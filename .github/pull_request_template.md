@@ -6,9 +6,9 @@
 
 ## Checklist before requesting a review
 <!--- These are suggested things you could add, but what you add will be dependent on your repository's standards. --->
-- [ ] This is an example of a checklist item
+- [ ] `make format` and `make lint` have been run and the output has been addressed.
 - [ ] The code runs successfully.
 
-```python
-print("Oh, it def does run successfully.")
+```
+Here is some console output
 ```
