@@ -24,5 +24,5 @@ run:
 	python -m ${BASEDIR}
 
 .PHONY: get-data
-run:
+get-data:
 	python -m ${BASEDIR} --get-data
