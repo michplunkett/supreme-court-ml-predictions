@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "poetry-python-project"
+name = "supreme-court-predictions"
 version = "0.1.0"
-description = "This repository is a template for a python project using the poetry container. The intent is to do all the basic lifting for a python project so that people can hit the ground running with their ideas."
-authors = ["michplunkett"]
+description = "The capstone project for the CAPP 30254 course at the University of Chicago."
+authors = ["michplunkett", "chanteriam", "FedericoDM"]
 readme = "README.md"
 packages = [{include = "poetry_python_project"}]
 
