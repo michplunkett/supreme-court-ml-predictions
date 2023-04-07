@@ -22,3 +22,7 @@ test-and-fail:
 .PHONY: run
 run:
 	python -m ${BASEDIR}
+
+.PHONY: get-data
+run:
+	python -m ${BASEDIR} --get-data
