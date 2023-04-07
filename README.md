@@ -1,5 +1,5 @@
 # Supreme Court ML Prediction Project
-This repository is a template for a python 🐍 project using the poetry container. The intent is to do all the basic lifting for a python project so that people can hit the ground running with their ideas.
+[This should be filled in with something meaningful at some point.]
 
 ### Project Requirements
 - Python version: `^3.11`
@@ -18,3 +18,4 @@ This repository is a template for a python 🐍 project using the poetry contain
 - `make lint`: Runs `pytlint` on the codebase
 - `make test`: Runs test cases in the `test` directory
 - `make run`: Runs the `main` function in the `supreme-court-predictions` folder
+- `get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
