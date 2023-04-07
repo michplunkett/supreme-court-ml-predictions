@@ -1,7 +1,7 @@
 # Here is some general information on Makefile's so that you can grow this out:
 # https://www.gnu.org/software/make/manual/html_node/Introduction.html
 
-BASEDIR="supreme-court-predictions"
+BASEDIR="supreme_court_predictions"
 
 .PHONY: format
 format:
@@ -21,4 +21,4 @@ test-and-fail:
 
 .PHONY: run
 run:
-	python -m supreme-court-predictions
+	python -m ${BASEDIR}
