@@ -6,7 +6,6 @@ import argparse
 
 from supreme_court_predictions.api.convokit.client import get_data
 
-# pylint: disable=invalid-name
 if __name__ == "__main__":
     print("oh, what up?")
 
