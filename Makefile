@@ -21,4 +21,4 @@ test-and-fail:
 
 .PHONY: run
 run:
-	python -m project
+	python -m supreme-court-predictions
