@@ -3,6 +3,12 @@
 .vscode
 **/.DS_Store
 
+# Data folders
+/supreme_court_predictions/data/convokit/*
+!/supreme_court_predictions/data/convokit/README.md
+/supreme_court_predictions/data/clean_convokit/*
+!/supreme_court_predictions/data/clean_convokit/README.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
