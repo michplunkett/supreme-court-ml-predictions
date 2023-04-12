@@ -1,11 +1,13 @@
 """
-This class is used to clean the data and convert it to a usable format
+This class is used to clean the data and convert it to a usable format.
 """
 
 # Global Imports
 import os
 import json
 import pandas as pd
+
+from supreme_court_predictions.util.contants import ENCODING_UTF_8_SIG
 
 # Convokit import
 from convokit import Corpus, download
@@ -36,7 +38,7 @@ class DataCleaner:
 
     def get_data(self):
         """
-        Loads and outputs the Supreme Court Corpus data
+        Loads and outputs the Supreme Court Corpus data.
         """
 
         print("Loading Supreme Court Corpus Data...")
@@ -46,7 +48,7 @@ class DataCleaner:
     # Begin reading data
     def load_data(self, file_name):
         """
-        Opens the data and returns it as a dictionary
+        Opens the data and returns it as a dictionary.
 
         :param file_name: The name of the file to open
         :return: The data as a dictionary
@@ -68,9 +70,9 @@ class DataCleaner:
 
     def speakers_to_df(self, speakers_dict):
         """
-        Converts the speakers dictionary to a pandas dataframe
+        Converts the speakers dictionary to a pandas dataframe.
 
-        :param speakers_dict: The speakers dictionary
+        :param speakers_dict: The speaker's dictionary
         :return: The speakers dataframe
         """
 
@@ -93,10 +95,9 @@ class DataCleaner:
 
     def get_conversation_dfs(self, conversations_dict):
         """
-        Converts the conversations dictionary to several
-        pandas dataframes
+        Converts the conversations dictionary to several pandas dataframes.
 
-        :param conversations_dict: The conversations dictionary
+        :param conversations_dict: The conversations' dictionary
         :return: The conversations dataframe, advocates dataframe,
                 and voters dataframe
         """
@@ -147,7 +148,7 @@ class DataCleaner:
 
     def clean_utterances(self, utterances_list):
         """
-        Cleans the utterances list
+        Cleans the utterances list.
 
         :param utterances_list: The utterances list
         :return: The cleaned utterances list
@@ -174,7 +175,7 @@ class DataCleaner:
 
     def parse_all_data(self):
         """
-        Cleans and parses all of the data
+        Cleans and parses all the data.
         """
         print("Parsing speakers...")
         speakers_dict = self.load_data("speakers.json")
@@ -198,27 +199,27 @@ class DataCleaner:
             self.speakers_df.to_csv(
                 self.OUTPUT_PATH + "/speakers_df.csv",
                 index=False,
-                encoding="utf-8-sig",
+                encoding=ENCODING_UTF_8_SIG,
             )
             self.conversations_df.to_csv(
                 self.OUTPUT_PATH + "/conversations_df.csv",
                 index=False,
-                encoding="utf-8-sig",
+                encoding=ENCODING_UTF_8_SIG,
             )
             self.advocates_df.to_csv(
                 self.OUTPUT_PATH + "/advocates_df.csv",
                 index=False,
-                encoding="utf-8-sig",
+                encoding=ENCODING_UTF_8_SIG,
             )
             self.voters_df.to_csv(
                 self.OUTPUT_PATH + "/voters_df.csv",
                 index=False,
-                encoding="utf-8-sig",
+                encoding=ENCODING_UTF_8_SIG,
             )
             self.utterances_df.to_csv(
                 self.OUTPUT_PATH + "/utterances_df.csv",
                 index=False,
-                encoding="utf-8-sig",
+                encoding=ENCODING_UTF_8_SIG,
             )
 
             print("Data saved to " + self.OUTPUT_PATH)
