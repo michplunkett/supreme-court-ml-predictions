@@ -31,6 +31,8 @@ class DataCleaner:
         if not downloaded_corpus:
             print("Corpus not present, downloading...")
             self.get_data()
+        else:
+            print("Corpus already downloaded")
 
     def get_data(self):
         """
@@ -174,9 +176,11 @@ class DataCleaner:
         """
         Cleans and parses all of the data
         """
+        print("Parsing speakers...")
         speakers_dict = self.load_data("speakers.json")
         self.speakers_df = self.speakers_to_df(speakers_dict)
 
+        print("Parsing conversations metadata...")
         conversations_dict = self.load_data("conversations.json")
         (
             self.conversations_df,
@@ -184,12 +188,37 @@ class DataCleaner:
             self.voters_df,
         ) = self.get_conversation_dfs(conversations_dict)
 
+        print("Parsing utterances...")
         utterances_list = self.load_data("utterances.jsonl")
         self.clean_utterances_list, self.utterances_df = self.clean_utterances(
             utterances_list
         )
 
         if self.save_data:
-
             self.speakers_df.to_csv(
+                self.OUTPUT_PATH + "/speakers_df.csv",
+                index=False,
+                encoding="utf-8-sig",
+            )
+            self.conversations_df.to_csv(
+                self.OUTPUT_PATH + "/conversations_df.csv",
+                index=False,
+                encoding="utf-8-sig",
+            )
+            self.advocates_df.to_csv(
+                self.OUTPUT_PATH + "/advocates_df.csv",
+                index=False,
+                encoding="utf-8-sig",
+            )
+            self.voters_df.to_csv(
+                self.OUTPUT_PATH + "/voters_df.csv",
+                index=False,
+                encoding="utf-8-sig",
+            )
+            self.utterances_df.to_csv(
+                self.OUTPUT_PATH + "/utterances_df.csv",
+                index=False,
+                encoding="utf-8-sig",
+            )
 
+            print("Data saved to " + self.OUTPUT_PATH)
