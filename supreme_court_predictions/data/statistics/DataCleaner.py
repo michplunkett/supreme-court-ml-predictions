@@ -12,8 +12,9 @@ from convokit import Corpus, download
 
 
 class DataCleaner:
-    def __init__(self, downloaded_corpus):
+    def __init__(self, downloaded_corpus, save_data=True):
         self.downloaded_corpus = downloaded_corpus
+        self.save_data = save_data
 
         # Get local directory
         cwd = os.getcwd()
@@ -22,6 +23,10 @@ class DataCleaner:
             "data/statistics", "data/convokit"
         )
         print(f"Working in {self.LOCAL_PATH}")
+
+        # Set output path
+        self.OUTPUT_PATH = self.LOCAL_PATH.replace("convokit", "clean_convokit")
+        print(f"Data will be saved to {self.OUTPUT_PATH}")
 
         if not downloaded_corpus:
             print("Corpus not present, downloading...")
@@ -37,7 +42,6 @@ class DataCleaner:
         corpus.dump("supreme_corpus", base_path=self.LOCAL_PATH)
 
     # Begin reading data
-
     def load_data(self, file_name):
         """
         Opens the data and returns it as a dictionary
@@ -156,6 +160,7 @@ class DataCleaner:
             clean_dict["conversation_id"] = utterance["conversation_id"]
             clean_dict["id"] = utterance["id"]
             utterance_text = utterance["text"]
+            # TODO: More robust cleaning
             clean_utterance = utterance_text.replace("\n", " ").strip()
             clean_dict["text"] = clean_utterance
 
@@ -164,3 +169,27 @@ class DataCleaner:
         utterances_df = pd.DataFrame(clean_utterances_list)
 
         return clean_utterances_list, utterances_df
+
+    def parse_all_data(self):
+        """
+        Cleans and parses all of the data
+        """
+        speakers_dict = self.load_data("speakers.json")
+        self.speakers_df = self.speakers_to_df(speakers_dict)
+
+        conversations_dict = self.load_data("conversations.json")
+        (
+            self.conversations_df,
+            self.advocates_df,
+            self.voters_df,
+        ) = self.get_conversation_dfs(conversations_dict)
+
+        utterances_list = self.load_data("utterances.jsonl")
+        self.clean_utterances_list, self.utterances_df = self.clean_utterances(
+            utterances_list
+        )
+
+        if self.save_data:
+
+            self.speakers_df.to_csv(
+
