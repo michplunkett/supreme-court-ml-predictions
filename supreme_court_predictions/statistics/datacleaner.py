@@ -31,10 +31,8 @@ class DataCleaner:
 
         # Get local directory
         cwd = os.getcwd()
-        self.local_path = cwd.replace("\\", "/")
-        self.local_path = self.local_path.replace(
-            "statistics",
-            "data/convokit",
+        self.local_path = (
+            cwd.replace("\\", "/") + "/supreme_court_predictions/data/convokit/"
         )
         print(f"Working in {self.local_path}")
 
@@ -66,7 +64,7 @@ class DataCleaner:
         :return: The data as a dictionary
         """
 
-        path = self.local_path + f"/supreme_corpus/{file_name}"
+        path = self.local_path + f"supreme_corpus/{file_name}"
         if "jsonl" in file_name:
             data = []
             with open(path, encoding=ENCODING_UTF_8) as json_file:
