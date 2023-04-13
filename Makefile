@@ -5,7 +5,7 @@ BASEDIR="supreme_court_predictions"
 
 .PHONY: format
 format:
-	black ${BASEDIR}/ test/
+	black ${BASEDIR}/ test/ --line-length=80
 
 .PHONY: lint
 lint:
@@ -26,3 +26,7 @@ run:
 .PHONY: get-data
 get-data:
 	python -m ${BASEDIR} --get-data
+
+.PHONY: clean-data
+clean-data:
+	python -m ${BASEDIR} --clean-data
