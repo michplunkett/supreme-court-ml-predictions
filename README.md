@@ -18,4 +18,5 @@
 - `make lint`: Runs `pytlint` on the codebase
 - `make test`: Runs test cases in the `test` directory
 - `make run`: Runs the `main` function in the `supreme-court-predictions` folder
-- `get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
+- `make get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
+- `make clean-data`: This function cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
