@@ -6,7 +6,10 @@ import os
 import json
 import pandas as pd
 
-from supreme_court_predictions.util.contants import ENCODING_UTF_8_SIG
+from supreme_court_predictions.util.contants import (
+    ENCODING_UTF_8,
+    ENCODING_UTF_8_SIG,
+)
 
 from convokit import Corpus, download
 
@@ -22,16 +25,16 @@ class DataCleaner:
 
         # Get local directory
         cwd = os.getcwd()
-        self.LOCAL_PATH = cwd.replace("\\", "/")
-        self.LOCAL_PATH = self.LOCAL_PATH.replace(
+        self.local_path = cwd.replace("\\", "/")
+        self.local_path = self.local_path.replace(
             "supreme_court_predictions/data/statistics",
             "supreme_court_predictions/data/convokit ",
         )
-        print(f"Working in {self.LOCAL_PATH}")
+        print(f"Working in {self.local_path}")
 
         # Set output path
-        self.OUTPUT_PATH = self.LOCAL_PATH.replace("convokit", "clean_convokit")
-        print(f"Data will be saved to {self.OUTPUT_PATH}")
+        self.output_path = self.local_path.replace("convokit", "clean_convokit")
+        print(f"Data will be saved to {self.output_path}")
 
         if not downloaded_corpus:
             print("Corpus not present, downloading...")
@@ -46,7 +49,7 @@ class DataCleaner:
 
         print("Loading Supreme Court Corpus Data...")
         corpus = Corpus(filename=download("supreme-corpus"))
-        corpus.dump("supreme_corpus", base_path=self.LOCAL_PATH)
+        corpus.dump("supreme_corpus", base_path=self.local_path)
 
     # Begin reading data
     def load_data(self, file_name):
@@ -57,17 +60,17 @@ class DataCleaner:
         :return: The data as a dictionary
         """
 
-        path = self.LOCAL_PATH + f"/supreme_corpus/{file_name}"
+        path = self.local_path + f"/supreme_corpus/{file_name}"
         if "jsonl" in file_name:
             data = []
-            with open(path) as json_file:
+            with open(path, encoding=ENCODING_UTF_8) as json_file:
                 json_list = list(json_file)
 
             for json_str in json_list:
                 clean_json = json.loads(json_str)
                 data.append(clean_json)
         else:
-            with open(path) as file:
+            with open(path, encoding=ENCODING_UTF_8) as file:
                 data = json.load(file)
         return data
 
@@ -207,29 +210,29 @@ class DataCleaner:
 
         if self.save_data:
             self.speakers_df.to_csv(
-                self.OUTPUT_PATH + "/speakers_df.csv",
+                self.output_path + "/speakers_df.csv",
                 index=False,
                 encoding=ENCODING_UTF_8_SIG,
             )
             self.conversations_df.to_csv(
-                self.OUTPUT_PATH + "/conversations_df.csv",
+                self.output_path + "/conversations_df.csv",
                 index=False,
                 encoding=ENCODING_UTF_8_SIG,
             )
             self.advocates_df.to_csv(
-                self.OUTPUT_PATH + "/advocates_df.csv",
+                self.output_path + "/advocates_df.csv",
                 index=False,
                 encoding=ENCODING_UTF_8_SIG,
             )
             self.voters_df.to_csv(
-                self.OUTPUT_PATH + "/voters_df.csv",
+                self.output_path + "/voters_df.csv",
                 index=False,
                 encoding=ENCODING_UTF_8_SIG,
             )
             self.utterances_df.to_csv(
-                self.OUTPUT_PATH + "/utterances_df.csv",
+                self.output_path + "/utterances_df.csv",
                 index=False,
                 encoding=ENCODING_UTF_8_SIG,
             )
 
-            print("Data saved to " + self.OUTPUT_PATH)
+            print("Data saved to " + self.output_path)
