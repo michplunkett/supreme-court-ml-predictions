@@ -22,7 +22,8 @@ class DataCleaner:
         cwd = os.getcwd()
         self.LOCAL_PATH = cwd.replace("\\", "/")
         self.LOCAL_PATH = self.LOCAL_PATH.replace(
-            "data/statistics", "data/convokit"
+            "supreme_court_predictions/data/statistics",
+            "supreme_court_predictions/data/convokit ",
         )
         print(f"Working in {self.LOCAL_PATH}")
 
@@ -68,7 +69,8 @@ class DataCleaner:
                 data = json.load(file)
         return data
 
-    def speakers_to_df(self, speakers_dict):
+    @staticmethod
+    def speakers_to_df(speakers_dict):
         """
         Converts the speakers dictionary to a pandas dataframe.
 
@@ -93,7 +95,8 @@ class DataCleaner:
         )
         return df
 
-    def get_conversation_dfs(self, conversations_dict):
+    @staticmethod
+    def get_conversation_dfs(conversations_dict):
         """
         Converts the conversations dictionary to several pandas dataframes.
 
@@ -106,36 +109,39 @@ class DataCleaner:
         voters_list = []
 
         for conversation_id in list(conversations_dict.keys()):
-            clean_dict = {}
             conversation_data = conversations_dict[conversation_id]["meta"]
-            clean_dict["id"] = conversation_id
-            clean_dict["case_id"] = conversation_data["case_id"]
-            clean_dict["winning_side"] = conversation_data["win_side"]
-
+            clean_dict = {
+                "id": conversation_id,
+                "case_id": conversation_data["case_id"],
+                "winning_side": conversation_data["win_side"],
+            }
             advocates = conversation_data["advocates"]
             voters = conversation_data["votes_side"]
 
             for advocate in advocates:
-                advocate_dict = {}
-                advocate_dict["id"] = conversation_id
-                advocate_dict["case_id"] = conversation_data["case_id"]
-                advocate_dict["advocate"] = advocate
-                advocate_dict["side"] = advocates[advocate]["side"]
-                advocate_dict["role"] = advocates[advocate]["role"]
+                advocate_dict = {
+                    "id": conversation_id,
+                    "case_id": conversation_data["case_id"],
+                    "advocate": advocate,
+                    "side": advocates[advocate]["side"],
+                    "role": advocates[advocate]["role"],
+                }
                 advocates_list.append(advocate_dict)
 
             if voters:
                 for voter, vote in voters.items():
-                    vote_dict = {}
-                    vote_dict["id"] = conversation_id
-                    vote_dict["case_id"] = conversation_data["case_id"]
-                    vote_dict["voter"] = voter
-                    vote_dict["vote"] = vote
+                    vote_dict = {
+                        "id": conversation_id,
+                        "case_id": conversation_data["case_id"],
+                        "voter": voter,
+                        "vote": vote,
+                    }
                     voters_list.append(vote_dict)
             else:
-                vote_dict = {}
-                vote_dict["id"] = conversation_id
-                vote_dict["case_id"] = conversation_data["case_id"]
+                vote_dict = {
+                    "id": conversation_id,
+                    "case_id": conversation_data["case_id"],
+                }
                 voters_list.append(vote_dict)
 
             metadata_list.append(clean_dict)
@@ -146,7 +152,8 @@ class DataCleaner:
 
         return conversation_metadata_df, advocates_df, voters_df
 
-    def clean_utterances(self, utterances_list):
+    @staticmethod
+    def clean_utterances(utterances_list):
         """
         Cleans the utterances list.
 
@@ -156,12 +163,13 @@ class DataCleaner:
 
         clean_utterances_list = []
         for utterance in utterances_list:
-            clean_dict = {}
-            clean_dict["case_id"] = utterance["meta"]["case_id"]
-            clean_dict["speaker"] = utterance["speaker"]
-            clean_dict["speaker_type"] = utterance["meta"]["speaker_type"]
-            clean_dict["conversation_id"] = utterance["conversation_id"]
-            clean_dict["id"] = utterance["id"]
+            clean_dict = {
+                "case_id": utterance["meta"]["case_id"],
+                "speaker": utterance["speaker"],
+                "speaker_type": utterance["meta"]["speaker_type"],
+                "conversation_id": utterance["conversation_id"],
+                "id": utterance["id"],
+            }
             utterance_text = utterance["text"]
             # TODO: More robust cleaning
             clean_utterance = utterance_text.replace("\n", " ").strip()
