@@ -60,7 +60,7 @@ class DataCleaner:
         :return: The data as a dictionary
         """
 
-        path = self.local_path + f"/supreme_corpus/{file_name}"
+        path = self.local_path + f"/supreme_court_predictions/data/convokit/supreme_corpus/{file_name}"
         if "jsonl" in file_name:
             data = []
             with open(path, encoding=ENCODING_UTF_8) as json_file:
