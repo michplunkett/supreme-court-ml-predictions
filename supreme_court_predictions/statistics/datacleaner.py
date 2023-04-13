@@ -6,13 +6,10 @@ import os
 import json
 import pandas as pd
 
-# from supreme_court_predictions.util.contants import (
-#     ENCODING_UTF_8,
-#     ENCODING_UTF_8_SIG,
-# )
-
-ENCODING_UTF_8 = "utf-8"
-ENCODING_UTF_8_SIG = "utf-8-sig"
+from supreme_court_predictions.util.contants import (
+    ENCODING_UTF_8,
+    ENCODING_UTF_8_SIG,
+)
 
 from convokit import Corpus, download
 
@@ -63,7 +60,7 @@ class DataCleaner:
         :return: The data as a dictionary
         """
 
-        path = self.local_path + f"supreme_corpus/{file_name}"
+        path = self.local_path + f"/supreme_corpus/{file_name}"
         if "jsonl" in file_name:
             data = []
             with open(path, encoding=ENCODING_UTF_8) as json_file:
