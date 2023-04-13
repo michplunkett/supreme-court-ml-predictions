@@ -1,5 +1,6 @@
 """
-This class is used to clean the data and convert it to a usable format.
+This file houses the class that is used to clean the convokit data and convert
+it to a usable format.
 """
 
 import os
@@ -15,6 +16,11 @@ from convokit import Corpus, download
 
 
 class DataCleaner:
+    """
+    This class houses the functions needed to clean the convokit data and turn
+    it into a usable format.
+    """
+
     def __init__(self, downloaded_corpus, save_data=True):
         self.clean_utterances_list = None
         self.speakers_df = None
