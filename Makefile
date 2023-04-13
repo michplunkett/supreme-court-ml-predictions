@@ -26,3 +26,7 @@ run:
 .PHONY: get-data
 get-data:
 	python -m ${BASEDIR} --get-data
+
+.PHONY: clean-data
+clean-data:
+	python -m ${BASEDIR} --clean-data
