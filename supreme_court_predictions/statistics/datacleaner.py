@@ -63,7 +63,7 @@ class DataCleaner:
         path = (
             self.local_path
             + f"/supreme_court_predictions/data/convokit/supreme_corpus/"
-              f"{file_name} "
+            f"{file_name} "
         )
         if "jsonl" in file_name:
             data = []
