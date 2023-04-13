@@ -2,19 +2,21 @@
 This class is used to clean the data and convert it to a usable format.
 """
 
-# Global Imports
 import os
 import json
 import pandas as pd
 
 from supreme_court_predictions.util.contants import ENCODING_UTF_8_SIG
 
-# Convokit import
 from convokit import Corpus, download
 
 
 class DataCleaner:
     def __init__(self, downloaded_corpus, save_data=True):
+        self.clean_utterances_list = None
+        self.speakers_df = None
+        self.utterances_df = None
+
         self.downloaded_corpus = downloaded_corpus
         self.save_data = save_data
 
