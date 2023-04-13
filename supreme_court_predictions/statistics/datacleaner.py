@@ -5,6 +5,7 @@ it to a usable format.
 
 import json
 import os
+import re
 
 import pandas as pd
 from convokit import Corpus, download
@@ -90,7 +91,7 @@ class DataCleaner:
         dict_list = []
         for speaker_key in list(speakers_dict.keys()):
             speaker_data = speakers_dict[speaker_key]["meta"]
-            speaker_data["speaker_key"] = speaker_key
+            speaker_data["speaker_key"] = re.sub(r"^j__", "", speaker_key)
             dict_list.append(speaker_data)
 
         df = pd.DataFrame(dict_list)
@@ -181,8 +182,12 @@ class DataCleaner:
             }
             utterance_text = utterance["text"]
             # TODO: More robust cleaning
-            clean_utterance = utterance_text.replace("\n", " ").strip()
-            clean_dict["text"] = clean_utterance
+            clean_utterance = utterance_text.lower()
+            no_newline = re.sub(r"[\r\n\t]", " ", clean_utterance)
+            no_bracket = re.sub(r"[\[\]\(\)-]", "", no_newline)
+
+            clean_dict["text"] = no_bracket
+
 
             clean_utterances_list.append(clean_dict)
 
