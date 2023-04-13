@@ -6,10 +6,13 @@ import os
 import json
 import pandas as pd
 
-from supreme_court_predictions.util.contants import (
-    ENCODING_UTF_8,
-    ENCODING_UTF_8_SIG,
-)
+# from supreme_court_predictions.util.contants import (
+#     ENCODING_UTF_8,
+#     ENCODING_UTF_8_SIG,
+# )
+
+ENCODING_UTF_8 = "utf-8"
+ENCODING_UTF_8_SIG = "utf-8-sig"
 
 from convokit import Corpus, download
 
@@ -27,8 +30,8 @@ class DataCleaner:
         cwd = os.getcwd()
         self.local_path = cwd.replace("\\", "/")
         self.local_path = self.local_path.replace(
-            "supreme_court_predictions/data/statistics",
-            "supreme_court_predictions/data/convokit ",
+            "statistics",
+            "data/convokit",
         )
         print(f"Working in {self.local_path}")
 
@@ -60,11 +63,7 @@ class DataCleaner:
         :return: The data as a dictionary
         """
 
-        path = (
-            self.local_path
-            + f"/supreme_court_predictions/data/convokit/supreme_corpus/"
-            f"{file_name} "
-        )
+        path = self.local_path + f"supreme_corpus/{file_name}"
         if "jsonl" in file_name:
             data = []
             with open(path, encoding=ENCODING_UTF_8) as json_file:
