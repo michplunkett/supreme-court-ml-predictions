@@ -16,9 +16,6 @@ responses = "^0.23.1"
 convokit = "^2.5.3"
 pandas = "^2.0.0"
 
-[tool.black]
-line-length = 80
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
