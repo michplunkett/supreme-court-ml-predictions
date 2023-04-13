@@ -3,16 +3,16 @@ This file houses the class that is used to clean the convokit data and convert
 it to a usable format.
 """
 
-import os
 import json
+import os
+
 import pandas as pd
+from convokit import Corpus, download
 
 from supreme_court_predictions.util.contants import (
     ENCODING_UTF_8,
     ENCODING_UTF_8_SIG,
 )
-
-from convokit import Corpus, download
 
 
 class DataCleaner:
