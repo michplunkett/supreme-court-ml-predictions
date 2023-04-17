@@ -2,24 +2,20 @@
 This file houses the class that is used to provide descriptive summary 
 statistics for the convokit datasets.
 """
-import json
 import os
-import re
 
 import pandas as pd
 import numpy as np
-from convokit import Corpus, download
 
 from .datacleaner import DataCleaner
 from supreme_court_predictions.util.contants import (
-    ENCODING_UTF_8,
     ENCODING_UTF_8_SIG,
 )
 
 
 class Descriptives:
     """
-    This class houses the functions needed to provide and export descriptive 
+    This class houses the functions needed to provide and export descriptive
     statistics of the convokit data.
     """
 
@@ -93,11 +89,15 @@ class Descriptives:
         [Insert]
         """
 
-        roles = list(np.char.lower(
-            np.array(df.loc[:, "role"]).astype(str)))
+        roles = list(np.char.lower(np.array(df.loc[:, "role"]).astype(str)))
 
         clean_roles = {
-            "inferred": 0, "for respondent": 0, "for petitioner": 0, "amicus curiae": 0, "for appellant": 0}
+            "inferred": 0,
+            "for respondent": 0,
+            "for petitioner": 0,
+            "amicus curiae": 0,
+            "for appellant": 0,
+        }
 
         for role in roles:
             if "inferred" in role:
@@ -136,7 +136,8 @@ class Descriptives:
 
         # Add case count descriptives
         conversation_stats.loc[("cases", ""), :] = len(
-            conversations.loc[:, "case_id"].unique())
+            conversations.loc[:, "case_id"].unique()
+        )
 
         return conversation_stats
 
@@ -155,9 +156,11 @@ class Descriptives:
 
         # Add count of unique speaker names and keys
         speakers_stats.loc[("speaker_name", ""), :] = len(
-            speakers.loc[:, "speaker_name"].unique())
+            speakers.loc[:, "speaker_name"].unique()
+        )
         speakers_stats.loc[("speaker_key", ""), :] = len(
-            speakers.loc[:, "speaker_key"].unique())
+            speakers.loc[:, "speaker_key"].unique()
+        )
 
         return speakers_stats
 
@@ -166,9 +169,6 @@ class Descriptives:
         """
         [Insert]
         """
-        filepath = self.local_path + "utterances_df.csv"
-        utterances = pd.read_csv(filepath)
-
         pass
 
     def get_voters_desc(self):
@@ -229,10 +229,10 @@ class Descriptives:
             )
 
             with pd.ExcelWriter(desc_out) as writer:
-                self.advocates_stats.to_excel(writer, sheet_name='advocates')
+                self.advocates_stats.to_excel(writer, sheet_name="advocates")
                 self.conversations_stats.to_excel(
-                    writer, sheet_name='conversations')
-                self.speakers_stats.to_excel(writer, sheet_name='speakers')
-                self.voters_stats.to_excel(writer, sheet_name='voters')
+                    writer, sheet_name="conversations")
+                self.speakers_stats.to_excel(writer, sheet_name="speakers")
+                self.voters_stats.to_excel(writer, sheet_name="voters")
 
             print("Data saved to " + self.output_path)
