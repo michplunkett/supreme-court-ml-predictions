@@ -33,14 +33,12 @@ class DataCleaner:
         # Get local directory
         cwd = os.getcwd()
         self.local_path = (
-            cwd.replace("\\", "/") +
-            "/supreme_court_predictions/data/convokit/"
+            cwd.replace("\\", "/") + "/supreme_court_predictions/data/convokit/"
         )
         print(f"Working in {self.local_path}")
 
         # Set output path
-        self.output_path = self.local_path.replace(
-            "convokit", "clean_convokit")
+        self.output_path = self.local_path.replace("convokit", "clean_convokit")
         print(f"Data will be saved to {self.output_path}")
 
         if not downloaded_corpus:
@@ -189,7 +187,6 @@ class DataCleaner:
             no_bracket = re.sub(r"[\[\]\(\)-]", "", no_newline)
 
             clean_dict["text"] = no_bracket
-
 
             clean_utterances_list.append(clean_dict)
 

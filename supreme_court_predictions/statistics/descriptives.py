@@ -4,13 +4,12 @@ statistics for the convokit datasets.
 """
 import os
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from supreme_court_predictions.util.contants import ENCODING_UTF_8_SIG
 
 from .datacleaner import DataCleaner
-from supreme_court_predictions.util.contants import (
-    ENCODING_UTF_8_SIG,
-)
 
 
 class Descriptives:
@@ -32,14 +31,15 @@ class Descriptives:
         # Get local directory
         cwd = os.getcwd()
         self.local_path = (
-            cwd.replace("\\", "/") +
-            "/supreme_court_predictions/data/clean_convokit/"
+            cwd.replace("\\", "/")
+            + "/supreme_court_predictions/data/clean_convokit/"
         )
         print(f"Working in {self.local_path}")
 
         # Set output path
         self.output_path = self.local_path.replace(
-            "clean_convokit", "statistics")
+            "clean_convokit", "statistics"
+        )
         print(f"Data will be saved to {self.output_path}")
 
         # Download necessary data
@@ -79,7 +79,8 @@ class Descriptives:
             if col in ["side", "id", "case_id"]:
                 continue
             advocate_stats.loc[(col, ""), :] = len(
-                advocates.loc[:, col].unique())
+                advocates.loc[:, col].unique()
+            )
 
         return advocate_stats
 
@@ -103,14 +104,17 @@ class Descriptives:
             if "inferred" in role:
                 clean_roles["inferred"] = clean_roles.get("inferred") + 1
             elif "respondent" in role or "appelle" in role:
-                clean_roles["for respondent"] = clean_roles.get(
-                    "for respondent") + 1
+                clean_roles["for respondent"] = (
+                    clean_roles.get("for respondent") + 1
+                )
             elif "petitioner" in role:
-                clean_roles["for petitioner"] = clean_roles.get(
-                    "for petitioner") + 1
+                clean_roles["for petitioner"] = (
+                    clean_roles.get("for petitioner") + 1
+                )
             elif "amicus curiae" in role:
-                clean_roles["amicus curiae"] = clean_roles.get(
-                    "amicus curiae") + 1
+                clean_roles["amicus curiae"] = (
+                    clean_roles.get("amicus curiae") + 1
+                )
             elif "appellant" in role:
                 clean_roles["for appellant"] = clean_roles.get("appellant") + 1
             else:
@@ -132,7 +136,8 @@ class Descriptives:
 
         # Get dataframe of winning side descriptive stats
         conversation_stats = self.get_count_desc(
-            conversations, ["winning_side"])
+            conversations, ["winning_side"]
+        )
 
         # Add case count descriptives
         conversation_stats.loc[("cases", ""), :] = len(
@@ -152,7 +157,8 @@ class Descriptives:
 
         # Get descriptive stats
         speakers_stats = self.get_count_desc(
-            speakers, ["speaker_type", "speaker_role"])
+            speakers, ["speaker_type", "speaker_role"]
+        )
 
         # Add count of unique speaker names and keys
         speakers_stats.loc[("speaker_name", ""), :] = len(
@@ -181,7 +187,8 @@ class Descriptives:
         # Get descriptive stats of votes
         voter_stats = self.get_count_desc(voters, ["vote"])
         voter_stats.loc[("justices", ""), :] = len(
-            voters.loc[:, "voter"].unique())
+            voters.loc[:, "voter"].unique()
+        )
 
         return voter_stats
 
@@ -231,7 +238,8 @@ class Descriptives:
             with pd.ExcelWriter(desc_out) as writer:
                 self.advocates_stats.to_excel(writer, sheet_name="advocates")
                 self.conversations_stats.to_excel(
-                    writer, sheet_name="conversations")
+                    writer, sheet_name="conversations"
+                )
                 self.speakers_stats.to_excel(writer, sheet_name="speakers")
                 self.voters_stats.to_excel(writer, sheet_name="voters")
 
