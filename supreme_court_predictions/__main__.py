@@ -6,7 +6,9 @@ import argparse
 
 from supreme_court_predictions.api.convokit.client import get_data
 from supreme_court_predictions.statistics.service import (
-    clean_data, describe_data)
+    clean_data,
+    describe_data,
+)
 
 if __name__ == "__main__":
     print("oh, what up?")
@@ -34,7 +36,7 @@ if __name__ == "__main__":
         help="Generate descriptive statistics for Convokit",
         type=bool,
         default=False,
-        action=argparse.BooleanOptionalAction
+        action=argparse.BooleanOptionalAction,
     )
 
     args = parser.parse_args()

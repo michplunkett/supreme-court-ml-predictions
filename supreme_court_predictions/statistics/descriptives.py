@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from supreme_court_predictions.util.contants import ENCODING_UTF_8
+
 from .datacleaner import DataCleaner
 
 
@@ -29,14 +30,15 @@ class Descriptives:
         # Get local directory
         cwd = os.getcwd()
         self.local_path = (
-            cwd.replace("\\", "/") +
-            "/supreme_court_predictions/data/clean_convokit/"
+            cwd.replace("\\", "/")
+            + "/supreme_court_predictions/data/clean_convokit/"
         )
         print(f"Working in {self.local_path}")
 
         # Set output path
         self.output_path = self.local_path.replace(
-            "clean_convokit", "statistics")
+            "clean_convokit", "statistics"
+        )
         print(f"Data will be saved to {self.output_path}")
 
         # Download necessary data
@@ -91,8 +93,12 @@ class Descriptives:
 
         # Get advocate side descriptives
         advocate_stats = self.get_count_desc(advocates, ["side"])
-        sides = ["for petitioner", "for respondent",
-                 "unknown", "for amicus curiae"]
+        sides = [
+            "for petitioner",
+            "for respondent",
+            "unknown",
+            "for amicus curiae",
+        ]
 
         advocate_stats.index = self.fix_indices("side", sides)
 
@@ -102,10 +108,12 @@ class Descriptives:
         )
 
         advocate_stats.loc[("total roles"), :] = len(
-            advocates.loc[:, "role"].unique())
+            advocates.loc[:, "role"].unique()
+        )
 
         advocate_stats = pd.concat(
-            [advocate_stats, self.clean_roles(advocates)])
+            [advocate_stats, self.clean_roles(advocates)]
+        )
 
         return advocate_stats
 
@@ -131,11 +139,13 @@ class Descriptives:
             if "inferred" in role:
                 clean_roles["inferred"] = clean_roles.get("inferred") + 1
             elif "respondent" in role or "appelle" in role:
-                clean_roles["for respondent"] = clean_roles.get(
-                    "for respondent") + 1
+                clean_roles["for respondent"] = (
+                    clean_roles.get("for respondent") + 1
+                )
             elif "petitioner" in role or "appellant" in role:
-                clean_roles["for petitioner"] = clean_roles.get(
-                    "for petitioner") + 1
+                clean_roles["for petitioner"] = (
+                    clean_roles.get("for petitioner") + 1
+                )
             elif "amicus curiae" in role:
                 clean_roles["for amicus curiae"] = (
                     clean_roles.get("for amicus curiae") + 1
@@ -163,14 +173,20 @@ class Descriptives:
         conversations = pd.read_csv(self.local_path + "conversations_df.csv")
 
         # Get dataframe of winning side descriptive stats
-        winning_sides = ["for petitioner",
-                         "for respondent", "unclear", "unavailable"]
+        winning_sides = [
+            "for petitioner",
+            "for respondent",
+            "unclear",
+            "unavailable",
+        ]
 
         conversation_stats = self.get_count_desc(
-            conversations, ["winning_side"])
+            conversations, ["winning_side"]
+        )
 
         conversation_stats.index = self.fix_indices(
-            "winning side", winning_sides)
+            "winning side", winning_sides
+        )
 
         # Add case count descriptives
         conversation_stats.loc[("total cases", ""), :] = len(
@@ -244,7 +260,8 @@ class Descriptives:
         # Get descriptive stats of votes
         voter_stats = self.get_count_desc(voters, ["vote"])
         voter_stats.loc[("justices", ""), :] = len(
-            voters.loc[:, "voter"].unique())
+            voters.loc[:, "voter"].unique()
+        )
 
         return voter_stats
 
@@ -294,7 +311,8 @@ class Descriptives:
             with pd.ExcelWriter(desc_out) as writer:
                 self.advocates_stats.to_excel(writer, sheet_name="advocates")
                 self.conversations_stats.to_excel(
-                    writer, sheet_name="conversations")
+                    writer, sheet_name="conversations"
+                )
                 self.speakers_stats.to_excel(writer, sheet_name="speakers")
                 self.voters_stats.to_excel(writer, sheet_name="voters")
                 self.utterances_stats.to_excel(writer, sheet_name="utterances")
