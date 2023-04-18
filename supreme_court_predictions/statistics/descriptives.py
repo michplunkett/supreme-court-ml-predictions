@@ -308,7 +308,11 @@ class Descriptives:
 
             # Outputting to a single excel
             desc_out = self.output_path + "/descriptive_statistics.xlsx"
+            # Known ExcelWriter issue:
+            # https://github.com/pylint-dev/pylint/issues/3060
+            # pylint: disable=abstract-class-instantiated
             with pd.ExcelWriter(desc_out) as writer:
+                # pylint: enable=abstract-class-instantiated
                 self.advocates_stats.to_excel(writer, sheet_name="advocates")
                 self.conversations_stats.to_excel(
                     writer, sheet_name="conversations"
