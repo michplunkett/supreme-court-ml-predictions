@@ -4,10 +4,14 @@
 **/.DS_Store
 
 # Data folders
-/supreme_court_predictions/data/convokit/*
-!/supreme_court_predictions/data/convokit/README.md
 /supreme_court_predictions/data/clean_convokit/*
 !/supreme_court_predictions/data/clean_convokit/README.md
+/supreme_court_predictions/data/convokit/*
+!/supreme_court_predictions/data/convokit/README.md
+/supreme_court_predictions/data/models/*
+!/supreme_court_predictions/data/models/README.md
+/supreme_court_predictions/data/statistics/*
+!/supreme_court_predictions/data/statistics/README.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

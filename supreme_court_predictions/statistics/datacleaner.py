@@ -188,7 +188,6 @@ class DataCleaner:
 
             clean_dict["text"] = no_bracket
 
-
             clean_utterances_list.append(clean_dict)
 
         utterances_df = pd.DataFrame(clean_utterances_list)

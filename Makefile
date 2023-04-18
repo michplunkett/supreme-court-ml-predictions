@@ -31,3 +31,7 @@ get-data:
 .PHONY: clean-data
 clean-data:
 	python -m ${BASEDIR} --clean-data
+
+.PHONY: describe-data
+describe-data:
+	python -m ${BASEDIR} --describe-data
