@@ -1,6 +1,11 @@
 # Supreme Court ML Prediction Project
 The project uses historic United States Supreme Court cases to train natural language processing models to predict case rulings.
 
+### Project Assumptions
+1. The number of unique roles within the advocates' file is too numerous to be helpful, so we merged them into 5 categories. While this merger may remove some of the variability and nuance in the file, we believe it will make it easier to derive meaningful conclusions.
+   - The groupings for the roles are as follows: `inferred`, `for respondent`, `for partitioner`, and `for amicus curiae`
+   - The code for that grouping can be found in the `clean_roles` function in the [`descriptives.py` file.](https://github.com/michplunkett/supreme-court-ml-predictions/blob/main/supreme_court_predictions/statistics/descriptives.py)
+
 ### Project Requirements
 - Python version: `^3.11`
 - [Poetry](https://python-poetry.org/)
