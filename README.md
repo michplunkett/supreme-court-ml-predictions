@@ -1,5 +1,5 @@
 # Supreme Court ML Prediction Project
-[This should be filled in with something meaningful at some point.]
+The project uses historic supreme court cases to train natural language processing models to predict case rulings.
 
 ### Project Requirements
 - Python version: `^3.11`
