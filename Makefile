@@ -5,8 +5,8 @@ BASEDIR="supreme_court_predictions"
 
 .PHONY: format
 format:
-	isort ${BASEDIR}/ test/ --line-length=80 --profile=black
-	black ${BASEDIR}/ test/ --line-length=80
+	isort ${BASEDIR}/ test/
+	black ${BASEDIR}/ test/
 
 .PHONY: lint
 lint:
