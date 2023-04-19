@@ -49,7 +49,8 @@ class Descriptives:
         else:
             print("Cleaned corpus already downloaded")
 
-    def fix_indices(self, main, sub):
+    @staticmethod
+    def fix_indices(main, sub):
         """
         Provides new pandas MultiIndices for a DataFrame.
 
@@ -64,7 +65,8 @@ class Descriptives:
             new_indices.append((main, index))
         return pd.MultiIndex.from_tuples(new_indices)
 
-    def get_count_desc(self, df, cols):
+    @staticmethod
+    def get_count_desc(df, cols):
         """
         Calculates descriptive statistics of counts for a given DataFrame.
 
@@ -107,7 +109,7 @@ class Descriptives:
             advocates.loc[:, "advocate"].unique()
         )
 
-        advocate_stats.loc[("total roles"), :] = len(
+        advocate_stats.loc["total roles", :] = len(
             advocates.loc[:, "role"].unique()
         )
 
@@ -128,7 +130,7 @@ class Descriptives:
         """
         roles = list(np.char.lower(np.array(df.loc[:, "role"]).astype(str)))
 
-        # Collect aggregate roles based on key words
+        # Collect aggregate roles based on keywords
         clean_roles = {
             "inferred": 0,
             "for respondent": 0,
