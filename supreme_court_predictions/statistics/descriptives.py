@@ -207,10 +207,10 @@ class Descriptives:
         speakers = pd.read_csv(self.local_path + "speakers_df.csv")
 
         # Get descriptive stats
-        speakers_stats = self.get_count_desc(speakers, ["speaker_role"])
+        speakers_stats = self.get_count_desc(speakers, ["speaker_type"])
 
-        speaker_roles = ["inaudible (U)", "justice (J)", "unknown (A)"]
-        speakers_stats.index = self.fix_indices("speaker role", speaker_roles)
+        speaker_types = ["advocate (A)", "justice (J)", "unknown (U)"]
+        speakers_stats.index = self.fix_indices("speaker type", speaker_types)
 
         # Add count of unique speaker names and keys
         speakers_stats.loc[("speaker names", ""), :] = len(
