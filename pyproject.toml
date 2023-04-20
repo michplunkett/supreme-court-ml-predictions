@@ -20,6 +20,14 @@ nltk = "^3.8.1"
 sklearn = "^0.0.post4"
 openpyxl = "^3.1.2"
 
+[tool.black]
+line-length = 80
+
+[tool.isort]
+profile= "black"
+line_length = 80
+skip = [".gitignore", "supreme_court_predictions/data/"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
