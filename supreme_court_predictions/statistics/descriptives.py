@@ -256,18 +256,18 @@ class Descriptives:
 
         cases_stats.index = self.fix_indices("win side", winning_sides)
 
-        # get counts
+        # Get counts
         ct_values = []
         attributes = ["id", "court", "year", "petitioner", "respondent"]
 
         for attr in attributes:
             ct_values.append(len(cases.loc[:, attr].unique()))
 
-        # get min/max - years
+        # Get min/max - years
         min_year = min(cases.loc[:, "year"].unique())
         max_year = max(cases.loc[:, "year"].unique())
 
-        # add counts to df
+        # Add counts to df
         for attr, count in zip(attributes, ct_values):
             attr = attr + "s"
             if attr == "years":
@@ -287,7 +287,7 @@ class Descriptives:
         print("Grabbing advocates descriptive statistics...")
         self.advocates_stats = self.get_advocate_desc()
 
-        print("Grabbing cases descriptive statistics...")
+        print("Grabbing case descriptive statistics...")
         self.cases_stats = self.get_cases_desc()
 
         print("Grabbing speakers descriptive statistics...")
