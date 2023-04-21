@@ -39,7 +39,7 @@ There are two ways that you can run this application, one of them is to run all 
 - `make clean-data`: This function cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
 - `make describe-data`: This function parses the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces an Excel file that contains basic descriptive statistics of the data.
 
-## Project Structure
+## File Description
 
 Within the `api` directory, the `client.py` file for convokit downloads initial data through the get_data function, and the google_cloud_platform `client.py` file will send computing jobs to the cloud. 
 
@@ -52,6 +52,49 @@ In the `statistics` directory, `service.py` cleans data and provides statical su
 Specifically, `datacleaner.py` provides a DataCleaner class that provides functionality to download, load, and clean convokit data. `parse_all_data` method can clean and parse the Supreme Court Corpus data, convert data into pandas DataFrames, and save the cleaned data to CSV files in `/supreme_court_predictions/data/clean_convokit`.
 
 `descriptives.py` provides a Descriptives class that generates summary statistics on cases, advocates, speakers, voters, and utterances. The `parse_all_data` method generates these summary statistics and exports data as separate CSV files and one complete Excel file. 
+
+### Summary Statistics
+
+For `descriptives.py` sepcifically, here are the kinds of summary statistics each function produces in pandas DataFrame format:
+
+**get_advocate_desc**: 
+
+  Count of each advocate side 
+
+  Total number of unique advocates
+
+  Total number of unique roles
+
+  Aggregate count of each role type based on keywords 
+
+
+**get_speaker_desc**: 
+
+  Count of each speaker type (advocate (A), justice (J), unknown (U))
+
+  Total number of unique speaker names
+
+  Total number of unique speaker keys
+
+
+**get_utterances_desc**: 
+
+    Average number of utterances per case
+
+    Average number of unique speakers per case
+
+
+**get_voters_desc**:
+
+    Count of each vote (affirm, reverse, not participating, recused, unknown)
+
+    Total number of unique justices
+
+**get_cases_desc**: 
+
+    Count of each winning side
+
+    Total number of unique cases, courts, years (with min and max year), petitioners, respondents
 
 ```supreme-court-ml-predictions
 ├── CODEOWNERS
