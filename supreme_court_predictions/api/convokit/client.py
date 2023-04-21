@@ -4,7 +4,10 @@ This file serves as the client for convokit.
 import requests
 from convokit import Corpus, download
 
-from supreme_court_predictions.util.contants import ENCODING_UTF_8
+from supreme_court_predictions.util.contants import (
+    ENCODING_UTF_8,
+    FILE_MODE_WRITE,
+)
 
 # Constants
 DOWNLOAD_BASE_PATH = "./supreme_court_predictions/data/convokit/"
@@ -26,6 +29,6 @@ def get_data():
     )
 
     with open(
-        f"{DOWNLOAD_BASE_PATH}supreme_corpus/cases.jsonl", "w"
+        f"{DOWNLOAD_BASE_PATH}supreme_corpus/cases.jsonl", FILE_MODE_WRITE
     ) as outfile:
         outfile.write(r.content.decode(ENCODING_UTF_8))
