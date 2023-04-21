@@ -47,9 +47,9 @@ In the `util` directory, the `constants.py` file declares often used constants.
 
 The `data` directory will contain the data for the initial download in convokit, a cleaned version in clean_convokit, results from statistical summaries in statistics, and model analysis results in models. 
 
-In the `statistics` directory, `datacleaner.py` provides a DataCleaner class that provides functionality to download, load, and clean convokit data. `parse_all_data method` can clean and parse the Supreme Court Corpus data, convert data into pandas DataFrames, and save the cleaned data to CSV files in `/supreme_court_predictions/data/clean_convokit`.
+In the `statistics` directory, `datacleaner.py` provides a DataCleaner class that provides functionality to download, load, and clean convokit data. `parse_all_data` method can clean and parse the Supreme Court Corpus data, convert data into pandas DataFrames, and save the cleaned data to CSV files in `/supreme_court_predictions/data/clean_convokit`.
 
-
+`descriptives.py` provides a Descriptives class that generates summary statistics on cases, advocates, speakers, voters, and utterances. The `parse_all_data` method generates these summary statistics and exports data as separate CSV files and one complete Excel file.
 
 ```supreme-court-ml-predictions
 ├── CODEOWNERS
