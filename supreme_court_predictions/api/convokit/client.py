@@ -25,5 +25,7 @@ def get_data():
         allow_redirects=True,
     )
 
-    with open(f"{DOWNLOAD_BASE_PATH}cases.jsonl", "w") as outfile:
+    with open(
+        f"{DOWNLOAD_BASE_PATH}supreme_corpus/cases.jsonl", "w"
+    ) as outfile:
         outfile.write(r.content.decode(ENCODING_UTF_8))
