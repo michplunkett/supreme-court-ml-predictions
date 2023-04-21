@@ -10,7 +10,10 @@ import re
 import pandas as pd
 from convokit import Corpus, download
 
-from supreme_court_predictions.util.contants import ENCODING_UTF_8
+from supreme_court_predictions.util.contants import (
+    ENCODING_UTF_8,
+    FILE_MODE_READ,
+)
 
 
 class DataCleaner:
@@ -66,14 +69,18 @@ class DataCleaner:
         path = self.local_path + f"supreme_corpus/{file_name}"
         if "jsonl" in file_name:
             data = []
-            with open(path, encoding=ENCODING_UTF_8) as json_file:
+            with open(
+                path, encoding=ENCODING_UTF_8, mode=FILE_MODE_READ
+            ) as json_file:
                 json_list = list(json_file)
 
             for json_str in json_list:
                 clean_json = json.loads(json_str)
                 data.append(clean_json)
         else:
-            with open(path, encoding=ENCODING_UTF_8) as file:
+            with open(
+                path, encoding=ENCODING_UTF_8, mode=FILE_MODE_READ
+            ) as file:
                 data = json.load(file)
         return data
 
