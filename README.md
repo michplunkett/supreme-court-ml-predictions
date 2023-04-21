@@ -38,3 +38,70 @@ There are two ways that you can run this application, one of them is to run all 
 - `make get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
 - `make clean-data`: This function cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
 - `make describe-data`: This function parses the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces an Excel file that contains basic descriptive statistics of the data.
+
+## Project Structure
+
+Within the `api` directory, the `client.py` file for convokit downloads initial data through the get_data function, and the google_cloud_platform `client.py` file will send computing jobs to the cloud. 
+
+In the `util` directory, the `constants.py` file declares often used constants.  
+
+The `data` directory will contain the data for the initial download in convokit, a cleaned version in clean_convokit, results from statistical summaries in statistics, and model analysis results in models. 
+
+In the `statistics` directory, `datacleaner.py` provides a DataCleaner class that provides functionality to download, load, and clean convokit data. `parse_all_data method` can clean and parse the Supreme Court Corpus data, convert data into pandas DataFrames, and save the cleaned data to CSV files in `/supreme_court_predictions/data/clean_convokit`.
+
+
+
+```supreme-court-ml-predictions
+├── CODEOWNERS
+├── LICENSE
+├── Makefile
+├── README.md
+├── data_cleaning.ipynb
+├── poetry.lock
+├── pylintrc
+├── pyproject.toml
+├── supreme_court_predictions
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── convokit
+│   │   │   └── client.py
+│   │   └── google_cloud_platform
+│   │       └── client.py
+│   ├── data
+│   │   ├── clean_convokit
+│   │   │   ├── README.md
+│   │   │   ├── advocates_df.csv
+│   │   │   ├── conversations_df.csv
+│   │   │   ├── speakers_df.csv
+│   │   │   ├── utterances_df.csv
+│   │   │   └── voters_df.csv
+│   │   ├── convokit
+│   │   │   ├── README.md
+│   │   │   └── supreme_corpus
+│   │   │       ├── conversations.json
+│   │   │       ├── corpus.json
+│   │   │       ├── index.json
+│   │   │       ├── speakers.json
+│   │   │       └── utterances.jsonl
+│   │   ├── models
+│   │   │   └── README.md
+│   │   └── statistics
+│   │       └── README.md
+│   ├── models
+│   │   └── __init__.py
+│   ├── statistics
+│   │   ├── __init__.py
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── datacleaner.cpython-311.pyc
+│   │   │   └── service.cpython-311.pyc
+│   │   ├── datacleaner.py
+│   │   ├── descriptives.py
+│   │   └── service.py
+│   └── util
+│       ├── __init__.py
+│       └── contants.py
+└── test
+    ├── __init__.py
+    └── test_example.py```
