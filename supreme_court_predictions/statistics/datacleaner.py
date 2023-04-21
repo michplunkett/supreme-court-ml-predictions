@@ -26,6 +26,7 @@ class DataCleaner:
         self.clean_utterances_list = None
         self.speakers_df = None
         self.utterances_df = None
+        self.cases_df = None
 
         self.downloaded_corpus = downloaded_corpus
         self.save_data = save_data
@@ -194,6 +195,36 @@ class DataCleaner:
 
         return clean_utterances_list, utterances_df
 
+    @staticmethod
+    def get_cases_dfs(cases_lst):
+        """
+        Converts the cases list to a metadata dataframe.
+
+        :param cases_lst: The cases' list containing dictionaries of cases.
+        :return: The cases dataframe of case metadata.
+        """
+
+        metadata = {
+            "id": [],
+            "year": [],
+            "citation": [],
+            "title": [],
+            "petitioner": [],
+            "respondent": [],
+            "docket_no": [],
+            "court": [],
+            "decided_date": [],
+            "win_side": [],
+            "is_eq_divided": [],
+        }
+
+        for case in cases_lst:
+            # get metadata
+            for attr, obvs in metadata.items():
+                obvs.append(case[attr])
+
+        return pd.DataFrame(metadata)
+
     def parse_all_data(self):
         """
         Cleans and parses all the data.
@@ -215,6 +246,10 @@ class DataCleaner:
         self.clean_utterances_list, self.utterances_df = self.clean_utterances(
             utterances_list
         )
+
+        print("Parsing cases...")
+        cases_list = self.load_data("cases.jsonl")
+        self.cases_df = self.get_cases_dfs(cases_list)
 
         if self.save_data:
             self.speakers_df.to_csv(
@@ -239,6 +274,11 @@ class DataCleaner:
             )
             self.utterances_df.to_csv(
                 self.output_path + "/utterances_df.csv",
+                index=False,
+                encoding=ENCODING_UTF_8_SIG,
+            )
+            self.cases_df.to_csv(
+                self.output_path + "/cases_df.csv",
                 index=False,
                 encoding=ENCODING_UTF_8_SIG,
             )
