@@ -10,10 +10,7 @@ import re
 import pandas as pd
 from convokit import Corpus, download
 
-from supreme_court_predictions.util.contants import (
-    ENCODING_UTF_8,
-    ENCODING_UTF_8_SIG,
-)
+from supreme_court_predictions.util.contants import ENCODING_UTF_8
 
 
 class DataCleaner:
@@ -255,32 +252,32 @@ class DataCleaner:
             self.speakers_df.to_csv(
                 self.output_path + "/speakers_df.csv",
                 index=False,
-                encoding=ENCODING_UTF_8_SIG,
+                encoding=ENCODING_UTF_8,
             )
             self.conversations_df.to_csv(
                 self.output_path + "/conversations_df.csv",
                 index=False,
-                encoding=ENCODING_UTF_8_SIG,
+                encoding=ENCODING_UTF_8,
             )
             self.advocates_df.to_csv(
                 self.output_path + "/advocates_df.csv",
                 index=False,
-                encoding=ENCODING_UTF_8_SIG,
+                encoding=ENCODING_UTF_8,
             )
             self.voters_df.to_csv(
                 self.output_path + "/voters_df.csv",
                 index=False,
-                encoding=ENCODING_UTF_8_SIG,
+                encoding=ENCODING_UTF_8,
             )
             self.utterances_df.to_csv(
                 self.output_path + "/utterances_df.csv",
                 index=False,
-                encoding=ENCODING_UTF_8_SIG,
+                encoding=ENCODING_UTF_8,
             )
             self.cases_df.to_csv(
                 self.output_path + "/cases_df.csv",
                 index=False,
-                encoding=ENCODING_UTF_8_SIG,
+                encoding=ENCODING_UTF_8,
             )
 
             print("Data saved to " + self.output_path)
