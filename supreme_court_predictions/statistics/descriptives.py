@@ -245,7 +245,7 @@ class Descriptives:
         vote_types = ["for petitioner", "for respondent", "unknown"]
         voter_stats.index = self.fix_indices("votes", vote_types)
 
-        voter_stats.loc[("justices", ""), :] = len(
+        voter_stats.loc[("justices", ""), "counts"] = len(
             voters.loc[:, "voter"].unique()
         )
 
