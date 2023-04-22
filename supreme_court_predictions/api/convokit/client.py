@@ -29,6 +29,6 @@ def get_data():
     )
 
     with open(
-        f"{DOWNLOAD_BASE_PATH}supreme_corpus/cases.jsonl", FILE_MODE_WRITE
+        f"{DOWNLOAD_BASE_PATH}supreme_corpus/cases.jsonl", mode=FILE_MODE_WRITE
     ) as outfile:
         outfile.write(r.content.decode(ENCODING_UTF_8))
