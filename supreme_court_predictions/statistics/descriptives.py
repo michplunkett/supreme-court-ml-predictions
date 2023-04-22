@@ -82,6 +82,13 @@ class Descriptives:
         df_stats.name = "counts"
         df_stats = df_stats.to_frame()
 
+        # get percentages
+        if len(df_stats) > 1:
+            total = sum(df_stats.loc[:, "counts"])
+            df_stats.loc[:, "percentages"] = (
+                df_stats.loc[:, "counts"] / total
+            ) * 100
+
         return df_stats
 
     def get_advocate_desc(self):
@@ -105,11 +112,11 @@ class Descriptives:
         advocate_stats.index = self.fix_indices("side", sides)
 
         # Add total roles, total advocates, and aggregate roles to descriptives
-        advocate_stats.loc[("total advocates", ""), :] = len(
+        advocate_stats.loc[("total advocates", ""), "counts"] = len(
             advocates.loc[:, "advocate"].unique()
         )
 
-        advocate_stats.loc["total roles", :] = len(
+        advocate_stats.loc["total roles", "counts"] = len(
             advocates.loc[:, "role"].unique()
         )
 
@@ -163,6 +170,12 @@ class Descriptives:
         )
         clean_roles_df.index = indices
 
+        # add percentages
+        total = sum(clean_roles_df.loc[:, "counts"])
+        clean_roles_df.loc[:, "percentages"] = (
+            clean_roles_df.loc[:, "counts"] / total
+        ) * 100
+
         return clean_roles_df
 
     def get_speaker_desc(self):
@@ -181,10 +194,10 @@ class Descriptives:
         speakers_stats.index = self.fix_indices("speaker type", speaker_types)
 
         # Add count of unique speaker names and keys
-        speakers_stats.loc[("speaker names", ""), :] = len(
+        speakers_stats.loc[("speaker names", ""), "counts"] = len(
             speakers.loc[:, "speaker_name"].unique()
         )
-        speakers_stats.loc[("speaker keys", ""), :] = len(
+        speakers_stats.loc[("speaker keys", ""), "counts"] = len(
             speakers.loc[:, "speaker_key"].unique()
         )
 
@@ -229,7 +242,10 @@ class Descriptives:
 
         # Get descriptive stats of votes
         voter_stats = self.get_count_desc(voters, ["vote"])
-        voter_stats.loc[("justices", ""), :] = len(
+        vote_types = ["for petitioner", "for respondent", "unknown"]
+        voter_stats.index = self.fix_indices("votes", vote_types)
+
+        voter_stats.loc[("justices", ""), "counts"] = len(
             voters.loc[:, "voter"].unique()
         )
 
