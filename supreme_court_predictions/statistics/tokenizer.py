@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import spacy
 
 class Tokenizer:
@@ -16,11 +17,7 @@ class Tokenizer:
         self.local_path = (
             cwd.replace("\\", "/") + "/supreme_court_predictions/data/clean_convokit/"
         )
-        print(f"Working in {self.local_path}")
-
-        # Set output path
-        self.output_path = self.local_path.replace("convokit", "clean_convokit")
-        print(f"Data will be saved to {self.output_path}")
+        print(f"Data will be saved to: \n{self.local_path}")
 
         try:
             self.nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
@@ -28,9 +25,17 @@ class Tokenizer:
             print("Spacy not present. Downloading files.")
             spacy.cli.download("en_core_web_sm")
             self.nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
+        print("Spacy module successfully loaded.")
 
-def main():
-    token_inst = Tokenizer()
+        self.tokenize()
 
-if __name__ == "__main__":
-    main()
+    def spacy_apply(self, text):
+        doc = self.nlp(text)
+        return [token.text for token in doc]
+
+    def tokenize(self):
+        utterances_df = pd.read_csv(self.local_path + "utterances_df.csv")
+
+        utterances_df['tokens'] = utterances_df.loc[:, "text"].apply(self.spacy_apply)
+        utterances_df.to_csv("path/to/your/file.csv", index=False)
+        print("Spacy Tokenization Complete")
