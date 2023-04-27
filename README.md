@@ -38,3 +38,17 @@ There are two ways that you can run this application, one of them is to run all 
 - `make get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
 - `make clean-data`: This function cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
 - `make describe-data`: This function parses the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces an Excel file that contains basic descriptive statistics of the data.
+
+## Package Description
+
+Within the `api` directory, the `client.py` file for convokit downloads initial data through the get_data function, and the google_cloud_platform `client.py` file will send computing jobs to the cloud. 
+
+In the `util` directory, the `constants.py` file declares often used constants.  
+
+The `data` directory will contain the data for the initial download in convokit, a cleaned version in clean_convokit, results from statistical summaries in statistics, and model analysis results in models. 
+
+In the `statistics` directory, `service.py` cleans data and provides statical summaries using `datacleaner.py` and `descriptives.py`. 
+
+Specifically, `datacleaner.py` provides a DataCleaner class that provides functionality to download, load, and clean convokit data. `parse_all_data` method can clean and parse the Supreme Court Corpus data, convert data into pandas DataFrames, and save the cleaned data to CSV files in `/supreme_court_predictions/data/clean_convokit`.
+
+`descriptives.py` provides a Descriptives class that generates summary statistics on cases, advocates, speakers, voters, and utterances. The `parse_all_data` method generates these summary statistics and exports data as separate CSV files and one complete Excel file. 
