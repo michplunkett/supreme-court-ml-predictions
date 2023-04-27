@@ -4,10 +4,12 @@ This file works as the central point of interaction for the statistics package.
 
 from supreme_court_predictions.statistics.datacleaner import DataCleaner
 from supreme_court_predictions.statistics.descriptives import Descriptives
+from supreme_court_predictions.statistics.tokenizer import Tokenizer
 
 
 def clean_data():
     DataCleaner(downloaded_corpus=True, save_data=True).parse_all_data()
+    Tokenizer()
 
 
 def describe_data():
