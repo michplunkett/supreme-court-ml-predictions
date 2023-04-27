@@ -1,6 +1,5 @@
 """
-A module implementing a Tokenizer class that utilizes 
-the spaCy library for tokenization and lemmatization of text. 
+A module implementing a Tokenizer class that tokenizes text. 
 The Tokenizer class provides methods for initializing the required 
 components and processing text data. It is designed to handle tokenization
 tasks efficiently and effectively in a user-friendly manner.
