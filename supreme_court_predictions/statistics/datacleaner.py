@@ -4,7 +4,6 @@ it to a usable format.
 """
 
 import json
-import os
 import re
 
 import pandas as pd
@@ -33,7 +32,6 @@ class DataCleaner:
         self.save_data = save_data
 
         # Get local directory
-        cwd = os.getcwd()
         self.local_path = get_full_pathway(
             "/supreme_court_predictions/data/convokit/"
         )

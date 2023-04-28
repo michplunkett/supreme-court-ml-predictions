@@ -5,10 +5,10 @@ components and processing text data. It is designed to handle tokenization
 tasks efficiently and effectively in a user-friendly manner.
 """
 
-import os
-
 import pandas as pd
 import spacy
+
+from supreme_court_predictions.util.files import get_full_pathway
 
 
 class Tokenizer:
@@ -24,10 +24,8 @@ class Tokenizer:
         and loading the spaCy model.
         """
         # Get local directory
-        cwd = os.getcwd()
-        self.local_path = (
-            cwd.replace("\\", "/")
-            + "/supreme_court_predictions/data/clean_convokit/"
+        self.local_path = get_full_pathway(
+            "/supreme_court_predictions/data/clean_convokit/"
         )
         print(f"Data will be saved to: \n{self.local_path}")
 
