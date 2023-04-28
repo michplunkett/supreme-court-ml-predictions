@@ -18,6 +18,8 @@ class Tokenizer:
     methods for tokenizing text.
     """
 
+    SPACY_PACKAGE = "en_core_web_sm"
+
     def __init__(self):
         """
         Initializes the Tokenizer class by setting up the local path
@@ -30,11 +32,11 @@ class Tokenizer:
         print(f"Data will be saved to: \n{self.local_path}")
 
         try:
-            self.nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+            self.nlp = spacy.load(self.SPACY_PACKAGE, disable=["parser", "ner"])
         except OSError:
             print("Spacy not present. Downloading files.")
-            spacy.cli.download("en_core_web_sm")
-            self.nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+            spacy.cli.download(self.SPACY_PACKAGE)
+            self.nlp = spacy.load(self.SPACY_PACKAGE, disable=["parser", "ner"])
         print("Spacy module successfully loaded.")
 
         self.tokenize()
