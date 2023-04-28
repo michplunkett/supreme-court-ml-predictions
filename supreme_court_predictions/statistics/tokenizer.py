@@ -63,4 +63,4 @@ class Tokenizer:
             self.spacy_apply
         )
         utterances_df.to_csv(self.local_path + "utterances_df.csv", index=False)
-        print("Spacy Tokenization Complete")
+        print("Spacy tokenization complete.")
