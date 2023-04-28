@@ -14,6 +14,7 @@ from supreme_court_predictions.util.contants import (
     ENCODING_UTF_8,
     FILE_MODE_READ,
 )
+from supreme_court_predictions.util.files import get_full_pathway
 
 
 class DataCleaner:
@@ -33,13 +34,15 @@ class DataCleaner:
 
         # Get local directory
         cwd = os.getcwd()
-        self.local_path = (
-            cwd.replace("\\", "/") + "/supreme_court_predictions/data/convokit/"
+        self.local_path = get_full_pathway(
+            "/supreme_court_predictions/data/convokit/"
         )
         print(f"Working in {self.local_path}")
 
         # Set output path
-        self.output_path = self.local_path.replace("convokit", "clean_convokit")
+        self.output_path = get_full_pathway(
+            "/supreme_court_predictions/data/clean_convokit/"
+        )
         print(f"Data will be saved to {self.output_path}")
 
         if not downloaded_corpus:
