@@ -2,12 +2,11 @@
 This file houses the class that is used to provide descriptive summary
 statistics for the convokit datasets.
 """
-import os
-
 import numpy as np
 import pandas as pd
 
 from supreme_court_predictions.util.contants import ENCODING_UTF_8
+from supreme_court_predictions.util.files import get_full_pathway
 
 from .datacleaner import DataCleaner
 
@@ -28,16 +27,14 @@ class Descriptives:
         self.save_data = save_data
 
         # Get local directory
-        cwd = os.getcwd()
-        self.local_path = (
-            cwd.replace("\\", "/")
-            + "/supreme_court_predictions/data/clean_convokit/"
+        self.local_path = get_full_pathway(
+            "/supreme_court_predictions/data/clean_convokit/"
         )
         print(f"Working in {self.local_path}")
 
         # Set output path
-        self.output_path = self.local_path.replace(
-            "clean_convokit", "statistics"
+        self.output_path = get_full_pathway(
+            "/supreme_court_predictions/data/statistics/"
         )
         print(f"Data will be saved to {self.output_path}")
 

@@ -5,10 +5,10 @@ components and processing text data. It is designed to handle tokenization
 tasks efficiently and effectively in a user-friendly manner.
 """
 
-import os
-
 import pandas as pd
 import spacy
+
+from supreme_court_predictions.util.files import get_full_pathway
 
 
 class Tokenizer:
@@ -18,25 +18,25 @@ class Tokenizer:
     methods for tokenizing text.
     """
 
+    SPACY_PACKAGE = "en_core_web_sm"
+
     def __init__(self):
         """
         Initializes the Tokenizer class by setting up the local path
         and loading the spaCy model.
         """
         # Get local directory
-        cwd = os.getcwd()
-        self.local_path = (
-            cwd.replace("\\", "/")
-            + "/supreme_court_predictions/data/clean_convokit/"
+        self.local_path = get_full_pathway(
+            "/supreme_court_predictions/data/clean_convokit/"
         )
         print(f"Data will be saved to: \n{self.local_path}")
 
         try:
-            self.nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+            self.nlp = spacy.load(self.SPACY_PACKAGE, disable=["parser", "ner"])
         except OSError:
             print("Spacy not present. Downloading files.")
-            spacy.cli.download("en_core_web_sm")
-            self.nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+            spacy.cli.download(self.SPACY_PACKAGE)
+            self.nlp = spacy.load(self.SPACY_PACKAGE, disable=["parser", "ner"])
         print("Spacy module successfully loaded.")
 
         self.tokenize()
@@ -63,4 +63,4 @@ class Tokenizer:
             self.spacy_apply
         )
         utterances_df.to_csv(self.local_path + "utterances_df.csv", index=False)
-        print("Spacy Tokenization Complete")
+        print("Spacy tokenization complete.")
