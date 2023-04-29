@@ -59,7 +59,7 @@ class Tokenizer:
         """
         utterances_df = pd.read_csv(self.local_path + "utterances_df.csv")
 
-        utterances_df["tokens"] = utterances_df.loc[:, "text"].apply(
+        utterances_df["tokens"] = utterances_df.loc[:, "text"].astype(str).apply(
             self.spacy_apply
         )
         utterances_df.to_csv(self.local_path + "utterances_df.csv", index=False)
