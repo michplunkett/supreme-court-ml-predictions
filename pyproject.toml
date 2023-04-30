@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "The capstone project for the CAPP 30254 course at the University of Chicago."
 authors = ["michplunkett", "chanteriam", "FedericoDM", "JJModern"]
 readme = "README.md"
-packages = [{include = "poetry_python_project"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
