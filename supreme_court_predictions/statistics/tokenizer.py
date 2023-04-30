@@ -1,6 +1,6 @@
 """
-A module implementing a Tokenizer class that tokenizes text. 
-The Tokenizer class provides methods for initializing the required 
+A module implementing a Tokenizer class that tokenizes text.
+The Tokenizer class provides methods for initializing the required
 components and processing text data. It is designed to handle tokenization
 tasks efficiently and effectively in a user-friendly manner.
 """
@@ -59,8 +59,8 @@ class Tokenizer:
         """
         utterances_df = pd.read_csv(self.local_path + "utterances_df.csv")
 
-        utterances_df["tokens"] = utterances_df.loc[:, "text"].apply(
-            self.spacy_apply
+        utterances_df["tokens"] = (
+            utterances_df.loc[:, "text"].astype(str).apply(self.spacy_apply)
         )
         utterances_df.to_csv(self.local_path + "utterances_df.csv", index=False)
         print("Spacy tokenization complete.")
