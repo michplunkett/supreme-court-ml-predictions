@@ -7,3 +7,6 @@ ENCODING_UTF_8 = "utf-8"
 # File modes
 FILE_MODE_READ = "r"
 FILE_MODE_WRITE = "w"
+
+# Current year for data filterning
+LATEST_YEAR = 2019

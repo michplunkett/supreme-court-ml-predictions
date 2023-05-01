@@ -35,3 +35,7 @@ clean-data:
 .PHONY: describe-data
 describe-data:
 	python -m ${BASEDIR} --describe-data
+
+.PHONY: tokenize-data
+tokenize-data:
+	python -m ${BASEDIR} --tokenize-data

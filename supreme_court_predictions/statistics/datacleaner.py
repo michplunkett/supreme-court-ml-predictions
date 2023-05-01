@@ -12,6 +12,7 @@ from convokit import Corpus, download
 from supreme_court_predictions.util.contants import (
     ENCODING_UTF_8,
     FILE_MODE_READ,
+    LATEST_YEAR,
 )
 from supreme_court_predictions.util.files import get_full_pathway
 
@@ -23,10 +24,11 @@ class DataCleaner:
     """
 
     def __init__(self, downloaded_corpus, save_data=True):
+        self.cases_df = None
+        self.clean_case_ids = None  # stores the case IDs to use
         self.clean_utterances_list = None
         self.speakers_df = None
         self.utterances_df = None
-        self.cases_df = None
 
         self.downloaded_corpus = downloaded_corpus
         self.save_data = save_data
@@ -85,6 +87,79 @@ class DataCleaner:
                 data = json.load(file)
         return data
 
+    def get_cases_df(self, cases_lst):
+        """
+        Converts the cases list to a metadata dataframe. Also provides list of
+        cleaned and filtered cases to use.
+
+        :param cases_lst: The cases' list containing dictionaries of cases.
+        :return: The cases dataframe of case metadata.
+        """
+
+        # Convert to dataframe
+        cases_df = self.load_cases_df(cases_lst)
+
+        # Clean, filter, and return dataframe data
+        self.clean_case_ids = self.get_clean_cases(cases_df)
+        clean_cases_df = cases_df.loc[
+            (cases_df.loc[:, "id"].isin(self.clean_case_ids)), :
+        ]
+
+        clean_cases_df = clean_cases_df.astype({"win_side": "int32"})
+        return clean_cases_df
+
+    @staticmethod
+    def load_cases_df(cases_lst):
+        """
+        Generates and unclean and unfiltered dataframe of court cases.
+
+        :param cases_lst: The cases' list containing dictionaries of cases.
+        :return: The uncleaned/unfiltered cases dataframe of case metadata.
+        """
+
+        # Convert to dataframe
+        metadata = {
+            "id": [],
+            "year": [],
+            "citation": [],
+            "title": [],
+            "petitioner": [],
+            "respondent": [],
+            "docket_no": [],
+            "court": [],
+            "decided_date": [],
+            "win_side": [],
+            "is_eq_divided": [],
+        }
+
+        for case in cases_lst:
+            # get metadata
+            for attr, obvs in metadata.items():
+                obvs.append(case[attr])
+
+        return pd.DataFrame(metadata)
+
+    @staticmethod
+    def get_clean_cases(cases):
+        """
+        Generates a list of cleaned case IDs.
+
+        :param cases: An uncleaned dataframe of cases.
+        : return: A list of clean case IDs
+        """
+
+        # Clean cases to 0/1 win side and cases from the last 5 years
+        case_ids = cases.loc[
+            (
+                (cases.loc[:, "win_side"] == 0.0)
+                | (cases.loc[:, "win_side"] == 1.0)
+            )
+            & (cases.loc[:, "year"] >= LATEST_YEAR - 5),
+            "id",
+        ].unique()
+
+        return case_ids
+
     @staticmethod
     def speakers_to_df(speakers_dict):
         """
@@ -109,10 +184,13 @@ class DataCleaner:
             },
             inplace=True,
         )
-        return df
 
-    @staticmethod
-    def get_conversation_dfs(conversations_dict):
+        # Remove low-quality data - unknown speaker types
+        df_cleaned = df.loc[(df.loc[:, "speaker_type"] != "U"), :]
+
+        return df_cleaned
+
+    def get_conversation_dfs(self, conversations_dict):
         """
         Converts the conversations dictionary to several pandas dataframes.
 
@@ -126,50 +204,60 @@ class DataCleaner:
 
         for conversation_id in list(conversations_dict.keys()):
             conversation_data = conversations_dict[conversation_id]["meta"]
-            clean_dict = {
-                "id": conversation_id,
-                "case_id": conversation_data["case_id"],
-                "winning_side": conversation_data["win_side"],
-            }
-            advocates = conversation_data["advocates"]
-            voters = conversation_data["votes_side"]
 
-            for advocate in advocates:
-                advocate_dict = {
+            # Filter dataset based on cleaned case ids and 0/1 side
+            if conversation_data["case_id"] in self.clean_case_ids:
+                clean_dict = {
                     "id": conversation_id,
                     "case_id": conversation_data["case_id"],
-                    "advocate": advocate,
-                    "side": advocates[advocate]["side"],
-                    "role": advocates[advocate]["role"],
+                    "winning_side": conversation_data["win_side"],
                 }
-                advocates_list.append(advocate_dict)
 
-            if voters:
-                for voter, vote in voters.items():
+                advocates = conversation_data["advocates"]
+                voters = conversation_data["votes_side"]
+
+                for advocate in advocates:
+                    if advocates[advocate]["side"] in [0, 1]:
+                        advocate_dict = {
+                            "id": conversation_id,
+                            "case_id": conversation_data["case_id"],
+                            "advocate": advocate,
+                            "side": advocates[advocate]["side"],
+                            "role": advocates[advocate]["role"],
+                        }
+                        advocates_list.append(advocate_dict)
+
+                if voters:
+                    for voter, vote in voters.items():
+                        if vote in [0, 1]:
+                            vote_dict = {
+                                "id": conversation_id,
+                                "case_id": conversation_data["case_id"],
+                                "voter": voter,
+                                "vote": vote,
+                            }
+                            voters_list.append(vote_dict)
+                else:
                     vote_dict = {
                         "id": conversation_id,
                         "case_id": conversation_data["case_id"],
-                        "voter": voter,
-                        "vote": vote,
                     }
                     voters_list.append(vote_dict)
-            else:
-                vote_dict = {
-                    "id": conversation_id,
-                    "case_id": conversation_data["case_id"],
-                }
-                voters_list.append(vote_dict)
 
-            metadata_list.append(clean_dict)
+                metadata_list.append(clean_dict)
 
         conversation_metadata_df = pd.DataFrame(metadata_list)
         advocates_df = pd.DataFrame(advocates_list)
         voters_df = pd.DataFrame(voters_list)
 
+        # Clean voters df - one vote per voter per case
+        voters_df = voters_df.drop_duplicates(
+            subset=["case_id", "voter"], keep="last"
+        ).reset_index(drop=True)
+
         return conversation_metadata_df, advocates_df, voters_df
 
-    @staticmethod
-    def clean_utterances(utterances_list):
+    def clean_utterances(self, utterances_list):
         """
         Cleans the utterances list.
 
@@ -177,8 +265,15 @@ class DataCleaner:
         :return: The cleaned utterances list
         """
 
+        # Filter dataset based on cleaned case ids
+        utterances_list_filtered = [
+            u
+            for u in utterances_list
+            if u["meta"]["case_id"] in self.clean_case_ids
+        ]
+
         clean_utterances_list = []
-        for utterance in utterances_list:
+        for utterance in utterances_list_filtered:
             clean_dict = {
                 "case_id": utterance["meta"]["case_id"],
                 "speaker": utterance["speaker"],
@@ -200,40 +295,14 @@ class DataCleaner:
 
         return clean_utterances_list, utterances_df
 
-    @staticmethod
-    def get_cases_dfs(cases_lst):
-        """
-        Converts the cases list to a metadata dataframe.
-
-        :param cases_lst: The cases' list containing dictionaries of cases.
-        :return: The cases dataframe of case metadata.
-        """
-
-        metadata = {
-            "id": [],
-            "year": [],
-            "citation": [],
-            "title": [],
-            "petitioner": [],
-            "respondent": [],
-            "docket_no": [],
-            "court": [],
-            "decided_date": [],
-            "win_side": [],
-            "is_eq_divided": [],
-        }
-
-        for case in cases_lst:
-            # get metadata
-            for attr, obvs in metadata.items():
-                obvs.append(case[attr])
-
-        return pd.DataFrame(metadata)
-
     def parse_all_data(self):
         """
         Cleans and parses all the data.
         """
+        print("Parsing cases...")
+        cases_list = self.load_data("cases.jsonl")
+        self.cases_df = self.get_cases_df(cases_list)
+
         print("Parsing speakers...")
         speakers_dict = self.load_data("speakers.json")
         self.speakers_df = self.speakers_to_df(speakers_dict)
@@ -251,10 +320,6 @@ class DataCleaner:
         self.clean_utterances_list, self.utterances_df = self.clean_utterances(
             utterances_list
         )
-
-        print("Parsing cases...")
-        cases_list = self.load_data("cases.jsonl")
-        self.cases_df = self.get_cases_dfs(cases_list)
 
         if self.save_data:
             self.speakers_df.to_csv(
