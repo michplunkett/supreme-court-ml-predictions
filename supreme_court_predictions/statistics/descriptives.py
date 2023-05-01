@@ -245,7 +245,12 @@ class Descriptives:
 
     def votes_by_justice(self, voters):
         """
-        Calculates the proportion of votes in favor of the petitioner by justice.
+        Calculates the proportion of votes in favor of the petitioner by 
+        justice.
+
+        :param voters: Dataframe including voter information.
+        :return Dataframe of descriptive statistics for votes by SCOTUS 
+                justices.
         """
 
         # Get justices
