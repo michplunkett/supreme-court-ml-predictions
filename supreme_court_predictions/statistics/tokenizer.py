@@ -50,7 +50,7 @@ class Tokenizer:
         :return: List of tokenized words.
         """
         doc = self.nlp(text)
-        return [token.text for token in doc]
+        return [token.lemma_ for token in doc if token.is_alpha and not token.is_stop]
 
     def tokenize(self):
         """
