@@ -187,10 +187,9 @@ class DataCleaner:
                 "id": utterance["id"],
             }
             utterance_text = utterance["text"]
-            # TODO: More robust cleaning
             clean_utterance = utterance_text.lower()
             no_newline = re.sub(r"[\r\n\t]", " ", clean_utterance)
-            no_bracket = re.sub(r"[\[\]\(\)-]", "", no_newline)
+            no_bracket = re.sub(r"[\[\]\(\)]", "", no_newline)
 
             clean_dict["text"] = no_bracket
 
