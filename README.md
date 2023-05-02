@@ -32,7 +32,7 @@ There are two ways that you can run this application, one of them is to run all 
 
 ## Standard Commands
 - `make format`: Runs `Black` on the codebase
-- `make lint`: Runs `pytlint` on the codebase
+- `make lint`: Runs `ruff` on the codebase
 - `make test`: Runs test cases in the `test` directory
 - `make run`: Runs the `main` function in the `supreme-court-predictions` folder
 - `make get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
