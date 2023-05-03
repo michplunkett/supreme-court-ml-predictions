@@ -9,8 +9,11 @@ from supreme_court_predictions.statistics.tokenizer import Tokenizer
 
 def clean_data():
     DataCleaner(downloaded_corpus=True, save_data=True).parse_all_data()
-    Tokenizer()
 
 
 def describe_data():
     Descriptives(downloaded_clean_corpus=True, save_data=True).parse_all_data()
+
+
+def tokenize_data():
+    Tokenizer()

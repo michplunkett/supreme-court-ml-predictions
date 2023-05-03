@@ -102,8 +102,6 @@ class Descriptives:
         sides = [
             "for petitioner",
             "for respondent",
-            "unknown",
-            "for amicus curiae",
         ]
 
         advocate_stats.index = self.fix_indices("side", sides)
@@ -139,7 +137,6 @@ class Descriptives:
             "inferred": 0,
             "for respondent": 0,
             "for petitioner": 0,
-            "for amicus curiae": 0,
         }
         for role in roles:
             if "inferred" in role:
@@ -151,10 +148,6 @@ class Descriptives:
             elif "petitioner" in role or "appellant" in role:
                 clean_roles["for petitioner"] = (
                     clean_roles.get("for petitioner") + 1
-                )
-            elif "amicus curiae" in role:
-                clean_roles["for amicus curiae"] = (
-                    clean_roles.get("for amicus curiae") + 1
                 )
             else:
                 clean_roles[role] = clean_roles.get(role, 0) + 1
@@ -187,7 +180,7 @@ class Descriptives:
         # Get descriptive stats
         speakers_stats = self.get_count_desc(speakers, ["speaker_type"])
 
-        speaker_types = ["advocate (A)", "justice (J)", "unknown (U)"]
+        speaker_types = ["advocate (A)", "justice (J)"]
         speakers_stats.index = self.fix_indices("speaker type", speaker_types)
 
         # Add count of unique speaker names and keys
@@ -239,14 +232,46 @@ class Descriptives:
 
         # Get descriptive stats of votes
         voter_stats = self.get_count_desc(voters, ["vote"])
-        vote_types = ["for petitioner", "for respondent", "unknown"]
+        vote_types = ["for petitioner", "for respondent"]
         voter_stats.index = self.fix_indices("votes", vote_types)
 
         voter_stats.loc[("justices", ""), "counts"] = len(
             voters.loc[:, "voter"].unique()
         )
 
+        voter_stats = pd.concat([voter_stats, self.votes_by_justice(voters)])
+
         return voter_stats
+
+    def votes_by_justice(self, voters):
+        """
+        Calculates the proportion of votes in favor of the petitioner by
+        justice.
+
+        :param voters: Dataframe including voter information.
+        :return Dataframe of descriptive statistics for votes by SCOTUS
+                justices.
+        """
+
+        # Get justices
+        justices = voters.loc[:, "voter"].unique()
+        indices = self.fix_indices("justice", justices)
+        voters_df = pd.DataFrame(
+            index=indices, columns=["counts", "percentages"]
+        )
+
+        for justice in justices:
+            # get counts
+            voters_df.loc[("justice", justice), "counts"] = len(
+                voters.loc[voters.loc[:, "voter"] == justice, :]
+            )
+
+            # get percent for petitioner
+            voters_df.loc[("justice", justice), "percentages"] = voters.loc[
+                voters.loc[:, "voter"] == justice, "vote"
+            ].sum() / len(voters.loc[voters.loc[:, "voter"] == justice, :])
+
+        return voters_df
 
     def get_cases_desc(self):
         """
@@ -261,8 +286,6 @@ class Descriptives:
         winning_sides = [
             "for petitioner",
             "for respondent",
-            "unclear",
-            "unavailable",
         ]
 
         cases_stats = self.get_count_desc(cases, ["win_side"])
@@ -296,12 +319,11 @@ class Descriptives:
         Calculates descriptive statistics for all of the supreme corpus
         DataFrames and exports them to csv/excel (if applicable).
         """
+        print("Grabbing case descriptive statistics...")
+        self.cases_stats = self.get_cases_desc()
 
         print("Grabbing advocates descriptive statistics...")
         self.advocates_stats = self.get_advocate_desc()
-
-        print("Grabbing case descriptive statistics...")
-        self.cases_stats = self.get_cases_desc()
 
         print("Grabbing speakers descriptive statistics...")
         self.speakers_stats = self.get_speaker_desc()

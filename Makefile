@@ -22,7 +22,7 @@ test-and-fail:
 
 .PHONY: run
 run:
-	python -m ${BASEDIR} --get-data --clean-data --describe-data
+	python -m ${BASEDIR} --get-data --clean-data --describe-data --tokenize-data
 
 .PHONY: get-data
 get-data:
@@ -35,3 +35,7 @@ clean-data:
 .PHONY: describe-data
 describe-data:
 	python -m ${BASEDIR} --describe-data
+
+.PHONY: tokenize-data
+tokenize-data:
+	python -m ${BASEDIR} --tokenize-data

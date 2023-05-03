@@ -8,6 +8,7 @@ from supreme_court_predictions.api.convokit.client import get_data
 from supreme_court_predictions.statistics.service import (
     clean_data,
     describe_data,
+    tokenize_data,
 )
 
 if __name__ == "__main__":
@@ -32,6 +33,14 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--tokenize-data",
+        help="Generate tokenizations for Convokit",
+        type=bool,
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
         "--describe-data",
         help="Generate descriptive statistics for Convokit",
         type=bool,
@@ -46,6 +55,9 @@ if __name__ == "__main__":
 
     if args.clean_data:
         clean_data()
+
+    if args.tokenize_data:
+        tokenize_data()
 
     if args.describe_data:
         describe_data()
