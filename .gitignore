@@ -10,6 +10,8 @@
 !/supreme_court_predictions/data/convokit/README.md
 /supreme_court_predictions/data/models/*
 !/supreme_court_predictions/data/models/README.md
+/supreme_court_predictions/data/processed/*
+!/supreme_court_predictions/data/processed/README.md
 /supreme_court_predictions/data/statistics/*
 !/supreme_court_predictions/data/statistics/README.md
 
