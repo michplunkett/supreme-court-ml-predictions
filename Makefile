@@ -35,3 +35,7 @@ clean-data:
 .PHONY: describe-data
 describe-data:
 	python -m ${BASEDIR} --describe-data
+
+.PHONY: logistic-regress
+logistic-regress:
+	python -m ${BASEDIR} --logistic-regress
