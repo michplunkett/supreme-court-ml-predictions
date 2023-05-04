@@ -37,7 +37,3 @@ class Logistic:
         y_pred = regressor.predict(X_test)
 
         print("Prediction done: ", y_pred)
-
-
-if __name__ == "__main__":
-    logistic_instance = Logistic()
