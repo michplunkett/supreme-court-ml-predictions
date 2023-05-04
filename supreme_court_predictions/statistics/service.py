@@ -2,8 +2,8 @@
 This file works as the central point of interaction for the statistics package.
 """
 
-from supreme_court_predictions.preprocessing.datacleaner import DataCleaner
-from supreme_court_predictions.preprocessing.tokenizer import Tokenizer
+from supreme_court_predictions.processing.datacleaner import DataCleaner
+from supreme_court_predictions.processing.tokenizer import Tokenizer
 from supreme_court_predictions.statistics.descriptives import Descriptives
 
 
