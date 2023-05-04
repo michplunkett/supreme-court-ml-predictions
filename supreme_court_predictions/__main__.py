@@ -4,7 +4,7 @@ This file serves as the entry point for the supreme_court_predictions module.
 
 import argparse
 
-from supreme_court_predictions.api.convokit.client import get_data
+from supreme_court_predictions.api.convokit import get_data
 from supreme_court_predictions.statistics.service import (
     clean_data,
     describe_data,
