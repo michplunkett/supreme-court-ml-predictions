@@ -8,8 +8,6 @@ import pandas as pd
 from supreme_court_predictions.util.contants import ENCODING_UTF_8
 from supreme_court_predictions.util.files import get_full_pathway
 
-from .datacleaner import DataCleaner
-
 
 class Descriptives:
     """
@@ -17,7 +15,7 @@ class Descriptives:
     statistics of the convokit data.
     """
 
-    def __init__(self, downloaded_clean_corpus, save_data=True):
+    def __init__(self, save_data=True):
         self.cases_stats = None
         self.advocates_stats = None
         self.speakers_stats = None
@@ -37,14 +35,6 @@ class Descriptives:
             "/supreme_court_predictions/data/statistics/"
         )
         print(f"Data will be saved to {self.output_path}")
-
-        # Download necessary data
-        if not downloaded_clean_corpus:
-            print("Cleaned corpus not present, downloading...")
-            cleaner = DataCleaner(True)
-            cleaner.parse_all_data()
-        else:
-            print("Cleaned corpus already downloaded")
 
     @staticmethod
     def fix_indices(main, sub):
