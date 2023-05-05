@@ -35,3 +35,7 @@ clean-data:
 .PHONY: describe-data
 describe-data:
 	python -m ${BASEDIR} --describe-data
+
+.PHONY: process-data
+process-data:
+	python -m ${BASEDIR} --process-data
