@@ -42,6 +42,22 @@ if __name__ == "__main__":
         action=argparse.BooleanOptionalAction,
     )
 
+    parser.add_argument(
+        "--process-data",
+        help="Generate aggregate tokenizations for Convokit",
+        type=bool,
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
+        "--logistic-regression",
+        help="Logistic Regression",
+        type=bool,
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
+
     args = parser.parse_args()
 
     if args.get_data:
@@ -53,3 +69,9 @@ if __name__ == "__main__":
 
     if args.describe_data:
         describe_data()
+
+    if args.process_data:
+        process_data()
+
+    if args.logistic_regression:
+        logistic_regression()

@@ -23,9 +23,9 @@ def tokenize_data():
     Tokenizer()
 
 
-def logistic_regression():
-    LogisiticRegression()
-
-
 def process_data():
     TokenAggregations(save_data=True).parse_all_data()
+
+
+def logistic_regression():
+    LogisiticRegression()
