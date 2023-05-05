@@ -4,14 +4,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
-from supreme_court_predictions.util.files import get_full_pathway
+from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class LogisiticRegression:
     def __init__(self):
-        self.local_path = get_full_pathway(
-            "/supreme_court_predictions/data/clean_convokit/"
-        )
+        self.local_path = get_full_data_pathway("clean_convokit/")
 
         self.utterances_df = pd.read_pickle(self.local_path + "utterances_df.p")
         self.logistic_regression()

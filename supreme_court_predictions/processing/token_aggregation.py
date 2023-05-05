@@ -5,7 +5,7 @@ import pickle
 
 import pandas as pd
 
-from supreme_court_predictions.util.files import get_full_pathway
+from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class TokenAggregations:
@@ -18,15 +18,11 @@ class TokenAggregations:
         self.save_data = save_data
 
         # Get local directory
-        self.local_path = get_full_pathway(
-            "/supreme_court_predictions/data/clean_convokit/"
-        )
+        self.local_path = get_full_data_pathway("clean_convokit/")
         print(f"Working in {self.local_path}")
 
         # Set output path
-        self.output_path = get_full_pathway(
-            "/supreme_court_predictions/data/processed/"
-        )
+        self.output_path = get_full_data_pathway("processed/")
         print(f"Data will be saved to {self.output_path}")
 
         # Get advocate and voter side dataframes

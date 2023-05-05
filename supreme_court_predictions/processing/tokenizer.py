@@ -8,7 +8,7 @@ tasks efficiently and effectively in a user-friendly manner.
 import pandas as pd
 import spacy
 
-from supreme_court_predictions.util.files import get_full_pathway
+from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class Tokenizer:
@@ -26,9 +26,7 @@ class Tokenizer:
         and loading the spaCy model.
         """
         # Get local directory
-        self.local_path = get_full_pathway(
-            "/supreme_court_predictions/data/clean_convokit/"
-        )
+        self.local_path = get_full_data_pathway("clean_convokit/")
         print(f"Data will be saved to: \n{self.local_path}")
 
         try:
