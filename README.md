@@ -36,10 +36,9 @@ There are two ways that you can run this application, one of them is to run all 
 - `make test`: Runs test cases in the `test` directory
 - `make run`: Runs the `main` function in the `supreme-court-predictions` folder
 - `make get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
-- `make clean-data`: This function cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html) and provides tokenizations of utterances data. and provides tokenizations of utterances data.
+- `make clean-data`: This function cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html) and provides tokenizations of utterances data.
 - `make describe-data`: This function parses the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces an Excel file that contains basic descriptive statistics of the data.
 - `make process-data': This function parses the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces dataframes collapsing tokenization by case IDs.
-- `make process-data`: This function parses the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces dataframes collapsing tokenization by case IDs.
 
 ## Package Description
 
