@@ -15,6 +15,7 @@ class LogisticRegression:
     """
     TODO: Need document string
     """
+
     def __init__(self):
         self.local_path = get_full_data_pathway("clean_convokit/")
 

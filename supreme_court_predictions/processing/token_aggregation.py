@@ -12,6 +12,7 @@ class TokenAggregations:
     """
     TODO: Need document string
     """
+
     def __init__(self, save_data=True):
         self.all_tokens = None
         self.advocate_tokens = None
