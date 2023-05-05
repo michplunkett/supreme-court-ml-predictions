@@ -1,3 +1,7 @@
+"""
+TODO: Need file document string
+"""
+
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
@@ -8,6 +12,9 @@ from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class LogisticRegression:
+    """
+    TODO: Need document string
+    """
     def __init__(self):
         self.local_path = get_full_data_pathway("clean_convokit/")
 
@@ -15,6 +22,9 @@ class LogisticRegression:
         self.logistic_regression()
 
     def logistic_regression(self):
+        """
+        TODO: Need document string
+        """
         vectorizer = CountVectorizer()
         vectorize_document = self.utterances_df.loc[:, "tokens"].apply(" ".join)
         print("Creating bag of words")

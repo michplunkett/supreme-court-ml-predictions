@@ -9,6 +9,9 @@ from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class TokenAggregations:
+    """
+    TODO: Need document string
+    """
     def __init__(self, save_data=True):
         self.all_tokens = None
         self.advocate_tokens = None
