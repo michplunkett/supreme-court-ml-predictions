@@ -1,10 +1,9 @@
 """
 This file provides tokens per case.
 """
+
 import pickle
-
 import pandas as pd
-
 from supreme_court_predictions.util.files import get_full_pathway
 
 
