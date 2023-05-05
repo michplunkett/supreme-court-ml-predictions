@@ -79,7 +79,6 @@ class TokenAggregations:
         :return A dataframe containing case IDs and the advocating side (0=for
                 respondent, 1=for petitioner)
         """
-
         advocateside = pd.read_csv(self.local_path + "advocates_df.csv")
         return advocateside.loc[:, ["case_id", "advocate", "side"]]
 
@@ -91,7 +90,6 @@ class TokenAggregations:
 
         :param cases: A dataframe of case utterances to aggregate tokens of.
         """
-
         # Aggregate tokens by case_id
         case_ids = ut_tokens.loc[:, "case_id"].unique()
         agg_tokens = {"case_id": [], "tokens": []}
@@ -143,7 +141,6 @@ class TokenAggregations:
                  utterances, also removing speaker accounts who don't have a
                  side.
         """
-
         # Renaming the speaker column for easier merging
         ut = utterances.rename(columns={"speaker": "advocate"})
 
@@ -171,7 +168,6 @@ class TokenAggregations:
                          (advocate=True) or opposed (advocate=False)
         :return A dataframe of tokens per case for petitioner advocates.
         """
-
         if advocate:
             ut = self.utterance_sides.loc[
                 self.utterance_sides.loc[:, "side"] == 1, :
@@ -188,7 +184,6 @@ class TokenAggregations:
 
         :return A dataframe of tokens per judge per case.
         """
-
         ut = self.utterance_sides.loc[
             self.utterance_sides.loc[:, "speaker_type"] == "J", :
         ]
@@ -198,9 +193,8 @@ class TokenAggregations:
         """
         Generates token aggregations for 1) all speakers, 2) only advocates, 3)
         only adversaries, 4) only judges, and appends the winning side of the
-        case. DataFrames and exports them to csv/excel (if applicable).
+        case. DataFrames and exports them as pickle objects (if applicable).
         """
-
         print("Grabbing token aggregation for all cases...")
         self.all_tokens = self.get_all_case_tokens()
 
