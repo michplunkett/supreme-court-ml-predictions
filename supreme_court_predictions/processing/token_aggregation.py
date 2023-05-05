@@ -1,6 +1,8 @@
 """
 This file provides tokens per case.
 """
+import pickle
+
 import pandas as pd
 
 from supreme_court_predictions.util.contants import ENCODING_UTF_8
@@ -223,13 +225,13 @@ class TokenAggregations:
                 self.judge_tokens,
             ]
             outpaths = [
-                self.output_path + "/case_aggregations.csv",
-                self.output_path + "/advocate_aggregations.csv",
-                self.output_path + "/adversary_aggregations.csv",
-                self.output_path + "/judge_aggregations.csv",
+                self.output_path + "/case_aggregations.p",
+                self.output_path + "/advocate_aggregations.p",
+                self.output_path + "/adversary_aggregations.p",
+                self.output_path + "/judge_aggregations.p",
             ]
 
-            for idx, desc in enumerate(aggregations):
-                desc.to_csv(outpaths[idx], index=True, encoding=ENCODING_UTF_8)
+            for idx, agg in enumerate(aggregations):
+                pickle.dump(agg, open(outpaths[idx], "wb"))
 
             print("Data saved to " + self.output_path)
