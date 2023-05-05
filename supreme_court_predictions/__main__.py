@@ -9,8 +9,8 @@ from supreme_court_predictions.statistics.service import (
     clean_data,
     describe_data,
     logistic_regression,
-    tokenize_data,
     process_data,
+    tokenize_data,
 )
 
 if __name__ == "__main__":
