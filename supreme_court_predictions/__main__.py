@@ -8,8 +8,6 @@ from supreme_court_predictions.api.convokit import get_data
 from supreme_court_predictions.statistics.service import (
     clean_data,
     describe_data,
-    logistic_regression,
-    process_data,
     tokenize_data,
 )
 
