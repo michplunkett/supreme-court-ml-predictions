@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from supreme_court_predictions.util.files import get_full_data_pathway
 
 
-class LogisiticRegression:
+class LogisticRegression:
     def __init__(self):
         self.local_path = get_full_data_pathway("clean_convokit/")
 
