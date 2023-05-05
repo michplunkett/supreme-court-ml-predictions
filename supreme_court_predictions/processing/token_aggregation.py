@@ -1,5 +1,5 @@
 """
-This file provides tokens per case.
+This file provides aggregations for tokens per case.
 """
 
 import pickle
