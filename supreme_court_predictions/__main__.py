@@ -8,8 +8,9 @@ from supreme_court_predictions.api.convokit import get_data
 from supreme_court_predictions.statistics.service import (
     clean_data,
     describe_data,
-    process_data,
+    logistic_regression,
     tokenize_data,
+    process_data,
 )
 
 if __name__ == "__main__":
@@ -41,14 +42,6 @@ if __name__ == "__main__":
         action=argparse.BooleanOptionalAction,
     )
 
-    parser.add_argument(
-        "--process-data",
-        help="Generate aggregate utterance tokenizations for Convokit",
-        type=bool,
-        default=False,
-        action=argparse.BooleanOptionalAction,
-    )
-
     args = parser.parse_args()
 
     if args.get_data:
@@ -60,6 +53,3 @@ if __name__ == "__main__":
 
     if args.describe_data:
         describe_data()
-
-    if args.process_data:
-        process_data()

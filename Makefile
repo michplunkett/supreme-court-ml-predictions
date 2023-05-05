@@ -36,6 +36,10 @@ clean-data:
 describe-data:
 	python -m ${BASEDIR} --describe-data
 
+.PHONY: logistic-regression
+logistic-regression:
+	python -m ${BASEDIR} --logistic-regression
+
 .PHONY: process-data
 process-data:
 	python -m ${BASEDIR} --process-data
