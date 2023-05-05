@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression as skLR
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.util.files import get_full_data_pathway
@@ -28,7 +28,7 @@ class LogisticRegression:
         )
 
         print("Logistic Regression underway \n")
-        regressor = LogisticRegression()
+        regressor = skLR()
 
         # Fit the classifier on the training data
         regressor.fit(X_train, y_train)

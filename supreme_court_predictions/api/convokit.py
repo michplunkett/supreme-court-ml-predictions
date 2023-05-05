@@ -8,9 +8,7 @@ from supreme_court_predictions.util.contants import (
     ENCODING_UTF_8,
     FILE_MODE_WRITE,
 )
-
-# Constants
-DOWNLOAD_BASE_PATH = "./supreme_court_predictions/data/convokit/"
+from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 def get_data():
@@ -18,9 +16,11 @@ def get_data():
     Loads and outputs the Supreme Court Corpus and case verdict data
     """
 
+    convokit_path = get_full_data_pathway("convokit/")
+
     print("Loading Supreme Court Corpus Data...")
     corpus = Corpus(filename=download("supreme-corpus"))
-    corpus.dump("supreme_corpus", base_path=DOWNLOAD_BASE_PATH)
+    corpus.dump("supreme_corpus", base_path=convokit_path)
 
     r = requests.get(
         url="https://zissou.infosci.cornell.edu/convokit"
@@ -29,6 +29,6 @@ def get_data():
     )
 
     with open(
-        f"{DOWNLOAD_BASE_PATH}supreme_corpus/cases.jsonl", mode=FILE_MODE_WRITE
+        f"{convokit_path}supreme_corpus/cases.jsonl", mode=FILE_MODE_WRITE
     ) as outfile:
         outfile.write(r.content.decode(ENCODING_UTF_8))

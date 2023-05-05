@@ -2,7 +2,9 @@
 This file works as the central point of interaction for the statistics package.
 """
 
-from supreme_court_predictions.models.logistic_regression import LogisticRegression
+from supreme_court_predictions.models.logistic_regression import (
+    LogisticRegression,
+)
 from supreme_court_predictions.processing.datacleaner import DataCleaner
 from supreme_court_predictions.processing.token_aggregation import (
     TokenAggregations,
