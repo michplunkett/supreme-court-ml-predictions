@@ -6,8 +6,9 @@ import argparse
 
 from supreme_court_predictions.api.convokit import get_data
 from supreme_court_predictions.statistics.service import (
+    clean_data,
     describe_data,
-    logistic_regress,
+    logistic_regression,
     tokenize_data,
 )
 
@@ -15,14 +16,6 @@ if __name__ == "__main__":
     print("oh, what up?")
 
     parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        "--logistic-regress",
-        help="Logistic Regression",
-        type=bool,
-        default=False,
-        action=argparse.BooleanOptionalAction,
-    )
 
     parser.add_argument(
         "--get-data",
@@ -48,17 +41,25 @@ if __name__ == "__main__":
         action=argparse.BooleanOptionalAction,
     )
 
+    parser.add_argument(
+        "--logistic-regression",
+        help="Logistic Regression",
+        type=bool,
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
+
     args = parser.parse_args()
 
     if args.get_data:
         get_data()
 
     if args.clean_data:
-        # clean_data()
+        clean_data()
         tokenize_data()
 
     if args.describe_data:
         describe_data()
 
-    if args.logistic_regress:
-        logistic_regress()
+    if args.logistic_regression:
+        logistic_regression()

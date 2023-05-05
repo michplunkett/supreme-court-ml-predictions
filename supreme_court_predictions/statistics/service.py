@@ -2,7 +2,7 @@
 This file works as the central point of interaction for the statistics package.
 """
 
-from supreme_court_predictions.models.logistic import Logistic
+from supreme_court_predictions.models.logistic import LogisiticRegression
 from supreme_court_predictions.processing.datacleaner import DataCleaner
 from supreme_court_predictions.processing.tokenizer import Tokenizer
 from supreme_court_predictions.statistics.descriptives import Descriptives
@@ -20,5 +20,5 @@ def tokenize_data():
     Tokenizer()
 
 
-def logistic_regress():
-    Logistic()
+def logistic_regression():
+    LogisiticRegression()

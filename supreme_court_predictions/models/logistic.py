@@ -7,16 +7,16 @@ from sklearn.model_selection import train_test_split
 from supreme_court_predictions.util.files import get_full_pathway
 
 
-class Logistic:
+class LogisiticRegression:
     def __init__(self):
         self.local_path = get_full_pathway(
             "/supreme_court_predictions/data/clean_convokit/"
         )
 
         self.utterances_df = pd.read_pickle(self.local_path + "utterances_df.p")
-        self.regress_logistic()
+        self.logistic_regression()
 
-    def regress_logistic(self):
+    def logistic_regression(self):
         vectorizer = CountVectorizer()
         vectorize_document = self.utterances_df.loc[:, "tokens"].apply(" ".join)
         print("Creating bag of words")
