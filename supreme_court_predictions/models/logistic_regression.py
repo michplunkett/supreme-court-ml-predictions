@@ -27,7 +27,7 @@ class LogisticRegression:
             bag_of_words_x, bag_of_words_y, test_size=0.25, random_state=123
         )
 
-        print("Logistic Regression underway \n")
+        print("Starting the Logistic Regression on utterances")
         regressor = skLR()
 
         # Fit the classifier on the training data
