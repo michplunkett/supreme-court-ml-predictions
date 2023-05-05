@@ -5,10 +5,14 @@ import pickle
 
 import pandas as pd
 
-from supreme_court_predictions.util.files import get_full_pathway
+from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class TokenAggregations:
+    """
+    TODO: Need document string
+    """
+
     def __init__(self, save_data=True):
         self.all_tokens = None
         self.advocate_tokens = None
@@ -18,21 +22,17 @@ class TokenAggregations:
         self.save_data = save_data
 
         # Get local directory
-        self.local_path = get_full_pathway(
-            "/supreme_court_predictions/data/clean_convokit/"
-        )
+        self.local_path = get_full_data_pathway("clean_convokit/")
         print(f"Working in {self.local_path}")
 
         # Set output path
-        self.output_path = get_full_pathway(
-            "/supreme_court_predictions/data/processed/"
-        )
+        self.output_path = get_full_data_pathway("processed/")
         print(f"Data will be saved to {self.output_path}")
 
         # Get advocate and voter side dataframes
-        self.winside = self.get_win_side()
-        self.voteside = self.get_vote_side()
-        self.advocateside = self.get_advocate_side()
+        self.win_side = self.get_win_side()
+        self.vote_side = self.get_vote_side()
+        self.advocate_side = self.get_advocate_side()
         self.utterances = self.get_utterances()
         self.utterance_sides = self.append_side(self.utterances)
 
@@ -55,10 +55,10 @@ class TokenAggregations:
         :return A dataframe containing case IDs and the winning side (0=for
                 respondent, 1=for petitioner)
         """
-        winside = pd.read_csv(self.local_path + "cases_df.csv").rename(
+        win_side_df = pd.read_csv(self.local_path + "cases_df.csv").rename(
             columns={"id": "case_id"}
         )
-        return winside.loc[:, ["case_id", "win_side"]]
+        return win_side_df.loc[:, ["case_id", "win_side"]]
 
     def get_vote_side(self):
         """
@@ -67,11 +67,11 @@ class TokenAggregations:
         :return A dataframe containing case IDs and the voting side (0=for
                 respondent, 1=for petitioner)
         """
-        voteside = pd.read_csv(self.local_path + "voters_df.csv")
-        voteside = voteside.rename(
+        vote_side_df = pd.read_csv(self.local_path + "voters_df.csv")
+        vote_side_df = vote_side_df.rename(
             columns={"vote": "side", "voter": "advocate"}
         )
-        return voteside.loc[:, ["case_id", "advocate", "side"]]
+        return vote_side_df.loc[:, ["case_id", "advocate", "side"]]
 
     def get_advocate_side(self):
         """
@@ -80,26 +80,27 @@ class TokenAggregations:
         :return A dataframe containing case IDs and the advocating side (0=for
                 respondent, 1=for petitioner)
         """
-        advocateside = pd.read_csv(self.local_path + "advocates_df.csv")
-        return advocateside.loc[:, ["case_id", "advocate", "side"]]
+        advocate_side_df = pd.read_csv(self.local_path + "advocates_df.csv")
+        return advocate_side_df.loc[:, ["case_id", "advocate", "side"]]
 
-    def get_case_tokens(self, ut_tokens):
+    def get_case_tokens(self, utterance_tokens):
         """
-        Returns a dataframe of utterances tokens per case, including winside of
-        the case. The ut_tokens dataframe is expected to have the columns
+        Returns a dataframe of utterances tokens per case, including win_side of
+        the case. The utterance_tokens dataframe is expected to have the columns
         "case_id" and "tokens".
 
-        :param cases: A dataframe of case utterances to aggregate tokens of.
+        :param utterance_tokens: A dataframe of case utterances to aggregate
+            tokens of.
         """
         # Aggregate tokens by case_id
-        case_ids = ut_tokens.loc[:, "case_id"].unique()
+        case_ids = utterance_tokens.loc[:, "case_id"].unique()
         agg_tokens = {"case_id": [], "tokens": []}
 
         for case in case_ids:
             tokens = []
             agg_tokens["case_id"].append(case)
-            for token in ut_tokens.loc[
-                ut_tokens.loc[:, "case_id"] == case, "tokens"
+            for token in utterance_tokens.loc[
+                utterance_tokens.loc[:, "case_id"] == case, "tokens"
             ]:
                 # Preprocess instances - from string to list
                 token = token.strip("[")
@@ -114,12 +115,12 @@ class TokenAggregations:
 
         agg_tokens = pd.DataFrame.from_dict(agg_tokens)
 
-        # merging WINSIDE onto tokens
-        agg_tokens_winside = pd.merge(
-            agg_tokens, self.winside, how="left", on="case_id"
+        # merging win_side onto tokens
+        agg_tokens_win_side = pd.merge(
+            agg_tokens, self.win_side, how="left", on="case_id"
         )
 
-        return agg_tokens_winside
+        return agg_tokens_win_side
 
     def get_all_case_tokens(self):
         """
@@ -135,8 +136,8 @@ class TokenAggregations:
         """
         Adds the speaker's advocate or vote side to the utterances dataframe.
 
-        :param ut: The utterances dataframe; must have only the columns case_id,
-                speaker, speaker_type, and tokens
+        :param utterances: The utterances dataframe; must have only the columns
+            case_id, speaker, speaker_type, and tokens
 
         :returns A dataframe with the side of the speaker appended to
                  utterances, also removing speaker accounts who don't have a
@@ -148,7 +149,7 @@ class TokenAggregations:
         # Merging utterances with voter (judge) and advocate sides
         ut_sides = pd.merge(
             ut,
-            pd.concat([self.voteside, self.advocateside]),
+            pd.concat([self.vote_side, self.advocate_side]),
             how="left",
             left_on=["case_id", "advocate"],
             right_on=["case_id", "advocate"],
@@ -162,8 +163,8 @@ class TokenAggregations:
 
     def get_advocate_case_tokens(self, advocate=True):
         """
-        Get all of the tokens for individuals either in favor of the petitioner
-        or opposed to the petitioner.
+        Get all tokens for individuals either in favor of the petitioner or
+        opposed to the petitioner.
 
         :param advocate: Whether to find the tokens for those in favor
                          (advocate=True) or opposed (advocate=False)
@@ -217,7 +218,7 @@ class TokenAggregations:
                 self.adversary_tokens,
                 self.judge_tokens,
             ]
-            outpaths = [
+            output_paths = [
                 self.output_path + "/case_aggregations.p",
                 self.output_path + "/advocate_aggregations.p",
                 self.output_path + "/adversary_aggregations.p",
@@ -225,6 +226,6 @@ class TokenAggregations:
             ]
 
             for idx, agg in enumerate(aggregations):
-                pickle.dump(agg, open(outpaths[idx], "wb"))
+                pickle.dump(agg, open(output_paths[idx], "wb"))
 
             print("Data saved to " + self.output_path)

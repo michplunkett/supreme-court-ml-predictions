@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from supreme_court_predictions.util.contants import ENCODING_UTF_8
-from supreme_court_predictions.util.files import get_full_pathway
+from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class Descriptives:
@@ -25,15 +25,11 @@ class Descriptives:
         self.save_data = save_data
 
         # Get local directory
-        self.local_path = get_full_pathway(
-            "/supreme_court_predictions/data/clean_convokit/"
-        )
+        self.local_path = get_full_data_pathway("clean_convokit/")
         print(f"Working in {self.local_path}")
 
         # Set output path
-        self.output_path = get_full_pathway(
-            "/supreme_court_predictions/data/statistics/"
-        )
+        self.output_path = get_full_data_pathway("statistics/")
         print(f"Data will be saved to {self.output_path}")
 
     @staticmethod

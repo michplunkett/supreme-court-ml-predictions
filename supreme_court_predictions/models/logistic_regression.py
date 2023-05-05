@@ -1,22 +1,31 @@
+"""
+TODO: Need file document string
+"""
+
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression as skLR
 from sklearn.model_selection import train_test_split
 
-from supreme_court_predictions.util.files import get_full_pathway
+from supreme_court_predictions.util.files import get_full_data_pathway
 
 
-class LogisiticRegression:
+class LogisticRegression:
+    """
+    TODO: Need document string
+    """
+
     def __init__(self):
-        self.local_path = get_full_pathway(
-            "/supreme_court_predictions/data/clean_convokit/"
-        )
+        self.local_path = get_full_data_pathway("clean_convokit/")
 
         self.utterances_df = pd.read_pickle(self.local_path + "utterances_df.p")
         self.logistic_regression()
 
     def logistic_regression(self):
+        """
+        TODO: Need document string
+        """
         vectorizer = CountVectorizer()
         vectorize_document = self.utterances_df.loc[:, "tokens"].apply(" ".join)
         print("Creating bag of words")
@@ -29,8 +38,8 @@ class LogisiticRegression:
             bag_of_words_x, bag_of_words_y, test_size=0.25, random_state=123
         )
 
-        print("Logistic Regression underway \n")
-        regressor = LogisticRegression()
+        print("Starting the Logistic Regression on utterances")
+        regressor = skLR()
 
         # Fit the classifier on the training data
         regressor.fit(X_train, y_train)

@@ -28,7 +28,9 @@ There are two ways that you can run this application, one of them is to run all 
 2. Run the command `poetry install` to install the package dependencies within the project.
 3. Run the `make get-data` command to get the data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html).
 4. Run the `make clean-data` command to clean the data so that we can have our data in the format needed for the downstream functions.
-5. Run the `make describe-data` command to process the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) and produce an Excel sheet that contains basic descriptive statistics of the data. 
+5. Run the `make describe-data` command to process the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) and produce an Excel sheet that contains basic descriptive statistics of the data.
+
+[THIS WILL BE UPDATED ONCE ALL OF OUR STEPS ARE IN PLACE]
 
 ## Standard Commands
 - `make format`: Runs `Black` on the codebase
@@ -38,7 +40,8 @@ There are two ways that you can run this application, one of them is to run all 
 - `make get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
 - `make clean-data`: This function cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html) and provides tokenizations of utterances data.
 - `make describe-data`: This function parses the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces an Excel file that contains basic descriptive statistics of the data.
-- `make process-data': This function parses the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces dataframes collapsing tokenization by case IDs.
+- `make process-data`: This function parses the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces dataframes collapsing tokenization by case IDs.
+- `make logistic-regression`: This function runs a logistic regression on the output of the `process-data` functionality.
 
 ## Package Description
 
