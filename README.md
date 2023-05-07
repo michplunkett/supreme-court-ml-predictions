@@ -2,10 +2,11 @@
 The project uses historic United States Supreme Court cases to train natural language processing models to predict case rulings.
 
 ### Project Assumptions and Things to Know
-1. The number of unique roles within the advocates' file is too numerous to be helpful, so we merged them into 5 categories. While this merger may remove some of the variability and nuance in the file, we believe it will make it easier to derive meaningful conclusions.
+1. The number of unique roles within the advocates' file is too numerous to be helpful, so we merged them into 5 categories. While this merger may remove some variability and nuance in the file, we believe it will make it easier to derive meaningful conclusions.
    - The groupings for the roles are as follows: `inferred`, `for respondent`, `for partitioner`, and `for amicus curiae`
    - The code for that grouping can be found in the `clean_roles` function in the [`descriptives.py` file.](https://github.com/michplunkett/supreme-court-ml-predictions/blob/main/supreme_court_predictions/statistics/descriptives.py)
-2. The current statistics model uses all the available data. Within the next week, we will change it to using just the first 5 years of the Roberts' court, starting on October 3, 2005, and ending on October 1, 2011.
+2. The years included within this data set are 2014 to 2019.
+3. The datasets included within the previously mentioned year range are ones where the winnings side was either 0 or 1 (no missing, etc.).
 
 ### Project Requirements
 - Python version: `^3.11`
