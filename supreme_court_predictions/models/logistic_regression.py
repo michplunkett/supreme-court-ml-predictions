@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression as skLR
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.util.files import get_full_data_pathway
@@ -17,17 +18,29 @@ class LogisticRegression:
     """
 
     def __init__(self):
-        self.local_path = get_full_data_pathway("clean_convokit/")
+        self.local_path = get_full_data_pathway("processed/")
 
-        self.utterances_df = pd.read_pickle(self.local_path + "utterances_df.p")
-        self.logistic_regression()
+        self.total_utterances = pd.read_pickle(
+            self.local_path + "case_aggregations.p"
+        )
+        self.advocate_utterances = pd.read_pickle(
+            self.local_path + "advocate_aggregations.p"
+        )
+        self.adversary_utterances = pd.read_pickle(
+            self.local_path + "adversary_aggregations.p"
+        )
+        self.judge_utterances = pd.read_pickle(
+            self.local_path + "judge_aggregations.p"
+        )
 
-    def logistic_regression(self):
+        self.run_regression()
+
+    def logistic_regression(self, df):
         """
         TODO: Need document string
         """
-        vectorizer = CountVectorizer()
-        vectorize_document = self.utterances_df.loc[:, "tokens"].apply(" ".join)
+        vectorizer = CountVectorizer(max_features=5000)
+        vectorize_document = df.loc[:, "tokens"].apply(" ".join)
         print("Creating bag of words")
         bag_of_words_x = vectorizer.fit_transform(vectorize_document)
 
@@ -35,7 +48,7 @@ class LogisticRegression:
         bag_of_words_y = np.random.randint(0, 2, len(vectorize_document))
 
         X_train, X_test, y_train, y_test = train_test_split(
-            bag_of_words_x, bag_of_words_y, test_size=0.25, random_state=123
+            bag_of_words_x, bag_of_words_y, test_size=0.20, random_state=123
         )
 
         print("Starting the Logistic Regression on utterances")
@@ -45,4 +58,23 @@ class LogisticRegression:
         regressor.fit(X_train, y_train)
         y_pred = regressor.predict(X_test)
 
-        print("Prediction done: ", y_pred)
+        return accuracy_score(y_true=y_test, y_pred=y_pred)
+
+    def run_regression(self):
+        """
+        TODO: Need document string
+        """
+
+        dfs = [
+            self.total_utterances,
+            self.judge_utterances,
+            self.advocate_utterances,
+            self.adversary_utterances,
+        ]
+
+        for df in dfs:
+            print("------------------------------------------")
+            print("Running regression on total utterances...")
+            acc = self.logistic_regression(df)
+            print(f"Accuracy score: {acc}")
+            print("------------------------------------------")
