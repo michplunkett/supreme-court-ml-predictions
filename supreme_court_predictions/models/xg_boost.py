@@ -1,19 +1,16 @@
 """
-This XGBoost runs a gradient boosted tree model 
-on utterance data from the Supreme Court dataset. This class aims to predict
-the results of a case based on the text learned from utterances. 
+This file contains the XGBoost class that runs a gradient boosted tree model on
+utterance data from the Supreme Court dataset. This class aims to predict the
+results of a case based on the text learned from utterances.
 """
 
-# General imports
 import pandas as pd
 import xgboost as xgb
-
-# Sklearn imports
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
-# Local imports
+from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.files import get_full_data_pathway
 
 # from sklearn.model_selection import cross_val_score
@@ -21,10 +18,10 @@ from supreme_court_predictions.util.files import get_full_data_pathway
 # from sklearn.model_selection import GridSearchCV
 
 
-class XGBoost:
+class XGBoost(Model):
     """
-    A class that runs logistic regression on aggregated utterance and cases data
-    from the Supreme Court dataset.
+    A class that runs a gradient boosted tree model on aggregated utterance and
+    cases data from the Supreme Court dataset.
     """
 
     def __init__(self):
@@ -45,11 +42,11 @@ class XGBoost:
 
         self.run_regression()
 
-    def xg_boost(self, df):
+    @staticmethod
+    def create(self, df):
         """
-        Perform logistic regression on the given dataframe of utterance data.
-        It regresses on the entire dataset and regresses for judges, advocates,
-        and adversaries.
+        Creates and runs a gradient boosted tree model on the given dataframe of
+        utterance data.
 
         :param
             df (pd.DataFrame): DataFrame containing utterance data
@@ -87,11 +84,9 @@ class XGBoost:
 
         return accuracy_score(y_true=y_test, y_pred=y_pred)
 
-    def run_xgboost(self):
+    def run(self):
         """
-        Run logistic regression on each type of aggregated utterance data.
-        It regresses on the entire dataset and regresses for judges, advocates,
-        and adversaries.
+        Runs the create function on each type of aggregated utterance.
         """
 
         dfs = [
@@ -104,8 +99,8 @@ class XGBoost:
         for df_name, df in dfs:
             try:
                 print("------------------------------------------")
-                print(f"Running xgboost on {df_name}...")
-                acc = self.xg_boost(df)
+                print(f"Running a gradient boosted tree model on {df_name}...")
+                acc = self.create(df)
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")
             except ValueError:
