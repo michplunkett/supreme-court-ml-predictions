@@ -46,7 +46,8 @@ class LogisticRegression(Model):
 
         :param df: DataFrame containing utterance data
 
-        :return float: Accuracy score of the logistic regression model
+        :return (regressor, y_test, y_pred): A tuple that contains the
+        regression model, test y-data, the predicted y-data.
         """
         vectorizer = CountVectorizer(analyzer="word", max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
@@ -70,6 +71,19 @@ class LogisticRegression(Model):
         regressor.fit(X_train, y_train)
         y_pred = regressor.predict(X_test)
 
+        return regressor, y_test, y_pred
+
+    def create_and_measure(self, df):
+        """
+        Creates and runs a logistic regression on the given dataframe of
+        utterance data and returns an accuracy measurement on the model.
+
+        :param df: DataFrame containing utterance data
+        :return: Accuracy score of the logistic regression model
+        """
+
+        _, y_test, y_pred = self.create(df)
+
         return accuracy_score(y_true=y_test, y_pred=y_pred)
 
     def run(self):
@@ -88,7 +102,7 @@ class LogisticRegression(Model):
             try:
                 print("------------------------------------------")
                 print(f"Running regression on {df_name}...")
-                acc = self.create(df)
+                acc = self.create_and_measure(df)
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")
             except ValueError:

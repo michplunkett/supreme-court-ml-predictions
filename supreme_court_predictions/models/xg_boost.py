@@ -40,7 +40,7 @@ class XGBoost(Model):
             self.local_path + "judge_aggregations.p"
         )
 
-        self.run_regression()
+        self.run()
 
     @staticmethod
     def create(self, df):
@@ -48,11 +48,10 @@ class XGBoost(Model):
         Creates and runs a gradient boosted tree model on the given dataframe of
         utterance data.
 
-        :param
-            df (pd.DataFrame): DataFrame containing utterance data
+        :param df: DataFrame containing utterance data
 
-        :return
-            float: Accuracy score of the logistic regression model
+        :return (regressor, y_test, y_pred): A tuple that contains the
+        regression model, test y-data, the predicted y-data.
         """
 
         vectorizer = CountVectorizer(analyzer="word", max_features=5000)
@@ -83,6 +82,19 @@ class XGBoost(Model):
         xgb_model.fit(X_train, y_train)
         y_pred = xgb_model.predict(X_test)
 
+        return xgb_model, y_test, y_pred
+
+    def create_and_measure(self, df):
+        """
+        Creates and runs a gradient boosted tree model on the given dataframe of
+        utterance data and returns an accuracy measurement on the model.
+
+        :param df: DataFrame containing utterance data
+        :return: Accuracy score of the logistic regression model
+        """
+
+        _, y_test, y_pred = self.create(df)
+
         return accuracy_score(y_true=y_test, y_pred=y_pred)
 
     def run(self):
@@ -101,7 +113,7 @@ class XGBoost(Model):
             try:
                 print("------------------------------------------")
                 print(f"Running a gradient boosted tree model on {df_name}...")
-                acc = self.create(df)
+                acc = self.create_and_measure(df)
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")
             except ValueError:
