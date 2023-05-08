@@ -23,14 +23,12 @@ class DataCleaner:
     it into a usable format.
     """
 
-    def __init__(self, downloaded_corpus):
+    def __init__(self):
         self.cases_df = None
         self.clean_case_ids = None  # stores the case IDs to use
         self.clean_utterances_list = None
         self.speakers_df = None
         self.utterances_df = None
-
-        self.downloaded_corpus = downloaded_corpus
 
         # Get local directory
         self.local_path = get_full_data_pathway("convokit/")
@@ -39,12 +37,6 @@ class DataCleaner:
         # Set output path
         self.output_path = get_full_data_pathway("clean_convokit/")
         print(f"Data will be saved to {self.output_path}")
-
-        if not downloaded_corpus:
-            print("Corpus not present, downloading...")
-            self.get_data()
-        else:
-            print("Corpus already downloaded")
 
     def get_data(self):
         """
