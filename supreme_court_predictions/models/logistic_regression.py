@@ -38,7 +38,10 @@ class LogisticRegression:
     @staticmethod
     def logistic_regression(df):
         """
-        TODO: Need document string
+        Given a dataframe, run a logistic regression on the tokens column
+        and return the accuracy score.
+
+        :param df: A dataframe containing the tokens column.
         """
         vectorizer = CountVectorizer(max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
@@ -52,7 +55,7 @@ class LogisticRegression:
             bag_of_words_x, bag_of_words_y, test_size=0.20, random_state=123
         )
 
-        print("Starting the Logistic Regression on utterances")
+        print("Starting the Logistic Regression")
         regressor = skLR()
 
         # Fit the classifier on the training data
@@ -63,7 +66,7 @@ class LogisticRegression:
 
     def run_regression(self):
         """
-        TODO: Need document string
+        Runs the logistic regression on all four dataframes.
         """
 
         dfs = [
@@ -75,7 +78,7 @@ class LogisticRegression:
 
         for df in dfs:
             print("------------------------------------------")
-            print("Running regression on total utterances...")
+            print(f"Running regression on {df}...")
             acc = self.logistic_regression(df)
             print(f"Accuracy score: {acc}")
             print("------------------------------------------")
