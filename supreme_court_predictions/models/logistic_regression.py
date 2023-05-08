@@ -35,7 +35,8 @@ class LogisticRegression:
 
         self.run_regression()
 
-    def logistic_regression(self, df):
+    @staticmethod
+    def logistic_regression(df):
         """
         TODO: Need document string
         """
