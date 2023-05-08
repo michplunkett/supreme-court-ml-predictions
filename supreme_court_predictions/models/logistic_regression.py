@@ -4,7 +4,6 @@ on utterance data from the Supreme Court dataset. This class aims to predict
 the results of a case based on the text learned from utterances. 
 """
 
-import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression as skLR
@@ -38,7 +37,8 @@ class LogisticRegression:
 
         self.run_regression()
 
-    def logistic_regression(self, df):
+    @staticmethod
+    def logistic_regression(df):
         """
         Perform logistic regression on the given dataframe of utterance data.
         It regresses on the entire dataset and regresses for judges, advocates,
