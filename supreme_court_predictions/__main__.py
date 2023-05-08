@@ -64,7 +64,7 @@ if __name__ == "__main__":
         get_data()
 
     if args.clean_data:
-        clean_data()
+        # clean_data()
         tokenize_data()
 
     if args.describe_data:

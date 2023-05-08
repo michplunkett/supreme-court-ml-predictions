@@ -99,7 +99,3 @@ class LogisticRegression:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
                 print("------------------------------------------")
-
-
-if __name__ == "__main__":
-    LogisticRegression()
