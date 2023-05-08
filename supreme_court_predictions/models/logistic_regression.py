@@ -1,5 +1,7 @@
 """
-TODO: Need file document string
+This LogisticRegression class runs logistic regression 
+on utterance data from the Supreme Court dataset. This class aims to predict
+the results of a case based on the text learned from utterances. 
 """
 
 import numpy as np
@@ -14,7 +16,8 @@ from supreme_court_predictions.util.files import get_full_data_pathway
 
 class LogisticRegression:
     """
-    TODO: Need document string
+    A class that runs logistic regression on aggregated utterance and cases data
+    from the Supreme Court dataset.
     """
 
     def __init__(self):
@@ -38,10 +41,15 @@ class LogisticRegression:
     @staticmethod
     def logistic_regression(df):
         """
-        Given a dataframe, run a logistic regression on the tokens column
-        and return the accuracy score.
+        Perform logistic regression on the given dataframe of utterance data.
+        It regresses on the entire dataset and regresses for judges, advocates,
+        and adversaries.
 
-        :param df: A dataframe containing the tokens column.
+        Args:
+            df (pd.DataFrame): DataFrame containing utterance data
+
+        Returns:
+            float: Accuracy score of the logistic regression model
         """
         vectorizer = CountVectorizer(max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
@@ -66,7 +74,9 @@ class LogisticRegression:
 
     def run_regression(self):
         """
-        Runs the logistic regression on all four dataframes.
+        Run logistic regression on each type of aggregated utterance data.
+        It regresses on the entire dataset and regresses for judges, advocates,
+        and adversaries.
         """
 
         dfs = [
