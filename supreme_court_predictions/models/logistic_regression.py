@@ -7,7 +7,6 @@ the results of a case based on the text learned from utterances.
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression as skLR
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
@@ -72,19 +71,6 @@ class LogisticRegression(Model):
         y_pred = regressor.predict(X_test)
 
         return regressor, y_test, y_pred
-
-    def create_and_measure(self, df):
-        """
-        Creates and runs a logistic regression on the given dataframe of
-        utterance data and returns an accuracy measurement on the model.
-
-        :param df: DataFrame containing utterance data
-        :return: Accuracy score of the logistic regression model
-        """
-
-        _, y_test, y_pred = self.create(df)
-
-        return accuracy_score(y_true=y_test, y_pred=y_pred)
 
     def run(self):
         """
