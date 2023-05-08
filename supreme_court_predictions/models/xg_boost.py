@@ -54,6 +54,7 @@ class XGBoost(Model):
         :return
             float: Accuracy score of the logistic regression model
         """
+
         vectorizer = CountVectorizer(analyzer="word", max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
         print("Creating bag of words")
