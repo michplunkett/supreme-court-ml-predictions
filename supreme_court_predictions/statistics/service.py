@@ -18,7 +18,7 @@ def clean_data():
 
 
 def describe_data():
-    Descriptives(downloaded_clean_corpus=True, save_data=True).parse_all_data()
+    Descriptives(save_data=True).parse_all_data()
 
 
 def tokenize_data():
