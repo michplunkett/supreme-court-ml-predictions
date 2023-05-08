@@ -50,7 +50,7 @@ class LogisticRegression:
         :return
             float: Accuracy score of the logistic regression model
         """
-        vectorizer = CountVectorizer(max_features=5000)
+        vectorizer = CountVectorizer(analyzer="word", max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
         print("Creating bag of words")
         bag_of_words_x = vectorizer.fit_transform(vectorize_document)
@@ -65,8 +65,8 @@ class LogisticRegression:
             stratify=bag_of_words_y,
         )
 
-        print("Starting the Logistic Regression on utterances")
-        regressor = skLR()
+        print("Starting the Logistic Regression")
+        regressor = skLR(max_iter=1000)
 
         # Fit the classifier on the training data
         regressor.fit(X_train, y_train)
