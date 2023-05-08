@@ -39,7 +39,7 @@ describe-data:
 .PHONY: process-data
 process-data:
 	python -m ${BASEDIR} --process-data
-	
+
 .PHONY: logistic-regression
 logistic-regression:
 	python -m ${BASEDIR} --logistic-regression
