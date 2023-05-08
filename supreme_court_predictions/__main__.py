@@ -5,12 +5,14 @@ This file serves as the entry point for the supreme_court_predictions module.
 import argparse
 
 from supreme_court_predictions.api.convokit import get_data
+from supreme_court_predictions.models.service import run_linear_regression
+from supreme_court_predictions.processing.service import (
+    process_data,
+    tokenize_data,
+)
 from supreme_court_predictions.statistics.service import (
     clean_data,
     describe_data,
-    logistic_regression,
-    process_data,
-    tokenize_data,
 )
 
 if __name__ == "__main__":
@@ -74,4 +76,4 @@ if __name__ == "__main__":
         process_data()
 
     if args.logistic_regression:
-        logistic_regression()
+        run_linear_regression()

@@ -13,13 +13,11 @@ class TokenAggregations:
     TODO: Need document string
     """
 
-    def __init__(self, save_data=True):
+    def __init__(self):
         self.all_tokens = None
         self.advocate_tokens = None
         self.adversary_tokens = None
         self.judge_tokens = None
-
-        self.save_data = save_data
 
         # Get local directory
         self.local_path = get_full_data_pathway("clean_convokit/")
@@ -209,23 +207,22 @@ class TokenAggregations:
         print("Grabbing token aggregation for judges...")
         self.judge_tokens = self.get_judge_case_tokens()
 
-        if self.save_data:
-            print("Exporting files...")
-            # Outputting to CSVs
-            aggregations = [
-                self.all_tokens,
-                self.advocate_tokens,
-                self.adversary_tokens,
-                self.judge_tokens,
-            ]
-            output_paths = [
-                self.output_path + "/case_aggregations.p",
-                self.output_path + "/advocate_aggregations.p",
-                self.output_path + "/adversary_aggregations.p",
-                self.output_path + "/judge_aggregations.p",
-            ]
+        print("Exporting files...")
+        # Outputting to CSVs
+        aggregations = [
+            self.all_tokens,
+            self.advocate_tokens,
+            self.adversary_tokens,
+            self.judge_tokens,
+        ]
+        output_paths = [
+            self.output_path + "/case_aggregations.p",
+            self.output_path + "/advocate_aggregations.p",
+            self.output_path + "/adversary_aggregations.p",
+            self.output_path + "/judge_aggregations.p",
+        ]
 
-            for idx, agg in enumerate(aggregations):
-                pickle.dump(agg, open(output_paths[idx], "wb"))
+        for idx, agg in enumerate(aggregations):
+            pickle.dump(agg, open(output_paths[idx], "wb"))
 
-            print("Data saved to " + self.output_path)
+        print("Data saved to " + self.output_path)
