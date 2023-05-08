@@ -4,8 +4,6 @@ This file contains the class that is the basis for all models in this package.
 
 from abc import ABC, abstractmethod
 
-from sklearn.metrics import accuracy_score
-
 
 class Model(ABC):
     """
@@ -22,16 +20,18 @@ class Model(ABC):
         :return: A sklearn model.
         """
 
-    def create_and_measure(self, df):
+    def create_and_measure(self, df, accuracy_measure):
         """
         Takes in a dataframe and returns the applicable accuracy measurement.
 
         :param df: A dataframe used to create the model.
+        :param accuracy_measure: A function that is used to measure accuracy
+        on the model.
         :return: Float of some accuracy measurement.
         """
         _, y_test, y_pred = self.create(df)
 
-        return accuracy_score(y_true=y_test, y_pred=y_pred)
+        return accuracy_measure(y_true=y_test, y_pred=y_pred)
 
     @abstractmethod
     def run(self):

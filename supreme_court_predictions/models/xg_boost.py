@@ -7,6 +7,7 @@ results of a case based on the text learned from utterances.
 import pandas as pd
 import xgboost as xgb
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
@@ -99,7 +100,7 @@ class XGBoost(Model):
             try:
                 print("------------------------------------------")
                 print(f"Running a gradient boosted tree model on {df_name}...")
-                acc = self.create_and_measure(df)
+                acc = self.create_and_measure(df, accuracy_score)
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")
             except ValueError:

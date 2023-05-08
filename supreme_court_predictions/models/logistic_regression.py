@@ -7,6 +7,7 @@ the results of a case based on the text learned from utterances.
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression as skLR
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
@@ -88,7 +89,7 @@ class LogisticRegression(Model):
             try:
                 print("------------------------------------------")
                 print(f"Running regression on {df_name}...")
-                acc = self.create_and_measure(df)
+                acc = self.create_and_measure(df, accuracy_score)
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")
             except ValueError:
