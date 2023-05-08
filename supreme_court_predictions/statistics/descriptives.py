@@ -15,14 +15,12 @@ class Descriptives:
     statistics of the convokit data.
     """
 
-    def __init__(self, save_data=True):
+    def __init__(self):
         self.cases_stats = None
         self.advocates_stats = None
         self.speakers_stats = None
         self.utterances_stats = None
         self.voters_stats = None
-
-        self.save_data = save_data
 
         # Get local directory
         self.local_path = get_full_data_pathway("clean_convokit/")
@@ -320,37 +318,36 @@ class Descriptives:
         print("Grabbing utterances descriptive statistics...")
         self.utterances_stats = self.get_utterances_desc()
 
-        if self.save_data:
-            # Outputting to CSVs
-            descriptives = [
-                self.advocates_stats,
-                self.cases_stats,
-                self.speakers_stats,
-                self.voters_stats,
-                self.utterances_stats,
-            ]
-            outpaths = [
-                self.output_path + "/advocates_stats.csv",
-                self.output_path + "/cases_stats.csv",
-                self.output_path + "/speakers_stats.csv",
-                self.output_path + "/voters_stats.csv",
-                self.output_path + "/utterances_stats.csv",
-            ]
+        # Outputting to CSVs
+        descriptives = [
+            self.advocates_stats,
+            self.cases_stats,
+            self.speakers_stats,
+            self.voters_stats,
+            self.utterances_stats,
+        ]
+        outpaths = [
+            self.output_path + "/advocates_stats.csv",
+            self.output_path + "/cases_stats.csv",
+            self.output_path + "/speakers_stats.csv",
+            self.output_path + "/voters_stats.csv",
+            self.output_path + "/utterances_stats.csv",
+        ]
 
-            for idx, desc in enumerate(descriptives):
-                desc.to_csv(outpaths[idx], index=True, encoding=ENCODING_UTF_8)
+        for idx, desc in enumerate(descriptives):
+            desc.to_csv(outpaths[idx], index=True, encoding=ENCODING_UTF_8)
 
-            # Outputting to a single excel
-            desc_out = self.output_path + "/descriptive_statistics.xlsx"
-            # Known ExcelWriter issue:
-            # https://github.com/pylint-dev/pylint/issues/3060
-            # pylint: disable=abstract-class-instantiated
-            with pd.ExcelWriter(desc_out) as writer:
-                # pylint: enable=abstract-class-instantiated
-                self.advocates_stats.to_excel(writer, sheet_name="advocates")
-                self.cases_stats.to_excel(writer, sheet_name="cases")
-                self.speakers_stats.to_excel(writer, sheet_name="speakers")
-                self.voters_stats.to_excel(writer, sheet_name="voters")
-                self.utterances_stats.to_excel(writer, sheet_name="utterances")
+        # Outputting to a single excel
+        desc_out = self.output_path + "/descriptive_statistics.xlsx"
+        # Known ExcelWriter issue:
+        # https://github.com/pylint-dev/pylint/issues/3060
+        # pylint: disable=abstract-class-instantiated
+        with pd.ExcelWriter(desc_out) as writer:
+            # pylint: enable=abstract-class-instantiated
+            self.advocates_stats.to_excel(writer, sheet_name="advocates")
+            self.cases_stats.to_excel(writer, sheet_name="cases")
+            self.speakers_stats.to_excel(writer, sheet_name="speakers")
+            self.voters_stats.to_excel(writer, sheet_name="voters")
+            self.utterances_stats.to_excel(writer, sheet_name="utterances")
 
-            print("Data saved to " + self.output_path)
+        print("Data saved to " + self.output_path)

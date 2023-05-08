@@ -23,15 +23,12 @@ class DataCleaner:
     it into a usable format.
     """
 
-    def __init__(self, downloaded_corpus, save_data=True):
+    def __init__(self):
         self.cases_df = None
         self.clean_case_ids = None  # stores the case IDs to use
         self.clean_utterances_list = None
         self.speakers_df = None
         self.utterances_df = None
-
-        self.downloaded_corpus = downloaded_corpus
-        self.save_data = save_data
 
         # Get local directory
         self.local_path = get_full_data_pathway("convokit/")
@@ -40,12 +37,6 @@ class DataCleaner:
         # Set output path
         self.output_path = get_full_data_pathway("clean_convokit/")
         print(f"Data will be saved to {self.output_path}")
-
-        if not downloaded_corpus:
-            print("Corpus not present, downloading...")
-            self.get_data()
-        else:
-            print("Corpus already downloaded")
 
     def get_data(self):
         """
@@ -316,36 +307,35 @@ class DataCleaner:
             utterances_list
         )
 
-        if self.save_data:
-            self.speakers_df.to_csv(
-                self.output_path + "/speakers_df.csv",
-                index=False,
-                encoding=ENCODING_UTF_8,
-            )
-            self.conversations_df.to_csv(
-                self.output_path + "/conversations_df.csv",
-                index=False,
-                encoding=ENCODING_UTF_8,
-            )
-            self.advocates_df.to_csv(
-                self.output_path + "/advocates_df.csv",
-                index=False,
-                encoding=ENCODING_UTF_8,
-            )
-            self.voters_df.to_csv(
-                self.output_path + "/voters_df.csv",
-                index=False,
-                encoding=ENCODING_UTF_8,
-            )
-            self.utterances_df.to_csv(
-                self.output_path + "/utterances_df.csv",
-                index=False,
-                encoding=ENCODING_UTF_8,
-            )
-            self.cases_df.to_csv(
-                self.output_path + "/cases_df.csv",
-                index=False,
-                encoding=ENCODING_UTF_8,
-            )
+        self.speakers_df.to_csv(
+            self.output_path + "/speakers_df.csv",
+            index=False,
+            encoding=ENCODING_UTF_8,
+        )
+        self.conversations_df.to_csv(
+            self.output_path + "/conversations_df.csv",
+            index=False,
+            encoding=ENCODING_UTF_8,
+        )
+        self.advocates_df.to_csv(
+            self.output_path + "/advocates_df.csv",
+            index=False,
+            encoding=ENCODING_UTF_8,
+        )
+        self.voters_df.to_csv(
+            self.output_path + "/voters_df.csv",
+            index=False,
+            encoding=ENCODING_UTF_8,
+        )
+        self.utterances_df.to_csv(
+            self.output_path + "/utterances_df.csv",
+            index=False,
+            encoding=ENCODING_UTF_8,
+        )
+        self.cases_df.to_csv(
+            self.output_path + "/cases_df.csv",
+            index=False,
+            encoding=ENCODING_UTF_8,
+        )
 
-            print("Data saved to " + self.output_path)
+        print("Data saved to " + self.output_path)

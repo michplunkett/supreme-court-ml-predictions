@@ -1,23 +1,27 @@
 """
-This LogisticRegression class runs logistic regression 
-on utterance data from the Supreme Court dataset. This class aims to predict
-the results of a case based on the text learned from utterances. 
+This file contains the XGBoost class that runs a gradient boosted tree model on
+utterance data from the Supreme Court dataset. This class aims to predict the
+results of a case based on the text learned from utterances.
 """
 
 import pandas as pd
+import xgboost as xgb
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.linear_model import LogisticRegression as skLR
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.files import get_full_data_pathway
 
+# from sklearn.model_selection import cross_val_score
+# from sklearn.metrics import confusion_matrix
+# from sklearn.model_selection import GridSearchCV
 
-class LogisticRegression(Model):
+
+class XGBoost(Model):
     """
-    A class that runs logistic regression on aggregated utterance and cases data
-    from the Supreme Court dataset.
+    A class that runs a gradient boosted tree model on aggregated utterance and
+    cases data from the Supreme Court dataset.
     """
 
     def __init__(self):
@@ -36,23 +40,25 @@ class LogisticRegression(Model):
             self.local_path + "judge_aggregations.p"
         )
 
-        self.run()
+        self.run_regression()
 
     @staticmethod
-    def create(df):
+    def create(self, df):
         """
-        Creates and runs a logistic regression on the given dataframe of
+        Creates and runs a gradient boosted tree model on the given dataframe of
         utterance data.
 
-        :param df: DataFrame containing utterance data
+        :param
+            df (pd.DataFrame): DataFrame containing utterance data
 
-        :return float: Accuracy score of the logistic regression model
+        :return
+            float: Accuracy score of the logistic regression model
         """
+
         vectorizer = CountVectorizer(analyzer="word", max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
         print("Creating bag of words")
         bag_of_words_x = vectorizer.fit_transform(vectorize_document)
-
         bag_of_words_y = df.loc[:, "win_side"]
 
         X_train, X_test, y_train, y_test = train_test_split(
@@ -63,12 +69,19 @@ class LogisticRegression(Model):
             stratify=bag_of_words_y,
         )
 
-        print("Starting the Logistic Regression")
-        regressor = skLR(max_iter=1000)
+        print("Starting the XGBoost model")
+        xgb_model = xgb.XGBClassifier(
+            max_depth=7,
+            n_estimators=300,
+            objective="binary:logistic",
+            random_state=1,
+            tree_method="gpu_hist",
+            predictor="gpu_predictor",
+        )
 
         # Fit the classifier on the training data
-        regressor.fit(X_train, y_train)
-        y_pred = regressor.predict(X_test)
+        xgb_model.fit(X_train, y_train)
+        y_pred = xgb_model.predict(X_test)
 
         return accuracy_score(y_true=y_test, y_pred=y_pred)
 
@@ -87,7 +100,7 @@ class LogisticRegression(Model):
         for df_name, df in dfs:
             try:
                 print("------------------------------------------")
-                print(f"Running regression on {df_name}...")
+                print(f"Running a gradient boosted tree model on {df_name}...")
                 acc = self.create(df)
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")

@@ -19,6 +19,7 @@ openpyxl = "^3.1.2"
 scikit-learn = "^1.2.2"
 spacy = "^3.5.2"
 ruff = "^0.0.263"
+xgboost = "^1.7.5"
 
 [tool.poetry.dependencies.en_core_web_sm]
 url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz"
