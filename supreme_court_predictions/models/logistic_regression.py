@@ -55,7 +55,6 @@ class LogisticRegression:
         print("Creating bag of words")
         bag_of_words_x = vectorizer.fit_transform(vectorize_document)
 
-        # TODO: after Chay's merge of dataframe, this can be updated.
         bag_of_words_y = df.loc[:, "win_side"]
 
         X_train, X_test, y_train, y_test = train_test_split(
