@@ -16,7 +16,7 @@ from supreme_court_predictions.util.files import get_full_data_pathway
 
 class LogisticRegression:
     """
-    A class that runs logistic regression on aggregated utterance and cases data 
+    A class that runs logistic regression on aggregated utterance and cases data
     from the Supreme Court dataset.
     """
 
@@ -42,7 +42,7 @@ class LogisticRegression:
     def logistic_regression(df):
         """
         Perform logistic regression on the given dataframe of utterance data.
-        It regresses on the entire dataset and regresses for judges, advocates, 
+        It regresses on the entire dataset and regresses for judges, advocates,
         and adversaries.
 
         Args:
@@ -75,7 +75,7 @@ class LogisticRegression:
     def run_regression(self):
         """
         Run logistic regression on each type of aggregated utterance data.
-        It regresses on the entire dataset and regresses for judges, advocates, 
+        It regresses on the entire dataset and regresses for judges, advocates,
         and adversaries.
         """
 
