@@ -10,10 +10,11 @@ from sklearn.linear_model import LogisticRegression as skLR
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
+from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.files import get_full_data_pathway
 
 
-class LogisticRegression:
+class LogisticRegression(Model):
     """
     A class that runs logistic regression on aggregated utterance and cases data
     from the Supreme Court dataset.
@@ -35,20 +36,17 @@ class LogisticRegression:
             self.local_path + "judge_aggregations.p"
         )
 
-        self.run_regression()
+        self.run()
 
     @staticmethod
-    def logistic_regression(df):
+    def create(df):
         """
-        Perform logistic regression on the given dataframe of utterance data.
-        It regresses on the entire dataset and regresses for judges, advocates,
-        and adversaries.
+        Creates and runs a logistic regression on the given dataframe of
+        utterance data.
 
-        :param
-            df (pd.DataFrame): DataFrame containing utterance data
+        :param df: DataFrame containing utterance data
 
-        :return
-            float: Accuracy score of the logistic regression model
+        :return float: Accuracy score of the logistic regression model
         """
         vectorizer = CountVectorizer(analyzer="word", max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
@@ -74,11 +72,10 @@ class LogisticRegression:
 
         return accuracy_score(y_true=y_test, y_pred=y_pred)
 
-    def run_regression(self):
+    def run(self):
         """
-        Run logistic regression on each type of aggregated utterance data.
-        It regresses on the entire dataset and regresses for judges, advocates,
-        and adversaries.
+        Runs a logistic regression create function on each type of aggregated
+        utterance.
         """
 
         dfs = [
@@ -92,10 +89,10 @@ class LogisticRegression:
             try:
                 print("------------------------------------------")
                 print(f"Running regression on {df_name}...")
-                acc = self.logistic_regression(df)
+                acc = self.create(df)
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")
-            except:
+            except ValueError:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
                 print("------------------------------------------")
