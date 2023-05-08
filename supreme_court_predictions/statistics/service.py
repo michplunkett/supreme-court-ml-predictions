@@ -14,11 +14,11 @@ from supreme_court_predictions.statistics.descriptives import Descriptives
 
 
 def clean_data():
-    DataCleaner(downloaded_corpus=True, save_data=True).parse_all_data()
+    DataCleaner(downloaded_corpus=True).parse_all_data()
 
 
 def describe_data():
-    Descriptives(save_data=True).parse_all_data()
+    Descriptives().parse_all_data()
 
 
 def tokenize_data():
