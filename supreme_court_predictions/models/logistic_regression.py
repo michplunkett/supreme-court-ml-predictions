@@ -38,17 +38,16 @@ class LogisticRegression:
 
         self.run_regression()
 
-    @staticmethod
-    def logistic_regression(df):
+    def logistic_regression(self, df):
         """
         Perform logistic regression on the given dataframe of utterance data.
         It regresses on the entire dataset and regresses for judges, advocates,
         and adversaries.
 
-        Args:
+        :param
             df (pd.DataFrame): DataFrame containing utterance data
 
-        Returns:
+        :return
             float: Accuracy score of the logistic regression model
         """
         vectorizer = CountVectorizer(max_features=5000)
@@ -57,10 +56,14 @@ class LogisticRegression:
         bag_of_words_x = vectorizer.fit_transform(vectorize_document)
 
         # TODO: after Chay's merge of dataframe, this can be updated.
-        bag_of_words_y = np.random.randint(0, 2, len(vectorize_document))
+        bag_of_words_y = df.loc[:, "win_side"]
 
         X_train, X_test, y_train, y_test = train_test_split(
-            bag_of_words_x, bag_of_words_y, test_size=0.20, random_state=123
+            bag_of_words_x,
+            bag_of_words_y,
+            test_size=0.20,
+            random_state=123,
+            stratify=bag_of_words_y,
         )
 
         print("Starting the Logistic Regression on utterances")
@@ -80,15 +83,24 @@ class LogisticRegression:
         """
 
         dfs = [
-            self.total_utterances,
-            self.judge_utterances,
-            self.advocate_utterances,
-            self.adversary_utterances,
+            ("total_utterances", self.total_utterances),
+            ("judge_utterances", self.judge_utterances),
+            ("advocate_utterances", self.advocate_utterances),
+            ("adversary_utterances", self.adversary_utterances),
         ]
 
-        for df in dfs:
-            print("------------------------------------------")
-            print("Running regression on total utterances...")
-            acc = self.logistic_regression(df)
-            print(f"Accuracy score: {acc}")
-            print("------------------------------------------")
+        for df_name, df in dfs:
+            try:
+                print("------------------------------------------")
+                print(f"Running regression on {df_name}...")
+                acc = self.logistic_regression(df)
+                print(f"Accuracy score: {acc}")
+                print("------------------------------------------")
+            except:
+                print("------------------------------------------")
+                print("Error: training data is not big enough for this subset")
+                print("------------------------------------------")
+
+
+if __name__ == "__main__":
+    LogisticRegression()
