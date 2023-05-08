@@ -5,7 +5,6 @@ the results of a case based on the text learned from utterances.
 """
 
 # General imports
-import numpy as np
 import pandas as pd
 import xgboost as xgb
 
@@ -14,13 +13,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
+# Local imports
+from supreme_court_predictions.util.files import get_full_data_pathway
+
 # from sklearn.model_selection import cross_val_score
 # from sklearn.metrics import confusion_matrix
 # from sklearn.model_selection import GridSearchCV
-
-
-# Local imports
-from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class XGBoost:
