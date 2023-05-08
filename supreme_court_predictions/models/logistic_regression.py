@@ -74,8 +74,7 @@ class LogisticRegression(Model):
 
     def run(self):
         """
-        Runs a logistic regression create function on each type of aggregated
-        utterance.
+        Runs the create function on each type of aggregated utterance.
         """
 
         dfs = [
