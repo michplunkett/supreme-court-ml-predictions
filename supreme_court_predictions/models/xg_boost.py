@@ -108,7 +108,7 @@ class XGBoost:
                 acc = self.xg_boost(df)
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")
-            except:
+            except ValueError:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
                 print("------------------------------------------")
