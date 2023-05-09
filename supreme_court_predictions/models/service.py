@@ -8,4 +8,4 @@ from supreme_court_predictions.models.logistic_regression import (
 
 
 def run_linear_regression():
-    LogisticRegression()
+    LogisticRegression().run()

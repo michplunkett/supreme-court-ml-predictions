@@ -10,9 +10,8 @@ class Model(ABC):
     This class sets basis for what makes up a model.
     """
 
-    @staticmethod
     @abstractmethod
-    def create(df):
+    def create(self, df):
         """
         Creates the model and returns an accuracy score.
 
@@ -38,3 +37,23 @@ class Model(ABC):
         """
         Runs the model on its respective data.
         """
+
+    @staticmethod
+    def print_results(model_name="", accuracy_scores=[], dataframe_names=[]):
+        """
+        Prints the results of running the model.
+
+        :param model_name (str): The name of the model.
+        :param accuracy_score (list): The accuracy scores generated across for
+                                      the dataframes ran in the model.
+        :param dataframe_names (list): Name of the dataframes the model was ran
+                                       against.
+        """
+
+        assert len(accuracy_scores) == len(dataframe_names)
+
+        for acc, df_name in zip(accuracy_scores, dataframe_names):
+            print("------------------------------------------")
+            print(f"Running a {model_name} on {df_name}...")
+            print(f"Accuracy score: {acc}")
+            print("------------------------------------------")
