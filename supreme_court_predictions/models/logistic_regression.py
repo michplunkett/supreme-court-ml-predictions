@@ -22,17 +22,17 @@ class LogisticRegression(Model):
 
     def __init__(
         self,
-        maxfeatures=5000,
-        testsize=0.20,
+        max_features=5000,
+        test_size=0.20,
         randomstate=123,
-        maxiter=1000,
+        max_iter=1000,
         print_results=True,
     ):
         self.local_path = get_full_data_pathway("processed/")
-        self.maxfeatures = maxfeatures
-        self.testsize = testsize
+        self.max_features = max_features
+        self.test_size = test_size
         self.randomstate = randomstate
-        self.maxiter = maxiter
+        self.max_iter = max_iter
         self.print = print_results
 
         self.total_utterances = pd.read_pickle(
@@ -59,7 +59,7 @@ class LogisticRegression(Model):
         regression model, test y-data, the predicted y-data.
         """
         vectorizer = CountVectorizer(
-            analyzer="word", max_features=self.maxfeatures
+            analyzer="word", max_features=self.max_features
         )
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
         print("Creating bag of words")
@@ -70,13 +70,13 @@ class LogisticRegression(Model):
         X_train, X_test, y_train, y_test = train_test_split(
             bag_of_words_x,
             bag_of_words_y,
-            test_size=self.testsize,
+            test_size=self.test_size,
             random_state=self.randomstate,
             stratify=bag_of_words_y,
         )
 
         print("Starting the Logistic Regression")
-        regressor = skLR(max_iter=self.maxiter)
+        regressor = skLR(max_iter=self.max_iter)
 
         # Fit the classifier on the training data
         regressor.fit(X_train, y_train)
