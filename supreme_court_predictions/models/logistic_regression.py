@@ -102,12 +102,12 @@ class LogisticRegression(Model):
             "adversary_utterances",
         ]
 
-        accs = []
+        accuracies = []
 
         for df in dfs:
             try:
                 acc = self.create_and_measure(df, accuracy_score)
-                accs.append(acc)
+                accuracies.append(acc)
             except ValueError:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
@@ -115,6 +115,6 @@ class LogisticRegression(Model):
 
         # Print the results, if applicable
         if self.print:
-            self.print_results("regression", accs, df_names)
+            self.print_results("regression", accuracies, df_names)
 
-        return accs
+        return accuracies
