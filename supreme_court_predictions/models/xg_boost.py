@@ -11,6 +11,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
+from supreme_court_predictions.util.contants import SEED_CONSTANT
 from supreme_court_predictions.util.files import get_full_data_pathway
 
 # from sklearn.model_selection import cross_val_score
@@ -73,7 +74,7 @@ class XGBoost(Model):
             max_depth=7,
             n_estimators=300,
             objective="binary:logistic",
-            random_state=1,
+            random_state=SEED_CONSTANT,
             tree_method="gpu_hist",
             predictor="gpu_predictor",
         )
@@ -102,12 +103,12 @@ class XGBoost(Model):
             "adversary_utterances",
         ]
 
-        accs = []
+        accuracies = []
 
         for df in dfs:
             try:
                 acc = self.create_and_measure(df, accuracy_score)
-                accs.append(acc)
+                accuracies.append(acc)
             except ValueError:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
@@ -115,6 +116,8 @@ class XGBoost(Model):
 
         # Print the results, if applicable
         if self.print:
-            self.print_results("gradient boosted tree model", accs, df_names)
+            self.print_results(
+                "gradient boosted tree model", accuracies, df_names
+            )
 
-        return accs
+        return accuracies

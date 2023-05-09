@@ -11,6 +11,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
+from supreme_court_predictions.util.contants import SEED_CONSTANT
 from supreme_court_predictions.util.files import get_full_data_pathway
 
 
@@ -24,14 +25,12 @@ class LogisticRegression(Model):
         self,
         max_features=5000,
         test_size=0.20,
-        randomstate=123,
         max_iter=1000,
         print_results=True,
     ):
         self.local_path = get_full_data_pathway("processed/")
         self.max_features = max_features
         self.test_size = test_size
-        self.randomstate = randomstate
         self.max_iter = max_iter
         self.print = print_results
 
@@ -71,7 +70,7 @@ class LogisticRegression(Model):
             bag_of_words_x,
             bag_of_words_y,
             test_size=self.test_size,
-            random_state=self.randomstate,
+            random_state=SEED_CONSTANT,
             stratify=bag_of_words_y,
         )
 
