@@ -10,7 +10,7 @@ from supreme_court_predictions.util.files import get_full_data_pathway
 
 class TokenAggregations:
     """
-    TODO: Need document string
+    This class aggregates tokens on a per case basis.
     """
 
     def __init__(self):

@@ -11,6 +11,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
+from supreme_court_predictions.util.contants import SEED_CONSTANT
 from supreme_court_predictions.util.files import get_full_data_pathway
 
 # from sklearn.model_selection import cross_val_score
@@ -24,8 +25,9 @@ class XGBoost(Model):
     cases data from the Supreme Court dataset.
     """
 
-    def __init__(self):
+    def __init__(self, print_results=True):
         self.local_path = get_full_data_pathway("processed/")
+        self.print = print_results
 
         self.total_utterances = pd.read_pickle(
             self.local_path + "case_aggregations.p"
@@ -42,8 +44,7 @@ class XGBoost(Model):
 
         self.run()
 
-    @staticmethod
-    def create(df):
+    def create(self, df):
         """
         Creates and runs a gradient boosted tree model on the given dataframe of
         utterance data.
@@ -73,7 +74,7 @@ class XGBoost(Model):
             max_depth=7,
             n_estimators=300,
             objective="binary:logistic",
-            random_state=1,
+            random_state=SEED_CONSTANT,
             tree_method="gpu_hist",
             predictor="gpu_predictor",
         )
@@ -90,20 +91,33 @@ class XGBoost(Model):
         """
 
         dfs = [
-            ("total_utterances", self.total_utterances),
-            ("judge_utterances", self.judge_utterances),
-            ("advocate_utterances", self.advocate_utterances),
-            ("adversary_utterances", self.adversary_utterances),
+            self.total_utterances,
+            self.judge_utterances,
+            self.advocate_utterances,
+            self.adversary_utterances,
+        ]
+        df_names = [
+            "total_utterances",
+            "judge_utterances",
+            "advocate_utterances",
+            "adversary_utterances",
         ]
 
-        for df_name, df in dfs:
+        accuracies = []
+
+        for df in dfs:
             try:
-                print("------------------------------------------")
-                print(f"Running a gradient boosted tree model on {df_name}...")
                 acc = self.create_and_measure(df, accuracy_score)
-                print(f"Accuracy score: {acc}")
-                print("------------------------------------------")
+                accuracies.append(acc)
             except ValueError:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
                 print("------------------------------------------")
+
+        # Print the results, if applicable
+        if self.print:
+            self.print_results(
+                "gradient boosted tree model", accuracies, df_names
+            )
+
+        return accuracies
