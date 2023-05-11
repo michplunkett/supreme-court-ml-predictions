@@ -4,6 +4,8 @@ on utterance data from the Supreme Court dataset. This class aims to predict
 the results of a case based on the text learned from utterances. 
 """
 
+import os.path
+
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression as skLR
@@ -23,6 +25,12 @@ class LogisticRegression(Model):
 
     def __init__(
         self,
+        dfs=[
+            "case_aggregations.p",
+            "judge_aggregations.p",
+            "advocate_aggregations.p",
+            "adversary_aggregations.p",
+        ],
         max_features=5000,
         test_size=0.20,
         max_iter=1000,
@@ -33,19 +41,26 @@ class LogisticRegression(Model):
         self.test_size = test_size
         self.max_iter = max_iter
         self.print = print_results
+        self.name = "Regression"
+        self.accuracies = []
 
-        self.total_utterances = pd.read_pickle(
-            self.local_path + "case_aggregations.p"
-        )
-        self.advocate_utterances = pd.read_pickle(
-            self.local_path + "advocate_aggregations.p"
-        )
-        self.adversary_utterances = pd.read_pickle(
-            self.local_path + "adversary_aggregations.p"
-        )
-        self.judge_utterances = pd.read_pickle(
-            self.local_path + "judge_aggregations.p"
-        )
+        # Dataframes and df names to run models against
+        self.dataframes = []
+        self.dataframe_names = []
+
+        for df in dfs:
+            # make sure its a file name
+            if os.path.isfile(self.local_path + df):
+                # pickle file
+                if (df.split(".")[-1]) == "p":
+                    self.dataframes.append(pd.read_pickle(self.local_path + df))
+
+                # csv file
+                else:
+                    self.dataframes.append(pd.read_csv(self.local_path + df))
+
+                # add name of file
+                self.dataframe_names.append(df.split(".")[0])
 
     def create(self, df):
         """
@@ -57,11 +72,12 @@ class LogisticRegression(Model):
         :return (regressor, y_test, y_pred): A tuple that contains the
         regression model, test y-data, the predicted y-data.
         """
+        if self.print:
+            print("Creating bag of words")
         vectorizer = CountVectorizer(
             analyzer="word", max_features=self.max_features
         )
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
-        print("Creating bag of words")
         bag_of_words_x = vectorizer.fit_transform(vectorize_document)
 
         bag_of_words_y = df.loc[:, "win_side"]
@@ -74,7 +90,8 @@ class LogisticRegression(Model):
             stratify=bag_of_words_y,
         )
 
-        print("Starting the Logistic Regression")
+        if self.print:
+            print("Starting the Logistic Regression")
         regressor = skLR(max_iter=self.max_iter)
 
         # Fit the classifier on the training data
@@ -88,25 +105,10 @@ class LogisticRegression(Model):
         Runs the create function on each type of aggregated utterance.
         """
 
-        dfs = [
-            self.total_utterances,
-            self.judge_utterances,
-            self.advocate_utterances,
-            self.adversary_utterances,
-        ]
-        df_names = [
-            "total_utterances",
-            "judge_utterances",
-            "advocate_utterances",
-            "adversary_utterances",
-        ]
-
-        accuracies = []
-
-        for df in dfs:
+        for df in self.dataframes:
             try:
                 acc = self.create_and_measure(df, accuracy_score)
-                accuracies.append(acc)
+                self.accuracies.append(acc)
             except ValueError:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
@@ -114,6 +116,33 @@ class LogisticRegression(Model):
 
         # Print the results, if applicable
         if self.print:
-            self.print_results("regression", accuracies, df_names)
+            self.print_results(
+                self.name.lower(), self.accuracies, self.dataframe_names
+            )
 
-        return accuracies
+        return self.accuracies
+
+    def __repr__(self):
+        """
+        Overwrites default string representation of Model
+
+        :return string representation of Model
+        """
+
+        parameters = [self.max_features, self.test_size, self.max_iter]
+        parameter_names = [
+            "Maximum Features:",
+            "Test Size:",
+            "Maximum Iterations:",
+        ]
+
+        s = f"MODEL TYPE: {self.name}\n"
+        s += "PARAMETERS: \n"
+        for parameter, name in zip(parameters, parameter_names):
+            s += f"\t{name}: {str(parameter)}\n"
+
+        s += "ACCURACIES: "
+        for name, acc in zip(self.dataframe_names, self.accuracies):
+            s += f"\n\t{name}: {str(acc)}"
+
+        return s
