@@ -38,6 +38,12 @@ class Model(ABC):
         Runs the model on its respective data.
         """
 
+    @abstractmethod
+    def __repr__(self):
+        """
+        Overwrites default string representation
+        """
+
     @staticmethod
     def print_results(model_name="", accuracy_scores=[], dataframe_names=[]):
         """
