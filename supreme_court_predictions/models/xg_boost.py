@@ -47,17 +47,15 @@ class XGBoost(Model):
         self.dataframe_names = []
 
         for df in dfs:
-            # make sure its a file name
+            # Make sure it's a file name
             if os.path.isfile(self.local_path + df):
-                # pickle file
-                if (df.split(".")[-1]) == "p":
-                    self.dataframes.append(pd.read_pickle(self.local_path + df))
+                # Use the correct file reading function
+                read_func = (
+                    pd.read_pickle if df.split(".")[-1] == "p" else pd.read_csv
+                )
+                self.dataframes.append(read_func(self.local_path + df))
 
-                # csv file
-                else:
-                    self.dataframes.append(pd.read_csv(self.local_path + df))
-
-                # add name of file
+                # Add name of file
                 self.dataframe_names.append(df.split(".")[0])
 
     def create(self, df):
