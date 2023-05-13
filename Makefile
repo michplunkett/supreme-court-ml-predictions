@@ -6,7 +6,7 @@ BASEDIR="supreme_court_predictions"
 .PHONY: format
 format:
 	isort ${BASEDIR}/ test/
-	black ${BASEDIR}/ test/
+	black ${BASEDIR}/ test/ *.ipynb
 
 .PHONY: lint
 lint:
