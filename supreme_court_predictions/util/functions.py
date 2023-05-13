@@ -1,6 +1,5 @@
 """
-This file holds functions used in multiple places that are relevant to files in
-a general sense.
+This file holds general utility functions.
 """
 
 import os
