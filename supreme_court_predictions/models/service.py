@@ -6,6 +6,7 @@ from supreme_court_predictions.models.logistic_regression import (
     LogisticRegression,
 )
 from supreme_court_predictions.models.random_forest import RandomForest
+from supreme_court_predictions.models.xg_boost import XGBoost
 
 
 def run_linear_regression():
@@ -14,3 +15,7 @@ def run_linear_regression():
 
 def run_random_forest():
     RandomForest().run()
+
+
+def run_xg_boost():
+    XGBoost.run()
