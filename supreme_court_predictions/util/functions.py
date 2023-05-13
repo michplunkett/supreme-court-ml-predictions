@@ -7,6 +7,8 @@ import os
 
 def debug_print(message, debug_mode=True):
     """
+    TODO: Add to `processing` and `statistics` packages.
+
     This function uses `print` if the application is in debug mode.
 
     :param str message: The desired message to print.
