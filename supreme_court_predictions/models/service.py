@@ -18,4 +18,4 @@ def run_random_forest():
 
 
 def run_xg_boost():
-    XGBoost.run()
+    XGBoost().run()
