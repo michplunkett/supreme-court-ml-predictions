@@ -5,6 +5,17 @@ This file holds general utility functions.
 import os
 
 
+def debug_print(message, debug_mode=True):
+    """
+    This function uses `print` if the application is in debug mode.
+
+    :param str message: The desired message to print.
+    :param bool debug_mode: If the application is in debug mode.
+    """
+    if debug_mode:
+        print(message)
+
+
 def get_full_data_pathway(desired_folder):
     """
     This function gives you the full pathway your desired data sub-folder.
