@@ -49,17 +49,17 @@ class LogisticRegression(Model):
         self.dataframe_names = []
 
         for df in dfs:
-            # make sure its a file name
+            # Ensure the file exists
             if os.path.isfile(self.local_path + df):
-                # pickle file
+                # Pickle file
                 if (df.split(".")[-1]) == "p":
                     self.dataframes.append(pd.read_pickle(self.local_path + df))
 
-                # csv file
+                # CSV File
                 else:
                     self.dataframes.append(pd.read_csv(self.local_path + df))
 
-                # add name of file
+                # Add name of file
                 self.dataframe_names.append(df.split(".")[0])
 
     def create(self, df):
@@ -105,20 +105,18 @@ class LogisticRegression(Model):
         Runs the create function on each type of aggregated utterance.
         """
 
-        for df in self.dataframes:
+        for df, dfname in zip(self.dataframes, self.dataframe_names):
             try:
                 acc = self.create_and_measure(df, accuracy_score)
                 self.accuracies.append(acc)
+
+                # Print the results, if applicable
+                if self.print:
+                    self.print_results(self.name.lower(), acc, dfname)
             except ValueError:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
                 print("------------------------------------------")
-
-        # Print the results, if applicable
-        if self.print:
-            self.print_results(
-                self.name.lower(), self.accuracies, self.dataframe_names
-            )
 
         return self.accuracies
 
@@ -131,9 +129,9 @@ class LogisticRegression(Model):
 
         parameters = [self.max_features, self.test_size, self.max_iter]
         parameter_names = [
-            "Maximum Features:",
-            "Test Size:",
-            "Maximum Iterations:",
+            "Maximum Features",
+            "Test Size",
+            "Maximum Iterations",
         ]
 
         return_str = f"MODEL TYPE: {self.name}\n"

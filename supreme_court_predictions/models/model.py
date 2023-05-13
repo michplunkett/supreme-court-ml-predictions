@@ -45,7 +45,7 @@ class Model(ABC):
         """
 
     @staticmethod
-    def print_results(model_name="", accuracy_scores=[], dataframe_names=[]):
+    def print_results(model_name="", accuracy_score=None, dataframe_name=None):
         """
         Prints the results of running the model.
 
@@ -55,11 +55,7 @@ class Model(ABC):
         :param list dataframe_names: Name of the dataframes the model was ran
                                        against.
         """
-
-        assert len(accuracy_scores) == len(dataframe_names)
-
-        for acc, df_name in zip(accuracy_scores, dataframe_names):
-            print("------------------------------------------")
-            print(f"Running a {model_name} on {df_name}...")
-            print(f"Accuracy score: {acc}")
-            print("------------------------------------------")
+        print("------------------------------------------")
+        print(f"Running a {model_name} on {dataframe_name}...")
+        print(f"Accuracy score: {accuracy_score}")
+        print("------------------------------------------")
