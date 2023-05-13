@@ -8,6 +8,7 @@ from supreme_court_predictions.api.convokit import get_data
 from supreme_court_predictions.models.service import (
     run_linear_regression,
     run_random_forest,
+    run_xg_boost,
 )
 from supreme_court_predictions.processing.service import (
     process_data,
@@ -65,7 +66,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--logistic-regression",
-        help="Logistic Regression",
+        help="Run the Logistic Regression model",
         type=bool,
         default=False,
         action=argparse.BooleanOptionalAction,
@@ -73,7 +74,15 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--random-forest",
-        help="Random Forest",
+        help="Run the Random Forest model",
+        type=bool,
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
+        "--xg-boost",
+        help="Run the XG Boost model",
         type=bool,
         default=False,
         action=argparse.BooleanOptionalAction,
@@ -101,3 +110,6 @@ if __name__ == "__main__":
 
     if args.random_forest:
         run_random_forest()
+
+    if args.run_xg_boost():
+        run_xg_boost()
