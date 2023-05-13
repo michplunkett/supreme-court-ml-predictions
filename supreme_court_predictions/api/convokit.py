@@ -8,17 +8,18 @@ from supreme_court_predictions.util.contants import (
     ENCODING_UTF_8,
     FILE_MODE_WRITE,
 )
-from supreme_court_predictions.util.files import get_full_data_pathway
+from supreme_court_predictions.util.functions import get_full_data_pathway
 
 
-def get_data():
+def get_data(debug=True):
     """
     Loads and outputs the Supreme Court Corpus and case verdict data
     """
 
     convokit_path = get_full_data_pathway("convokit/")
 
-    print("Loading Supreme Court Corpus Data...")
+    if debug:
+        print("Loading Supreme Court Corpus Data...")
     corpus = Corpus(filename=download("supreme-corpus"))
     corpus.dump("supreme_corpus", base_path=convokit_path)
 

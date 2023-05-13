@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.contants import SEED_CONSTANT
-from supreme_court_predictions.util.files import get_full_data_pathway
+from supreme_court_predictions.util.functions import get_full_data_pathway
 
 
 class RandomForest(Model):

@@ -111,5 +111,5 @@ if __name__ == "__main__":
     if args.random_forest:
         run_random_forest()
 
-    if args.run_xg_boost():
+    if args.xg_boost:
         run_xg_boost()
