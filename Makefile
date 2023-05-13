@@ -20,10 +20,24 @@ test:
 test-and-fail:
 	pytest -vsx test/
 
+# Group level commands
 .PHONY: get-data
 get-data:
 	python -m ${BASEDIR} --get-data
 
+.PHONY: prepare-data
+prepare-data:
+	python -m ${BASEDIR} --clean-data --describe-data --tokenize-data --process-data
+
+.PHONY: run-all-models
+run-all-models:
+	python -m ${BASEDIR} --logistic-regression --random-forest --xg-boost
+
+.PHONY: run
+run:
+	make get-data clean-data prepare-data run-all-models
+
+# Individual function commands
 .PHONY: clean-data
 clean-data:
 	python -m ${BASEDIR} --clean-data
@@ -40,10 +54,6 @@ tokenize-data:
 process-data:
 	python -m ${BASEDIR} --process-data
 
-.PHONY: run-all-models:
-run-all-models:
-	python -m ${BASEDIR} --logistic-regression --random-forest --xg-boost
-
 .PHONY: logistic-regression
 logistic-regression:
 	python -m ${BASEDIR} --logistic-regression
@@ -53,13 +63,5 @@ random-forest:
 	python -m ${BASEDIR} --random-forest
 
 .PHONY: xg-boost
-random-forest:
+xg-boost:
 	python -m ${BASEDIR} --xg-boost
-
-.PHONY: run
-run:
-	make clean-data prepare-data run-all-models
-
-.PHONY: prepare-data
-prepare-data:
-	python -m ${BASEDIR} --clean-data --describe-data --tokenize-data --process-data
