@@ -5,7 +5,10 @@ This file serves as the entry point for the supreme_court_predictions module.
 import argparse
 
 from supreme_court_predictions.api.convokit import get_data
-from supreme_court_predictions.models.service import run_linear_regression
+from supreme_court_predictions.models.service import (
+    run_linear_regression,
+    run_random_forest,
+)
 from supreme_court_predictions.processing.service import (
     process_data,
     tokenize_data,
@@ -37,6 +40,14 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--tokenize-data",
+        help="Tokenize the data from clean_convokit",
+        type=bool,
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
         "--describe-data",
         help="Generate descriptive statistics for Convokit",
         type=bool,
@@ -60,6 +71,14 @@ if __name__ == "__main__":
         action=argparse.BooleanOptionalAction,
     )
 
+    parser.add_argument(
+        "--random-forest",
+        help="Random Forest",
+        type=bool,
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
+
     args = parser.parse_args()
 
     if args.get_data:
@@ -67,6 +86,8 @@ if __name__ == "__main__":
 
     if args.clean_data:
         clean_data()
+
+    if args.tokenize_data:
         tokenize_data()
 
     if args.describe_data:
@@ -77,3 +98,6 @@ if __name__ == "__main__":
 
     if args.logistic_regression:
         run_linear_regression()
+
+    if args.random_forest:
+        run_random_forest()

@@ -1,25 +1,18 @@
-"""
-This LogisticRegression class runs logistic regression 
-on utterance data from the Supreme Court dataset. This class aims to predict
-the results of a case based on the text learned from utterances. 
-"""
-
 import os.path
 
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.linear_model import LogisticRegression as skLR
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
-from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.contants import SEED_CONSTANT
 from supreme_court_predictions.util.files import get_full_data_pathway
 
 
-class LogisticRegression(Model):
+class RandomForest:
     """
-    A class that runs logistic regression on aggregated utterance and cases data
+    This class runs sklearn random forest on aggregated utterance
     from the Supreme Court dataset.
     """
 
@@ -33,15 +26,17 @@ class LogisticRegression(Model):
         ],
         max_features=5000,
         test_size=0.20,
-        max_iter=1000,
+        num_trees=100,
+        max_depth=None,
         print_results=True,
     ):
         self.local_path = get_full_data_pathway("processed/")
         self.max_features = max_features
         self.test_size = test_size
-        self.max_iter = max_iter
+        self.num_trees = num_trees
+        self.max_depth = max_depth
         self.print = print_results
-        self.name = "Regression"
+        self.name = "Random Forest"
         self.accuracies = []
 
         # Dataframes and df names to run models against
@@ -64,13 +59,13 @@ class LogisticRegression(Model):
 
     def create(self, df):
         """
-        Creates and runs a logistic regression on the given dataframe of
+        Creates and runs a random forest on the given dataframe of
         utterance data.
 
         :param df: DataFrame containing utterance data
 
-        :return (regressor, y_test, y_pred): A tuple that contains the
-        regression model, test y-data, the predicted y-data.
+        :return (forest, y_test, y_pred): A tuple that contains the
+        forest model, test y-data, the predicted y-data.
         """
         if self.print:
             print("Creating bag of words")
@@ -91,14 +86,16 @@ class LogisticRegression(Model):
         )
 
         if self.print:
-            print("Starting the Logistic Regression")
-        regressor = skLR(max_iter=self.max_iter)
+            print("Starting the Random Forest")
+        forest = RandomForestClassifier(
+            num_trees=self.num_trees, max_depth=self.max_depth
+        )
 
         # Fit the classifier on the training data
-        regressor.fit(X_train, y_train)
-        y_pred = regressor.predict(X_test)
+        forest.fit(X_train, y_train)
+        y_pred = forest.predict(X_test)
 
-        return regressor, y_test, y_pred
+        return forest, y_test, y_pred
 
     def run(self):
         """
@@ -107,7 +104,9 @@ class LogisticRegression(Model):
 
         for df in self.dataframes:
             try:
-                acc = self.create_and_measure(df, accuracy_score)
+                # accuracy score method to be used later from ABC
+                _, y_test, y_pred = self.create(df)
+                acc = accuracy_score(y_true=y_test, y_pred=y_pred)
                 self.accuracies.append(acc)
             except ValueError:
                 print("------------------------------------------")
@@ -116,9 +115,12 @@ class LogisticRegression(Model):
 
         # Print the results, if applicable
         if self.print:
-            self.print_results(
-                self.name.lower(), self.accuracies, self.dataframe_names
-            )
+            # This will also be later used from ABC
+            for acc, df_name in zip(self.accuracies, self.dataframe_names):
+                print("------------------------------------------")
+                print(f"Running a {self.name.lower()} on {df_name}...")
+                print(f"Accuracy score: {acc}")
+                print("------------------------------------------")
 
         return self.accuracies
 
