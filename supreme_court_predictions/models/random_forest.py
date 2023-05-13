@@ -127,9 +127,9 @@ class RandomForest(Model):
 
         parameters = [self.max_features, self.test_size, self.max_iter]
         parameter_names = [
-            "Maximum Features:",
-            "Test Size:",
-            "Maximum Iterations:",
+            "Maximum Features",
+            "Test Size",
+            "Maximum Iterations",
         ]
 
         return_str = f"MODEL TYPE: {self.name}\n"
