@@ -50,13 +50,11 @@ class RandomForest(Model):
         for df in dfs:
             # Ensure the file exists
             if os.path.isfile(self.local_path + df):
-                # Pickle file
-                if (df.split(".")[-1]) == "p":
-                    self.dataframes.append(pd.read_pickle(self.local_path + df))
-
-                # CSV File
-                else:
-                    self.dataframes.append(pd.read_csv(self.local_path + df))
+                # Use the correct file reading function
+                read_func = (
+                    pd.read_pickle if df.split(".")[-1] == "p" else pd.read_csv
+                )
+                self.dataframes.append(read_func(self.local_path + df))
 
                 # Add name of file
                 self.dataframe_names.append(df.split(".")[0])
