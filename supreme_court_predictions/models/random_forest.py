@@ -1,14 +1,13 @@
 import os.path
 
 import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
-from supreme_court_predictions.models.model import Model
-from supreme_court_predictions.util.files import get_full_data_pathway
 from supreme_court_predictions.util.contants import SEED_CONSTANT
+from supreme_court_predictions.util.files import get_full_data_pathway
 
 
 class RandomForest:
@@ -116,14 +115,12 @@ class RandomForest:
 
         # Print the results, if applicable
         if self.print:
-
             # This will also be later used from ABC
             for acc, df_name in zip(self.accuracies, self.dataframe_names):
                 print("------------------------------------------")
                 print(f"Running a {self.name.lower()} on {df_name}...")
                 print(f"Accuracy score: {acc}")
                 print("------------------------------------------")
-
 
         return self.accuracies
 
