@@ -6,7 +6,7 @@ BASEDIR="supreme_court_predictions"
 .PHONY: format
 format:
 	isort ${BASEDIR}/ test/
-	black ${BASEDIR}/ test/
+	black ${BASEDIR}/ test/ *.ipynb
 
 .PHONY: lint
 lint:
@@ -20,14 +20,24 @@ test:
 test-and-fail:
 	pytest -vsx test/
 
-.PHONY: run
-run:
-	python -m ${BASEDIR} --get-data --clean-data --tokenize-data --describe-data --process-data --logistic-regression --random-forest
-
+# Group level commands
 .PHONY: get-data
 get-data:
 	python -m ${BASEDIR} --get-data
 
+.PHONY: prepare-data
+prepare-data:
+	python -m ${BASEDIR} --clean-data --describe-data --tokenize-data --process-data
+
+.PHONY: run-all-models
+run-all-models:
+	python -m ${BASEDIR} --logistic-regression --random-forest --xg-boost
+
+.PHONY: run
+run:
+	make get-data clean-data prepare-data run-all-models
+
+# Individual function commands
 .PHONY: clean-data
 clean-data:
 	python -m ${BASEDIR} --clean-data
@@ -51,3 +61,7 @@ logistic-regression:
 .PHONY: random-forest
 random-forest:
 	python -m ${BASEDIR} --random-forest
+
+.PHONY: xg-boost
+xg-boost:
+	python -m ${BASEDIR} --xg-boost

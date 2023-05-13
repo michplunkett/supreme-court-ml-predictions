@@ -3,7 +3,7 @@ This file contains tests for the util folder.
 """
 import os
 
-from supreme_court_predictions.util.files import get_full_data_pathway
+from supreme_court_predictions.util.functions import get_full_data_pathway
 
 
 def test_get_full_pathway():

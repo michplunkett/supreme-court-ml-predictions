@@ -21,12 +21,14 @@ spacy = "^3.5.2"
 ruff = "^0.0.263"
 xgboost = "^1.7.5"
 jupyter = "^1.0.0"
+jupyter-black = "^0.3.4"
 
 [tool.poetry.dependencies.en_core_web_sm]
 url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz"
 
 [tool.black]
 line-length = 80
+lab=false
 
 [tool.isort]
 profile= "black"

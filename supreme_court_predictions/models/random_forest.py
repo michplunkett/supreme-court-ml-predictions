@@ -8,7 +8,10 @@ from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.contants import SEED_CONSTANT
-from supreme_court_predictions.util.files import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
 class RandomForest(Model):
@@ -47,13 +50,11 @@ class RandomForest(Model):
         for df in dfs:
             # Ensure the file exists
             if os.path.isfile(self.local_path + df):
-                # Pickle file
-                if (df.split(".")[-1]) == "p":
-                    self.dataframes.append(pd.read_pickle(self.local_path + df))
-
-                # CSV File
-                else:
-                    self.dataframes.append(pd.read_csv(self.local_path + df))
+                # Use the correct file reading function
+                read_func = (
+                    pd.read_pickle if df.split(".")[-1] == "p" else pd.read_csv
+                )
+                self.dataframes.append(read_func(self.local_path + df))
 
                 # Add name of file
                 self.dataframe_names.append(df.split(".")[0])
@@ -68,8 +69,7 @@ class RandomForest(Model):
         :return (forest, y_test, y_pred): A tuple that contains the
         forest model, test y-data, the predicted y-data.
         """
-        if self.print:
-            print("Creating bag of words")
+        debug_print("Creating bag of words", self.print)
         vectorizer = CountVectorizer(
             analyzer="word", max_features=self.max_features
         )
@@ -87,7 +87,7 @@ class RandomForest(Model):
         )
 
         if self.print:
-            print("Starting the Random Forest")
+            debug_print("Starting the Random Forest", self.print)
         forest = RandomForestClassifier(
             n_estimators=self.num_trees, max_depth=self.max_depth
         )
@@ -103,18 +103,24 @@ class RandomForest(Model):
         Runs the create function on each type of aggregated utterance.
         """
 
-        for df, dfname in zip(self.dataframes, self.dataframe_names):
+        for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
                 acc = self.create_and_measure(df, accuracy_score)
                 self.accuracies.append(acc)
 
                 # Print the results, if applicable
-                if self.print:
-                    self.print_results(self.name.lower(), acc, dfname)
+                self.print_results(self.name.lower(), acc, df_name)
             except ValueError:
-                print("------------------------------------------")
-                print("Error: training data is not big enough for this subset")
-                print("------------------------------------------")
+                debug_print(
+                    "------------------------------------------", self.print
+                )
+                debug_print(
+                    "Error: training data is not big enough for this " "subset",
+                    self.print,
+                )
+                debug_print(
+                    "------------------------------------------", self.print
+                )
 
         return self.accuracies
 

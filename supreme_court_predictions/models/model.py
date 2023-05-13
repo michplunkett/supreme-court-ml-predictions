@@ -44,18 +44,20 @@ class Model(ABC):
         Overwrites default string representation
         """
 
-    @staticmethod
-    def print_results(model_name="", accuracy_score=None, dataframe_name=None):
+    def print_results(
+        self, model_name="", accuracy_score=None, dataframe_name=None
+    ):
         """
         Prints the results of running the model.
 
         :param str model_name: The name of the model.
-        :param list accuracy_scores: The accuracy scores generated across for
-                                      the dataframes ran in the model.
-        :param list dataframe_names: Name of the dataframes the model was ran
-                                       against.
+        :param list accuracy_score: The accuracy scores generated across for
+        the dataframes ran in the model.
+        :param list dataframe_name: Name of the dataframe used to create the
+        model.
         """
-        print("------------------------------------------")
-        print(f"Running a {model_name} on {dataframe_name}...")
-        print(f"Accuracy score: {accuracy_score}")
-        print("------------------------------------------")
+        if self.print:
+            print("------------------------------------------")
+            print(f"Running a {model_name} on {dataframe_name}...")
+            print(f"Accuracy score: {accuracy_score}")
+            print("------------------------------------------")

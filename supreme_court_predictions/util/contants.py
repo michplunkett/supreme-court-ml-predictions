@@ -11,5 +11,5 @@ SEED_CONSTANT = 123
 FILE_MODE_READ = "r"
 FILE_MODE_WRITE = "w"
 
-# Current year for data filterning
+# Current year for data filtering
 LATEST_YEAR = 2019

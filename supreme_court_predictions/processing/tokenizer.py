@@ -8,7 +8,7 @@ tasks efficiently and effectively in a user-friendly manner.
 import pandas as pd
 import spacy
 
-from supreme_court_predictions.util.files import get_full_data_pathway
+from supreme_court_predictions.util.functions import get_full_data_pathway
 
 
 class Tokenizer:
