@@ -22,7 +22,7 @@ test-and-fail:
 
 .PHONY: run
 run:
-	python -m ${BASEDIR} --get-data --clean-data --describe-data --process-data --logistic-regression
+	python -m ${BASEDIR} --get-data --clean-data --tokenize-data --describe-data --process-data --logistic-regression --random-forest
 
 .PHONY: get-data
 get-data:
@@ -36,6 +36,10 @@ clean-data:
 describe-data:
 	python -m ${BASEDIR} --describe-data
 
+.PHONY: tokenize-data
+tokenize-data:
+	python -m ${BASEDIR} --tokenize-data
+
 .PHONY: process-data
 process-data:
 	python -m ${BASEDIR} --process-data
@@ -44,3 +48,6 @@ process-data:
 logistic-regression:
 	python -m ${BASEDIR} --logistic-regression
 
+.PHONY: random-forest
+random-forest:
+	python -m ${BASEDIR} --random-forest
