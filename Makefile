@@ -20,10 +20,6 @@ test:
 test-and-fail:
 	pytest -vsx test/
 
-.PHONY: run
-run:
-	python -m ${BASEDIR} --get-data --clean-data --tokenize-data --describe-data --process-data --logistic-regression --random-forest
-
 .PHONY: get-data
 get-data:
 	python -m ${BASEDIR} --get-data
@@ -44,6 +40,10 @@ tokenize-data:
 process-data:
 	python -m ${BASEDIR} --process-data
 
+.PHONY: run-all-models:
+run-all-models:
+	python -m ${BASEDIR} --logistic-regression --random-forest --xg-boost
+
 .PHONY: logistic-regression
 logistic-regression:
 	python -m ${BASEDIR} --logistic-regression
@@ -51,3 +51,15 @@ logistic-regression:
 .PHONY: random-forest
 random-forest:
 	python -m ${BASEDIR} --random-forest
+
+.PHONY: xg-boost
+random-forest:
+	python -m ${BASEDIR} --xg-boost
+
+.PHONY: run
+run:
+	make clean-data prepare-data run-all-models
+
+.PHONY: prepare-data
+prepare-data:
+	python -m ${BASEDIR} --clean-data --describe-data --tokenize-data --process-data
