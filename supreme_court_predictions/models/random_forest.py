@@ -125,11 +125,17 @@ class RandomForest(Model):
         :return string representation of Model
         """
 
-        parameters = [self.max_features, self.test_size, self.max_iter]
+        parameters = [
+            self.max_features,
+            self.test_size,
+            self.num_trees,
+            self.max_depth,
+        ]
         parameter_names = [
             "Maximum Features",
             "Test Size",
-            "Maximum Iterations",
+            "Number of Trees",
+            "Maximum Depth",
         ]
 
         return_str = f"MODEL TYPE: {self.name}\n"
