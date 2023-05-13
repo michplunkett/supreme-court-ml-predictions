@@ -103,20 +103,19 @@ class RandomForest(Model):
         Runs the create function on each type of aggregated utterance.
         """
 
-        for df in self.dataframes:
+        for df, dfname in zip(self.dataframes, self.dataframe_names):
             try:
                 acc = self.create_and_measure(df, accuracy_score)
                 self.accuracies.append(acc)
+
+                # Print the results, if applicable
+                if self.print:
+                    self.print_results(self.name.lower(), acc, dfname)
             except ValueError:
                 print("------------------------------------------")
                 print("Error: training data is not big enough for this subset")
                 print("------------------------------------------")
 
-        # Print the results, if applicable
-        if self.print:
-            self.print_results(
-                self.name.lower(), self.accuracies, self.dataframe_names
-            )
         return self.accuracies
 
     def __repr__(self):
