@@ -14,7 +14,10 @@ from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.contants import SEED_CONSTANT
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 # from sklearn.model_selection import cross_val_score
 # from sklearn.metrics import confusion_matrix
@@ -68,8 +71,7 @@ class XGBoost(Model):
         :return (regressor, y_test, y_pred): A tuple that contains the
         regression model, test y-data, the predicted y-data.
         """
-        if self.print:
-            print("Creating bag of words")
+        debug_print("Creating bag of words", self.print)
 
         vectorizer = CountVectorizer(analyzer="word", max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
@@ -84,8 +86,7 @@ class XGBoost(Model):
             stratify=bag_of_words_y,
         )
 
-        if self.print:
-            print("Starting the XGBoost model")
+        debug_print("Starting the XGBoost model", self.print)
 
         xgb_model = xgb.XGBClassifier(
             max_depth=7,
@@ -113,12 +114,18 @@ class XGBoost(Model):
                 self.accuracies.append(acc)
 
                 # Print the results, if applicable
-                if self.print:
-                    self.print_results(self.name.lower(), acc, dfname)
+                self.print_results(self.name.lower(), acc, dfname)
             except ValueError:
-                print("------------------------------------------")
-                print("Error: training data is not big enough for this subset")
-                print("------------------------------------------")
+                debug_print(
+                    "------------------------------------------", self.print
+                )
+                debug_print(
+                    "Error: training data is not big enough for this subset",
+                    self.print,
+                )
+                debug_print(
+                    "------------------------------------------", self.print
+                )
 
         return self.accuracies
 

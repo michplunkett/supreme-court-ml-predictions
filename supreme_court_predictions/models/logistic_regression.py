@@ -14,7 +14,10 @@ from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.contants import SEED_CONSTANT
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
 class LogisticRegression(Model):
@@ -72,8 +75,7 @@ class LogisticRegression(Model):
         :return (regressor, y_test, y_pred): A tuple that contains the
         regression model, test y-data, the predicted y-data.
         """
-        if self.print:
-            print("Creating bag of words")
+        debug_print("Creating bag of words", self.print)
         vectorizer = CountVectorizer(
             analyzer="word", max_features=self.max_features
         )
@@ -90,8 +92,7 @@ class LogisticRegression(Model):
             stratify=bag_of_words_y,
         )
 
-        if self.print:
-            print("Starting the Logistic Regression")
+        debug_print("Starting the Logistic Regression", self.print)
         regressor = skLR(max_iter=self.max_iter)
 
         # Fit the classifier on the training data
@@ -105,18 +106,24 @@ class LogisticRegression(Model):
         Runs the create function on each type of aggregated utterance.
         """
 
-        for df, dfname in zip(self.dataframes, self.dataframe_names):
+        for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
                 acc = self.create_and_measure(df, accuracy_score)
                 self.accuracies.append(acc)
 
                 # Print the results, if applicable
-                if self.print:
-                    self.print_results(self.name.lower(), acc, dfname)
+                self.print_results(self.name.lower(), acc, df_name)
             except ValueError:
-                print("------------------------------------------")
-                print("Error: training data is not big enough for this subset")
-                print("------------------------------------------")
+                debug_print(
+                    "------------------------------------------", self.print
+                )
+                debug_print(
+                    "Error: training data is not big enough for this subset",
+                    self.print,
+                )
+                debug_print(
+                    "------------------------------------------", self.print
+                )
 
         return self.accuracies
 
