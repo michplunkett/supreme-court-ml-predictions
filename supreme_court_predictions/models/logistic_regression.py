@@ -49,17 +49,17 @@ class LogisticRegression(Model):
         self.dataframe_names = []
 
         for df in dfs:
-            # make sure its a file name
+            # Ensure the file exists
             if os.path.isfile(self.local_path + df):
-                # pickle file
+                # Pickle file
                 if (df.split(".")[-1]) == "p":
                     self.dataframes.append(pd.read_pickle(self.local_path + df))
 
-                # csv file
+                # CSV File
                 else:
                     self.dataframes.append(pd.read_csv(self.local_path + df))
 
-                # add name of file
+                # Add name of file
                 self.dataframe_names.append(df.split(".")[0])
 
     def create(self, df):
