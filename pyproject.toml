@@ -28,6 +28,7 @@ url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_s
 
 [tool.black]
 line-length = 80
+lab=false
 
 [tool.isort]
 profile= "black"
