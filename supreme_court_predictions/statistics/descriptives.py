@@ -6,7 +6,10 @@ import numpy as np
 import pandas as pd
 
 from supreme_court_predictions.util.contants import ENCODING_UTF_8
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
 class Descriptives:
@@ -15,20 +18,23 @@ class Descriptives:
     statistics of the convokit data.
     """
 
-    def __init__(self):
-        self.cases_stats = None
+    def __init__(self, debug_mode=False):
         self.advocates_stats = None
+        self.cases_stats = None
+        self.debug_mode = debug_mode
         self.speakers_stats = None
         self.utterances_stats = None
         self.voters_stats = None
 
         # Get local directory
         self.local_path = get_full_data_pathway("clean_convokit/")
-        print(f"Working in {self.local_path}")
+        debug_print(f"Working in {self.local_path}", self.debug_mode)
 
         # Set output path
         self.output_path = get_full_data_pathway("statistics/")
-        print(f"Data will be saved to {self.output_path}")
+        debug_print(
+            f"Data will be saved to {self.output_path}", self.debug_mode
+        )
 
     @staticmethod
     def fix_indices(main, sub):
@@ -300,33 +306,41 @@ class Descriptives:
 
     def parse_all_data(self):
         """
-        Calculates descriptive statistics for all of the supreme corpus
-        DataFrames and exports them to csv/excel (if applicable).
+        Calculates descriptive statistics for all supreme corpus DataFrames
+        and exports them to csv/excel (if applicable).
         """
-        print("Grabbing case descriptive statistics...")
+        debug_print("Grabbing case descriptive statistics...", self.debug_mode)
         self.cases_stats = self.get_cases_desc()
 
-        print("Grabbing advocates descriptive statistics...")
+        debug_print(
+            "Grabbing advocates descriptive statistics...", self.debug_mode
+        )
         self.advocates_stats = self.get_advocate_desc()
 
-        print("Grabbing speakers descriptive statistics...")
+        debug_print(
+            "Grabbing speakers descriptive statistics...", self.debug_mode
+        )
         self.speakers_stats = self.get_speaker_desc()
 
-        print("Grabbing voters descriptive statistics...")
+        debug_print(
+            "Grabbing voters descriptive statistics...", self.debug_mode
+        )
         self.voters_stats = self.get_voters_desc()
 
-        print("Grabbing utterances descriptive statistics...")
+        debug_print(
+            "Grabbing utterances descriptive statistics...", self.debug_mode
+        )
         self.utterances_stats = self.get_utterances_desc()
 
         # Outputting to CSVs
-        descriptives = [
+        descriptive_statistics = [
             self.advocates_stats,
             self.cases_stats,
             self.speakers_stats,
             self.voters_stats,
             self.utterances_stats,
         ]
-        outpaths = [
+        output_paths = [
             self.output_path + "/advocates_stats.csv",
             self.output_path + "/cases_stats.csv",
             self.output_path + "/speakers_stats.csv",
@@ -334,8 +348,8 @@ class Descriptives:
             self.output_path + "/utterances_stats.csv",
         ]
 
-        for idx, desc in enumerate(descriptives):
-            desc.to_csv(outpaths[idx], index=True, encoding=ENCODING_UTF_8)
+        for idx, desc in enumerate(descriptive_statistics):
+            desc.to_csv(output_paths[idx], index=True, encoding=ENCODING_UTF_8)
 
         # Outputting to a single excel
         desc_out = self.output_path + "/descriptive_statistics.xlsx"
@@ -350,4 +364,4 @@ class Descriptives:
             self.voters_stats.to_excel(writer, sheet_name="voters")
             self.utterances_stats.to_excel(writer, sheet_name="utterances")
 
-        print("Data saved to " + self.output_path)
+        debug_print("Data saved to " + self.output_path, self.debug_mode)
