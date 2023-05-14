@@ -38,6 +38,16 @@ class Model(ABC):
         Runs the model on its respective data.
         """
 
+    def print(self, message: str):
+        """
+        Handles the decision to print a message to standard out, and does so
+        if the application is in debug mode.
+
+        :param message: The message to be printed.
+        """
+        if self.debug_mode:
+            print(message)
+
     @abstractmethod
     def __repr__(self):
         """
@@ -56,7 +66,7 @@ class Model(ABC):
         :param list dataframe_name: Name of the dataframe used to create the
         model.
         """
-        if self.print:
+        if self.debug_mode:
             print("------------------------------------------")
             print(f"Running a {model_name} on {dataframe_name}...")
             print(f"Accuracy score: {accuracy_score}")
