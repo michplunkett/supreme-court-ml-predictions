@@ -14,7 +14,7 @@ from supreme_court_predictions.util.contants import (
     FILE_MODE_READ,
     LATEST_YEAR,
 )
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import debug_print, get_full_data_pathway
 
 
 class DataCleaner:
@@ -23,27 +23,25 @@ class DataCleaner:
     it into a usable format.
     """
 
-    def __init__(self):
+    def __init__(self, debug_mode=False):
         self.cases_df = None
         self.clean_case_ids = None  # stores the case IDs to use
         self.clean_utterances_list = None
+        self.debug_mode = debug_mode
+        self.local_path = get_full_data_pathway("convokit/")
+        self.output_path = get_full_data_pathway("clean_convokit/")
         self.speakers_df = None
         self.utterances_df = None
 
-        # Get local directory
-        self.local_path = get_full_data_pathway("convokit/")
-        print(f"Working in {self.local_path}")
-
-        # Set output path
-        self.output_path = get_full_data_pathway("clean_convokit/")
-        print(f"Data will be saved to {self.output_path}")
+        debug_print(f"Working in {self.local_path}", self.debug_mode)
+        debug_print(f"Data will be saved to {self.output_path}", self.debug_mode)
 
     def get_data(self):
         """
         Loads and outputs the Supreme Court Corpus data.
         """
 
-        print("Loading Supreme Court Corpus Data...")
+        debug_print("Loading Supreme Court Corpus Data...", self.debug_mode)
         corpus = Corpus(filename=download("supreme-corpus"))
         corpus.dump("supreme_corpus", base_path=self.local_path)
 
@@ -121,8 +119,8 @@ class DataCleaner:
 
         for case in cases_lst:
             # get metadata
-            for attr, obvs in metadata.items():
-                obvs.append(case[attr])
+            for attr, observations in metadata.items():
+                observations.append(case[attr])
 
         return pd.DataFrame(metadata)
 
@@ -285,15 +283,15 @@ class DataCleaner:
         """
         Cleans and parses all the data.
         """
-        print("Parsing cases...")
+        debug_print("Parsing cases...", self.debug_mode)
         cases_list = self.load_data("cases.jsonl")
         self.cases_df = self.get_cases_df(cases_list)
 
-        print("Parsing speakers...")
+        debug_print("Parsing speakers...", self.debug_mode)
         speakers_dict = self.load_data("speakers.json")
         self.speakers_df = self.speakers_to_df(speakers_dict)
 
-        print("Parsing conversations metadata...")
+        debug_print("Parsing conversations metadata...", self.debug_mode)
         conversations_dict = self.load_data("conversations.json")
         (
             self.conversations_df,
@@ -301,7 +299,7 @@ class DataCleaner:
             self.voters_df,
         ) = self.get_conversation_dfs(conversations_dict)
 
-        print("Parsing utterances...")
+        debug_print("Parsing utterances...", self.debug_mode)
         utterances_list = self.load_data("utterances.jsonl")
         self.clean_utterances_list, self.utterances_df = self.clean_utterances(
             utterances_list
@@ -338,4 +336,4 @@ class DataCleaner:
             encoding=ENCODING_UTF_8,
         )
 
-        print("Data saved to " + self.output_path)
+        debug_print("Data saved to " + self.output_path, self.debug_mode)
