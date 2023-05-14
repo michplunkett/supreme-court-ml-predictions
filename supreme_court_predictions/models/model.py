@@ -51,7 +51,7 @@ class Model(ABC):
     @abstractmethod
     def __repr__(self):
         """
-        Overwrites default string representation
+        Overwrites default string representation.
         """
 
     def print_results(
@@ -62,9 +62,9 @@ class Model(ABC):
 
         :param str model_name: The name of the model.
         :param list accuracy_score: The accuracy scores generated across for
-        the dataframes ran in the model.
+            the dataframes ran in the model.
         :param list dataframe_name: Name of the dataframe used to create the
-        model.
+            model.
         """
         if self.debug_mode:
             print("------------------------------------------")
