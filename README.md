@@ -46,7 +46,7 @@ There are two ways that you can run this application, one of them is to run all 
 
 [THIS WILL BE UPDATED ONCE ALL OF OUR STEPS ARE IN PLACE]
 
-## Package Description
+## Package Descriptions
 
 Within the `api` directory, the `client.py` file for convokit downloads initial data through the get_data function, and the google_cloud_platform `client.py` file will send computing jobs to the cloud. 
 
