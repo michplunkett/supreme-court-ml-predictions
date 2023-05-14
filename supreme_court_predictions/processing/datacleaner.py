@@ -14,7 +14,10 @@ from supreme_court_predictions.util.contants import (
     FILE_MODE_READ,
     LATEST_YEAR,
 )
-from supreme_court_predictions.util.functions import debug_print, get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
 class DataCleaner:
@@ -34,7 +37,9 @@ class DataCleaner:
         self.utterances_df = None
 
         debug_print(f"Working in {self.local_path}", self.debug_mode)
-        debug_print(f"Data will be saved to {self.output_path}", self.debug_mode)
+        debug_print(
+            f"Data will be saved to {self.output_path}", self.debug_mode
+        )
 
     def get_data(self):
         """
