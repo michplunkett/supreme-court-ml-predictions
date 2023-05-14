@@ -16,7 +16,7 @@ from supreme_court_predictions.util.functions import (
 
 class RandomForest(Model):
     """
-    This class runs sklearn random forest on aggregated utterance
+    This class runs sklearn random forest on aggregated utterances
     from the Supreme Court dataset.
     """
 

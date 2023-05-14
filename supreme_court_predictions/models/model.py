@@ -41,7 +41,7 @@ class Model(ABC):
     @abstractmethod
     def __repr__(self):
         """
-        Overwrites default string representation
+        Overwrites default string representation.
         """
 
     def print_results(
