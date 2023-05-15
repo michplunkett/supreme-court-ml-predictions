@@ -90,7 +90,7 @@ class XGBoost(Model):
 
         xgb_model = xgb.XGBClassifier(
             max_depth=7,
-            n_estimators=300,
+            n_estimators=100,
             objective="binary:logistic",
             random_state=SEED_CONSTANT,
             tree_method="gpu_hist",
