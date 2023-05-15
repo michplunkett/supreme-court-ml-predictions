@@ -8,7 +8,10 @@ tasks efficiently and effectively in a user-friendly manner.
 import pandas as pd
 import spacy
 
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
 class Tokenizer:
@@ -20,22 +23,26 @@ class Tokenizer:
 
     SPACY_PACKAGE = "en_core_web_sm"
 
-    def __init__(self):
+    def __init__(self, debug_mode=False):
         """
         Initializes the Tokenizer class by setting up the local path
         and loading the spaCy model.
         """
-        # Get local directory
+        self.debug_mode = debug_mode
         self.local_path = get_full_data_pathway("clean_convokit/")
-        print(f"Data will be saved to: \n{self.local_path}")
+        debug_print(
+            f"Data will be saved to: \n{self.local_path}", self.debug_mode
+        )
 
         try:
             self.nlp = spacy.load(self.SPACY_PACKAGE, disable=["parser", "ner"])
         except OSError:
-            print("Spacy not present. Downloading files.")
+            debug_print(
+                "spaCy not present. Downloading package.", self.debug_mode
+            )
             spacy.cli.download(self.SPACY_PACKAGE)
             self.nlp = spacy.load(self.SPACY_PACKAGE, disable=["parser", "ner"])
-        print("Spacy module successfully loaded.")
+        debug_print("spaCy module successfully loaded.", self.debug_mode)
 
         self.tokenize()
 
@@ -66,4 +73,4 @@ class Tokenizer:
         )
         utterances_df.to_csv(self.local_path + "utterances_df.csv", index=False)
         utterances_df.to_pickle(self.local_path + "utterances_df.p")
-        print("Spacy tokenization complete.")
+        debug_print("Spacy tokenization complete.", self.debug_mode)
