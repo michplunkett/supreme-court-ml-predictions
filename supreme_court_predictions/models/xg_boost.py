@@ -36,6 +36,10 @@ class XGBoost(Model):
             "advocate_aggregations.p",
             "adversary_aggregations.p",
         ],
+        max_features=5000,
+        test_size=0.20,
+        max_depth=7,
+        n_estimators=100,
     ):
         self.accuracies = []
         self.debug_mode = debug_mode
@@ -45,6 +49,13 @@ class XGBoost(Model):
         # Dataframes and df names to run models against
         self.dataframes = []
         self.dataframe_names = []
+
+        # Parameters (model and others)
+        self.max_features = max_features
+        self.test_size = test_size
+        # Model params
+        self.max_depth = max_depth
+        self.n_estimators = n_estimators
 
         for df in dfs:
             # Make sure it's a file name
@@ -70,7 +81,9 @@ class XGBoost(Model):
         """
         self.print("Creating bag of words")
 
-        vectorizer = CountVectorizer(analyzer="word", max_features=5000)
+        vectorizer = CountVectorizer(
+            analyzer="word", max_features=self.max_features
+        )
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
         bag_of_words_x = vectorizer.fit_transform(vectorize_document)
         bag_of_words_y = df.loc[:, "win_side"]
@@ -78,7 +91,7 @@ class XGBoost(Model):
         X_train, X_test, y_train, y_test = train_test_split(
             bag_of_words_x,
             bag_of_words_y,
-            test_size=0.20,
+            test_size=self.test_size,
             random_state=123,
             stratify=bag_of_words_y,
         )
