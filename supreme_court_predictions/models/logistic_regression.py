@@ -88,7 +88,7 @@ class LogisticRegression(Model):
         )
 
         self.print("Starting the Logistic Regression")
-        regressor = skLR(max_iter=self.max_iter)
+        regressor = skLR(max_iter=self.max_iter, random_state=SEED_CONSTANT)
 
         # Fit the classifier on the training data
         regressor.fit(X_train, y_train)
