@@ -4,6 +4,8 @@ This file contains the class that is the basis for all models in this package.
 
 from abc import ABC, abstractmethod
 
+from supreme_court_predictions.util.functions import debug_print
+
 
 class Model(ABC):
     """
@@ -45,8 +47,7 @@ class Model(ABC):
 
         :param message: The message to be printed.
         """
-        if self.debug_mode:
-            print(message)
+        debug_print(message, self.debug_mode)
 
     @abstractmethod
     def __repr__(self):
