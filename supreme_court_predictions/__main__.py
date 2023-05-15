@@ -11,13 +11,11 @@ from supreme_court_predictions.models.service import (
     run_xg_boost,
 )
 from supreme_court_predictions.processing.service import (
+    clean_data,
     process_data,
     tokenize_data,
 )
-from supreme_court_predictions.statistics.service import (
-    clean_data,
-    describe_data,
-)
+from supreme_court_predictions.statistics.service import describe_data
 
 if __name__ == "__main__":
     print("oh, what up?")

@@ -123,7 +123,7 @@ class DataCleaner:
         }
 
         for case in cases_lst:
-            # get metadata
+            # Get metadata
             for attr, observations in metadata.items():
                 observations.append(case[attr])
 
@@ -341,4 +341,4 @@ class DataCleaner:
             encoding=ENCODING_UTF_8,
         )
 
-        debug_print("Data saved to " + self.output_path, self.debug_mode)
+        debug_print(f"Data saved to {self.output_path}", self.debug_mode)
