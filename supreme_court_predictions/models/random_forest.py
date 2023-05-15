@@ -30,7 +30,6 @@ class RandomForest(Model):
         test_size=0.20,
         num_trees=100,
         max_depth=None,
-        print_results=True,
     ):
         self.accuracies = []
         self.debug_mode = debug_mode
