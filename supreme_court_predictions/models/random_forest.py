@@ -118,7 +118,7 @@ class RandomForest(Model):
 
     def __repr__(self):
         """
-        Overwrites default string representation of Model
+        Overwrites default string representation of Model.
 
         :return string representation of Model
         """
