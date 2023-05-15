@@ -5,7 +5,10 @@ import pickle
 
 import pandas as pd
 
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
 class TokenAggregations:
@@ -13,19 +16,22 @@ class TokenAggregations:
     This class aggregates tokens on a per case basis.
     """
 
-    def __init__(self):
-        self.all_tokens = None
-        self.advocate_tokens = None
+    def __init__(self, debug_mode=False):
         self.adversary_tokens = None
+        self.advocate_tokens = None
+        self.all_tokens = None
+        self.debug_mode = debug_mode
         self.judge_tokens = None
 
         # Get local directory
         self.local_path = get_full_data_pathway("clean_convokit/")
-        print(f"Working in {self.local_path}")
+        debug_print(f"Working in {self.local_path}", self.debug_mode)
 
         # Set output path
         self.output_path = get_full_data_pathway("processed/")
-        print(f"Data will be saved to {self.output_path}")
+        debug_print(
+            f"Data will be saved to {self.output_path}", self.debug_mode
+        )
 
         # Get advocate and voter side dataframes
         self.win_side = self.get_win_side()
@@ -51,7 +57,7 @@ class TokenAggregations:
         Get the winning side of the cases.
 
         :return A dataframe containing case IDs and the winning side (0=for
-                respondent, 1=for petitioner)
+            respondent, 1=for petitioner)
         """
         win_side_df = pd.read_csv(self.local_path + "cases_df.csv").rename(
             columns={"id": "case_id"}
@@ -63,7 +69,7 @@ class TokenAggregations:
         Get the voting side of the cases (for Judges only).
 
         :return A dataframe containing case IDs and the voting side (0=for
-                respondent, 1=for petitioner)
+            respondent, 1=for petitioner)
         """
         vote_side_df = pd.read_csv(self.local_path + "voters_df.csv")
         vote_side_df = vote_side_df.rename(
@@ -76,7 +82,7 @@ class TokenAggregations:
         Get the advocating side of the cases (for non-Judges only).
 
         :return A dataframe containing case IDs and the advocating side (0=for
-                respondent, 1=for petitioner)
+            respondent, 1=for petitioner)
         """
         advocate_side_df = pd.read_csv(self.local_path + "advocates_df.csv")
         return advocate_side_df.loc[:, ["case_id", "advocate", "side"]]
@@ -138,8 +144,8 @@ class TokenAggregations:
             case_id, speaker, speaker_type, and tokens
 
         :returns A dataframe with the side of the speaker appended to
-                 utterances, also removing speaker accounts who don't have a
-                 side.
+            utterances, also removing speaker accounts who don't have a
+            side.
         """
         # Renaming the speaker column for easier merging
         ut = utterances.rename(columns={"speaker": "advocate"})
@@ -165,7 +171,7 @@ class TokenAggregations:
         opposed to the petitioner.
 
         :param advocate: Whether to find the tokens for those in favor
-                         (advocate=True) or opposed (advocate=False)
+            (advocate=True) or opposed (advocate=False)
         :return A dataframe of tokens per case for petitioner advocates.
         """
         if advocate:
@@ -195,19 +201,25 @@ class TokenAggregations:
         only adversaries, 4) only judges, and appends the winning side of the
         case. DataFrames and exports them as pickle objects (if applicable).
         """
-        print("Grabbing token aggregation for all cases...")
+        debug_print(
+            "Grabbing token aggregation for all cases...", self.debug_mode
+        )
         self.all_tokens = self.get_all_case_tokens()
 
-        print("Grabbing token aggregation for advocates...")
+        debug_print(
+            "Grabbing token aggregation for advocates...", self.debug_mode
+        )
         self.advocate_tokens = self.get_advocate_case_tokens(True)
 
-        print("Grabbing token aggregation for adversaries...")
+        debug_print(
+            "Grabbing token aggregation for adversaries...", self.debug_mode
+        )
         self.adversary_tokens = self.get_advocate_case_tokens(False)
 
-        print("Grabbing token aggregation for judges...")
+        debug_print("Grabbing token aggregation for judges...", self.debug_mode)
         self.judge_tokens = self.get_judge_case_tokens()
 
-        print("Exporting files...")
+        debug_print("Exporting files...")
         # Outputting to CSVs
         aggregations = [
             self.all_tokens,
@@ -225,4 +237,4 @@ class TokenAggregations:
         for idx, agg in enumerate(aggregations):
             pickle.dump(agg, open(output_paths[idx], "wb"))
 
-        print("Data saved to " + self.output_path)
+        debug_print("Data saved to " + self.output_path, self.debug_mode)
