@@ -14,14 +14,17 @@ from supreme_court_predictions.util.functions import (
 )
 
 
-def get_data(debug=True):
+def get_data(debug_mode=False):
     """
     Loads and outputs the Supreme Court Corpus and case verdict data
+
+    :param bool debug_mode: Indicates if the application requires debug print
+        statements.
     """
 
     convokit_path = get_full_data_pathway("convokit/")
 
-    debug_print("Loading Supreme Court Corpus Data...", debug)
+    debug_print("Loading Supreme Court Corpus Data...", debug_mode)
     corpus = Corpus(filename=download("supreme-corpus"))
     corpus.dump("supreme_corpus", base_path=convokit_path)
 

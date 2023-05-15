@@ -14,10 +14,7 @@ from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.contants import SEED_CONSTANT
-from supreme_court_predictions.util.functions import (
-    debug_print,
-    get_full_data_pathway,
-)
+from supreme_court_predictions.util.functions import get_full_data_pathway
 
 # from sklearn.model_selection import cross_val_score
 # from sklearn.metrics import confusion_matrix
@@ -32,18 +29,18 @@ class XGBoost(Model):
 
     def __init__(
         self,
+        debug_mode=False,
         dfs=[
             "case_aggregations.p",
             "judge_aggregations.p",
             "advocate_aggregations.p",
             "adversary_aggregations.p",
         ],
-        print_results=True,
     ):
-        self.local_path = get_full_data_pathway("processed/")
-        self.print = print_results
-        self.name = "Gradient Boosted Tree Model"
         self.accuracies = []
+        self.debug_mode = debug_mode
+        self.local_path = get_full_data_pathway("processed/")
+        self.name = "Gradient Boosted Tree Model"
 
         # Dataframes and df names to run models against
         self.dataframes = []
@@ -71,7 +68,7 @@ class XGBoost(Model):
         :return (regressor, y_test, y_pred): A tuple that contains the
         regression model, test y-data, the predicted y-data.
         """
-        debug_print("Creating bag of words", self.print)
+        self.print("Creating bag of words")
 
         vectorizer = CountVectorizer(analyzer="word", max_features=5000)
         vectorize_document = df.loc[:, "tokens"].apply(" ".join)
@@ -86,7 +83,7 @@ class XGBoost(Model):
             stratify=bag_of_words_y,
         )
 
-        debug_print("Starting the XGBoost model", self.print)
+        self.print("Starting the XGBoost model")
 
         xgb_model = xgb.XGBClassifier(
             max_depth=7,
@@ -108,30 +105,25 @@ class XGBoost(Model):
         Runs the create function on each type of aggregated utterance.
         """
 
-        for df, dfname in zip(self.dataframes, self.dataframe_names):
+        for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
                 acc = self.create_and_measure(df, accuracy_score)
                 self.accuracies.append(acc)
 
                 # Print the results, if applicable
-                self.print_results(self.name.lower(), acc, dfname)
+                self.print_results(self.name.lower(), acc, df_name)
             except ValueError:
-                debug_print(
-                    "------------------------------------------", self.print
+                self.print("------------------------------------------")
+                self.print(
+                    "Error: training data is not big enough for this subset"
                 )
-                debug_print(
-                    "Error: training data is not big enough for this subset",
-                    self.print,
-                )
-                debug_print(
-                    "------------------------------------------", self.print
-                )
+                self.print("------------------------------------------")
 
         return self.accuracies
 
     def __repr__(self):
         """
-        Overwrites default string representation of Model
+        Overwrites default string representation of Model.
 
         :return string representation of Model
         """

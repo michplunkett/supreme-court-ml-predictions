@@ -4,6 +4,8 @@ This file contains the class that is the basis for all models in this package.
 
 from abc import ABC, abstractmethod
 
+from supreme_court_predictions.util.functions import debug_print
+
 
 class Model(ABC):
     """
@@ -38,10 +40,19 @@ class Model(ABC):
         Runs the model on its respective data.
         """
 
+    def print(self, message: str):
+        """
+        Handles the decision to print a message to standard out, and does so
+        if the application is in debug mode.
+
+        :param message: The message to be printed.
+        """
+        debug_print(message, self.debug_mode)
+
     @abstractmethod
     def __repr__(self):
         """
-        Overwrites default string representation
+        Overwrites default string representation.
         """
 
     def print_results(
@@ -52,11 +63,11 @@ class Model(ABC):
 
         :param str model_name: The name of the model.
         :param list accuracy_score: The accuracy scores generated across for
-        the dataframes ran in the model.
+            the dataframes ran in the model.
         :param list dataframe_name: Name of the dataframe used to create the
-        model.
+            model.
         """
-        if self.print:
+        if self.debug_mode:
             print("------------------------------------------")
             print(f"Running a {model_name} on {dataframe_name}...")
             print(f"Accuracy score: {accuracy_score}")
