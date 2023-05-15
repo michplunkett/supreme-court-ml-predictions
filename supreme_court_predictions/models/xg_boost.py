@@ -40,6 +40,7 @@ class XGBoost(Model):
         test_size=0.20,
         max_depth=7,
         n_estimators=100,
+        eta=0.3,
     ):
         self.accuracies = []
         self.debug_mode = debug_mode
@@ -56,6 +57,7 @@ class XGBoost(Model):
         # Model params
         self.max_depth = max_depth
         self.n_estimators = n_estimators
+        self.eta = eta
 
         for df in dfs:
             # Make sure it's a file name
@@ -99,11 +101,12 @@ class XGBoost(Model):
         self.print("Starting the XGBoost model")
 
         xgb_model = xgb.XGBClassifier(
-            max_depth=7,
-            n_estimators=100,
+            max_depth=self.max_depth,
+            n_estimators=self.n_estimators,
             objective="binary:logistic",
             random_state=SEED_CONSTANT,
             tree_method="gpu_hist",
+            eta=self.eta,
             predictor="gpu_predictor",
         )
 
