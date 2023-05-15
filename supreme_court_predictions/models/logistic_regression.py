@@ -33,20 +33,18 @@ class LogisticRegression(Model):
             "adversary_aggregations.p",
         ],
         max_features=5000,
-        test_size=0.20,
         max_iter=1000,
+        test_size=0.20,
     ):
         self.accuracies = []
+        self.dataframes = []
+        self.dataframe_names = []
         self.debug_mode = debug_mode
         self.local_path = get_full_data_pathway("processed/")
         self.max_features = max_features
         self.max_iter = max_iter
         self.name = "Regression"
         self.test_size = test_size
-
-        # Dataframes and df names to run models against
-        self.dataframes = []
-        self.dataframe_names = []
 
         for df in dfs:
             # Ensure the file exists
