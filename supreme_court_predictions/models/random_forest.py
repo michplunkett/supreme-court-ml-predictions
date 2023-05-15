@@ -26,11 +26,10 @@ class RandomForest(Model):
             "advocate_aggregations.p",
             "adversary_aggregations.p",
         ],
-        max_features=5000,
-        test_size=0.20,
-        num_trees=100,
         max_depth=None,
-        print_results=True,
+        max_features=5000,
+        num_trees=100,
+        test_size=0.20,
     ):
         self.accuracies = []
         self.debug_mode = debug_mode
