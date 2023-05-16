@@ -12,7 +12,7 @@ from supreme_court_predictions.util.functions import (
 )
 
 
-class Descriptives:
+class DescriptiveStatistics:
     """
     This class houses the functions needed to provide and export descriptive
     statistics of the convokit data.
@@ -87,7 +87,7 @@ class Descriptives:
         # Load data
         advocates = pd.read_csv(self.local_path + "advocates_df.csv")
 
-        # Get advocate side descriptives
+        # Get advocate side descriptive statistics
         advocate_stats = self.get_count_desc(advocates, ["side"])
         sides = [
             "for petitioner",
@@ -96,7 +96,8 @@ class Descriptives:
 
         advocate_stats.index = self.fix_indices("side", sides)
 
-        # Add total roles, total advocates, and aggregate roles to descriptives
+        # Add total roles, total advocates, and aggregate roles to descriptive
+        # statistics
         advocate_stats.loc[("total advocates", ""), "counts"] = len(
             advocates.loc[:, "advocate"].unique()
         )
@@ -167,7 +168,7 @@ class Descriptives:
         # Load data
         speakers = pd.read_csv(self.local_path + "speakers_df.csv")
 
-        # Get descriptive stats
+        # Get descriptive statistics
         speakers_stats = self.get_count_desc(speakers, ["speaker_type"])
 
         speaker_types = ["advocate (A)", "justice (J)"]
@@ -200,13 +201,13 @@ class Descriptives:
             utterances.loc[:, ["case_id", "speaker"]].value_counts()
         ) / len(utterances.loc[:, "case_id"].unique())
 
-        descriptives = {
+        descriptive_statistics = {
             "num of utterances": avg_utterance,
             "num of speakers": avg_speakers,
         }
 
         utterances_descriptives = pd.DataFrame.from_dict(
-            descriptives, orient="index", columns=["average"]
+            descriptive_statistics, orient="index", columns=["average"]
         )
 
         return utterances_descriptives
@@ -220,18 +221,20 @@ class Descriptives:
         # Load data
         voters = pd.read_csv(self.local_path + "voters_df.csv")
 
-        # Get descriptive stats of votes
-        voter_stats = self.get_count_desc(voters, ["vote"])
+        # Get descriptive statistics for votes
+        voter_statistics = self.get_count_desc(voters, ["vote"])
         vote_types = ["for petitioner", "for respondent"]
-        voter_stats.index = self.fix_indices("votes", vote_types)
+        voter_statistics.index = self.fix_indices("votes", vote_types)
 
-        voter_stats.loc[("justices", ""), "counts"] = len(
+        voter_statistics.loc[("justices", ""), "counts"] = len(
             voters.loc[:, "voter"].unique()
         )
 
-        voter_stats = pd.concat([voter_stats, self.votes_by_justice(voters)])
+        voter_statistics = pd.concat(
+            [voter_statistics, self.votes_by_justice(voters)]
+        )
 
-        return voter_stats
+        return voter_statistics
 
     def votes_by_justice(self, voters):
         """
@@ -251,12 +254,12 @@ class Descriptives:
         )
 
         for justice in justices:
-            # get counts
+            # Get counts
             voters_df.loc[("justice", justice), "counts"] = len(
                 voters.loc[voters.loc[:, "voter"] == justice, :]
             )
 
-            # get percent for petitioner
+            # Get percent for petitioner
             voters_df.loc[("justice", justice), "percentages"] = voters.loc[
                 voters.loc[:, "voter"] == justice, "vote"
             ].sum() / len(voters.loc[voters.loc[:, "voter"] == justice, :])
@@ -278,9 +281,9 @@ class Descriptives:
             "for respondent",
         ]
 
-        cases_stats = self.get_count_desc(cases, ["win_side"])
+        case_statistics = self.get_count_desc(cases, ["win_side"])
 
-        cases_stats.index = self.fix_indices("win side", winning_sides)
+        case_statistics.index = self.fix_indices("win side", winning_sides)
 
         # Get counts
         ct_values = []
@@ -300,9 +303,9 @@ class Descriptives:
                 attr = f"years ({min_year} to {max_year})"
             elif attr == "ids":
                 attr = "cases"
-            cases_stats.loc[(attr, ""), "counts"] = count
+            case_statistics.loc[(attr, ""), "counts"] = count
 
-        return cases_stats
+        return case_statistics
 
     def parse_all_data(self):
         """
