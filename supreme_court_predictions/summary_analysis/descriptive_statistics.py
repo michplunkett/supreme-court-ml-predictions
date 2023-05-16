@@ -351,10 +351,27 @@ class DescriptiveStatistics:
             self.output_path + "/utterances_stats.csv",
         ]
 
-        for idx, desc in enumerate(descriptive_statistics):
-            desc.to_csv(output_paths[idx], index=True, encoding=ENCODING_UTF_8)
+        for idx, desc_stats in enumerate(descriptive_statistics):
+            # Print statistics to CSV files
+            desc_stats.to_csv(
+                output_paths[idx], index=True, encoding=ENCODING_UTF_8
+            )
+            # Print statistics to std.out
+            # Create the title of statistical output from the output title
+            statistics_title = (
+                output_paths[idx]
+                .split("/")[-1]
+                .replace("_", " ")
+                .replace(".csv", "")
+                .replace("stats", "statistics")
+                .title()
+            )
+            print(statistics_title)
+            print(desc_stats)
+            if idx != len(descriptive_statistics) - 1:
+                print("\n")
 
-        # Outputting to a single excel
+        # Outputting to a single Excel file
         desc_out = self.output_path + "/descriptive_statistics.xlsx"
         # Known ExcelWriter issue:
         # https://github.com/pylint-dev/pylint/issues/3060
