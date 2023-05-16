@@ -18,10 +18,11 @@ class DescriptiveStatistics:
     statistics of the convokit data.
     """
 
-    def __init__(self, debug_mode=False):
+    def __init__(self, debug_mode=False, print_to_csv=True):
         self.advocates_stats = None
         self.cases_stats = None
         self.debug_mode = debug_mode
+        self.print_to_csv = print_to_csv
         self.speakers_stats = None
         self.utterances_stats = None
         self.voters_stats = None
@@ -353,23 +354,25 @@ class DescriptiveStatistics:
 
         for idx, desc_stats in enumerate(descriptive_statistics):
             # Print statistics to CSV files
-            desc_stats.to_csv(
-                output_paths[idx], index=True, encoding=ENCODING_UTF_8
-            )
+            if self.print_to_csv:
+                desc_stats.to_csv(
+                    output_paths[idx], index=True, encoding=ENCODING_UTF_8
+                )
             # Print statistics to std.out
             # Create the title of statistical output from the output title
-            statistics_title = (
-                output_paths[idx]
-                .split("/")[-1]
-                .replace("_", " ")
-                .replace(".csv", "")
-                .replace("stats", "statistics")
-                .title()
-            )
-            print(statistics_title)
-            print(desc_stats)
-            if idx != len(descriptive_statistics) - 1:
-                print("\n")
+            if self.debug_mode:
+                statistics_title = (
+                    output_paths[idx]
+                    .split("/")[-1]
+                    .replace("_", " ")
+                    .replace(".csv", "")
+                    .replace("stats", "statistics")
+                    .title()
+                )
+                print(statistics_title)
+                print(desc_stats)
+                if idx != len(descriptive_statistics) - 1:
+                    print("\n")
 
         # Outputting to a single Excel file
         desc_out = self.output_path + "/descriptive_statistics.xlsx"
