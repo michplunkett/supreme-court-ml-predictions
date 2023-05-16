@@ -9,7 +9,7 @@ import re
 import pandas as pd
 from convokit import Corpus, download
 
-from supreme_court_predictions.util.contants import (
+from supreme_court_predictions.util.constants import (
     ENCODING_UTF_8,
     FILE_MODE_READ,
     LATEST_YEAR,

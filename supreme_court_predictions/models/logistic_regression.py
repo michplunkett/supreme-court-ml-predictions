@@ -9,11 +9,10 @@ import os.path
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression as skLR
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
-from supreme_court_predictions.util.contants import SEED_CONSTANT
+from supreme_court_predictions.util.constants import SEED_CONSTANT
 from supreme_court_predictions.util.functions import get_full_data_pathway
 
 
@@ -36,11 +35,19 @@ class LogisticRegression(Model):
         max_iter=1000,
         test_size=0.20,
     ):
-        self.accuracies = []
+        # Model outputs
+        self.accuracies = {}
+        self.f1 = {}
+        self.confusion_matrix = {}
+        self.models = {}
         self.dataframes = []
         self.dataframe_names = []
+
+        # Data and display
         self.debug_mode = debug_mode
         self.local_path = get_full_data_pathway("processed/")
+
+        # Model features
         self.max_features = max_features
         self.max_iter = max_iter
         self.name = "Regression"
@@ -101,11 +108,14 @@ class LogisticRegression(Model):
 
         for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
-                acc = self.create_and_measure(df, accuracy_score)
-                self.accuracies.append(acc)
+                model, acc, f1, cm = self.create_and_measure(df)
+                self.models[df_name] = model
+                self.accuracies[df_name] = acc
+                self.f1[df_name] = f1
+                self.confusion_matrix[df_name] = cm
 
                 # Print the results, if applicable
-                self.print_results(self.name.lower(), acc, df_name)
+                self.print_results(self.name.lower(), acc, f1, df_name)
             except ValueError:
                 self.print("------------------------------------------")
                 self.print(
@@ -113,7 +123,7 @@ class LogisticRegression(Model):
                 )
                 self.print("------------------------------------------")
 
-        return self.accuracies
+        return self.accuracies, self.f1, self.confusion_matrix
 
     def __repr__(self):
         """
@@ -134,8 +144,12 @@ class LogisticRegression(Model):
         for parameter, name in zip(parameters, parameter_names):
             return_str += f"\t{name}: {str(parameter)}\n"
 
-        return_str += "ACCURACIES: "
-        for name, acc in zip(self.dataframe_names, self.accuracies):
-            return_str += f"\n\t{name}: {str(acc)}"
+        return_str += "ACCURACIES: \n"
+        for name, acc in self.accuracies.items():
+            return_str += f"\t{name}: {str(acc)}\n"
+
+        return_str += "F1 SCORES: "
+        for name, f1 in self.f1.items():
+            return_str += f"\n\t{name}: {str(f1)}"
 
         return return_str
