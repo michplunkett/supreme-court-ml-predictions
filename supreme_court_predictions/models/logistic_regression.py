@@ -36,12 +36,12 @@ class LogisticRegression(Model):
         test_size=0.20,
     ):
         # Model outputs
-        self.accuracies = []
-        self.f1 = []
+        self.accuracies = {}
+        self.f1 = {}
+        self.confusion_matrix = {}
+        self.models = {}
         self.dataframes = []
         self.dataframe_names = []
-        self.confusion_matrix = []
-        self.models = []
 
         # Data and display
         self.debug_mode = debug_mode
@@ -109,10 +109,10 @@ class LogisticRegression(Model):
         for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
                 model, acc, f1, cm = self.create_and_measure(df)
-                self.models.append(model)
-                self.accuracies.append(acc)
-                self.f1.append(f1)
-                self.confusion_matrix.append(cm)
+                self.models[df_name] = model
+                self.accuracies[df_name] = acc
+                self.f1[df_name] = f1
+                self.confusion_matrix[df_name] = cm
 
                 # Print the results, if applicable
                 self.print_results(self.name.lower(), acc, f1, df_name)
@@ -145,11 +145,11 @@ class LogisticRegression(Model):
             return_str += f"\t{name}: {str(parameter)}\n"
 
         return_str += "ACCURACIES: \n"
-        for name, acc in zip(self.dataframe_names, self.accuracies):
+        for name, acc in self.accuracies.items():
             return_str += f"\t{name}: {str(acc)}\n"
 
         return_str += "F1 SCORES: "
-        for name, f1 in zip(self.dataframe_names, self.f1):
+        for name, f1 in self.f1.items():
             return_str += f"\n\t{name}: {str(f1)}"
 
         return return_str

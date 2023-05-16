@@ -43,17 +43,17 @@ class XGBoost(Model):
         subsample=1,
     ):
         # Model outputs
-        self.accuracies = []
-        self.f1 = []
-        self.models = []
+        self.accuracies = {}
+        self.f1 = {}
+        self.models = {}
+        self.confusion_matrix = {}
+        self.dataframes = []
+        self.dataframe_names = []
+
+        # Data and display
         self.debug_mode = debug_mode
         self.local_path = get_full_data_pathway("processed/")
         self.name = "Gradient Boosted Tree Model"
-        self.confusion_matrix = []
-
-        # Dataframes and df names to run models against
-        self.dataframes = []
-        self.dataframe_names = []
 
         # Parameters (model and others)
         self.max_features = max_features
@@ -130,10 +130,10 @@ class XGBoost(Model):
         for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
                 model, acc, f1, cm = self.create_and_measure(df)
-                self.models.append(model)
-                self.accuracies.append(acc)
-                self.f1.append(f1)
-                self.confusion_matrix.append(cm)
+                self.models[df_name] = model
+                self.accuracies[df_name] = acc
+                self.f1[df_name] = f1
+                self.confusion_matrix[df_name] = cm
 
                 # Print the results, if applicable
                 self.print_results(self.name.lower(), acc, f1, df_name)
@@ -177,11 +177,11 @@ class XGBoost(Model):
             return_str += f"\t{name}: {str(parameter)}\n"
 
         return_str += "ACCURACIES: \n"
-        for name, acc in zip(self.dataframe_names, self.accuracies):
+        for name, acc in self.accuracies.items():
             return_str += f"\t{name}: {str(acc)}\n"
 
         return_str += "F1 SCORES: "
-        for name, f1 in zip(self.dataframe_names, self.f1):
+        for name, f1 in self.f1.items():
             return_str += f"\n\t{name}: {str(f1)}"
 
         return return_str
