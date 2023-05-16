@@ -159,7 +159,7 @@ class DescriptiveStatistics:
 
         return clean_roles_df
 
-    def get_speaker_desc(self):
+    def get_speaker_statistics(self):
         """
         Calculates descriptive statistics for the speakers DataFrame.
 
@@ -184,7 +184,7 @@ class DescriptiveStatistics:
 
         return speakers_stats
 
-    def get_utterances_desc(self):
+    def get_utterance_statistics(self):
         """
         Calculates descriptive statistics for the utterances DataFrame.
 
@@ -206,13 +206,13 @@ class DescriptiveStatistics:
             "num of speakers": avg_speakers,
         }
 
-        utterances_descriptives = pd.DataFrame.from_dict(
+        utterance_descriptive_statistics = pd.DataFrame.from_dict(
             descriptive_statistics, orient="index", columns=["average"]
         )
 
-        return utterances_descriptives
+        return utterance_descriptive_statistics
 
-    def get_voters_desc(self):
+    def get_voters_statistics(self):
         """
         Calculates descriptive statistics for the voters DataFrame.
 
@@ -266,7 +266,7 @@ class DescriptiveStatistics:
 
         return voters_df
 
-    def get_cases_desc(self):
+    def get_cases_statistics(self):
         """
         Calculates descriptive statistics for the cases DataFrame.
 
@@ -313,7 +313,7 @@ class DescriptiveStatistics:
         and exports them to csv/excel (if applicable).
         """
         debug_print("Grabbing case descriptive statistics...", self.debug_mode)
-        self.cases_stats = self.get_cases_desc()
+        self.cases_stats = self.get_cases_statistics()
 
         debug_print(
             "Grabbing advocates descriptive statistics...", self.debug_mode
@@ -323,17 +323,17 @@ class DescriptiveStatistics:
         debug_print(
             "Grabbing speakers descriptive statistics...", self.debug_mode
         )
-        self.speakers_stats = self.get_speaker_desc()
+        self.speakers_stats = self.get_speaker_statistics()
 
         debug_print(
             "Grabbing voters descriptive statistics...", self.debug_mode
         )
-        self.voters_stats = self.get_voters_desc()
+        self.voters_stats = self.get_voters_statistics()
 
         debug_print(
             "Grabbing utterances descriptive statistics...", self.debug_mode
         )
-        self.utterances_stats = self.get_utterances_desc()
+        self.utterances_stats = self.get_utterance_statistics()
 
         # Outputting to CSVs
         descriptive_statistics = [
