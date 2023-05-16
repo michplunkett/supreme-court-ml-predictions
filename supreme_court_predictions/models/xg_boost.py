@@ -36,12 +36,12 @@ class XGBoost(Model):
             "advocate_aggregations.p",
             "adversary_aggregations.p",
         ],
-        max_features=5000,
-        test_size=0.20,
-        max_depth=7,
-        n_estimators=100,
         eta=0.3,
+        max_depth=7,
+        max_features=5000,
+        n_estimators=100,
         subsample=1,
+        test_size=0.20,
     ):
         self.accuracies = []
         self.debug_mode = debug_mode
