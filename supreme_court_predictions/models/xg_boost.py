@@ -96,7 +96,7 @@ class XGBoost(Model):
             bag_of_words_x,
             bag_of_words_y,
             test_size=self.test_size,
-            random_state=123,
+            random_state=SEED_CONSTANT,
             stratify=bag_of_words_y,
         )
 
