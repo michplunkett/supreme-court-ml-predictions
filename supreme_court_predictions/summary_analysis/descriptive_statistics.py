@@ -53,7 +53,7 @@ class DescriptiveStatistics:
         return pd.MultiIndex.from_tuples(new_indices)
 
     @staticmethod
-    def get_count_desc(df, cols):
+    def get_count_statistics(df, cols):
         """
         Calculates descriptive statistics of counts for a given DataFrame.
 
@@ -78,7 +78,7 @@ class DescriptiveStatistics:
 
         return df_stats
 
-    def get_advocate_desc(self):
+    def get_advocate_statistics(self):
         """
         Calculates descriptive statistics for the advocates DataFrame.
 
@@ -88,7 +88,7 @@ class DescriptiveStatistics:
         advocates = pd.read_csv(self.local_path + "advocates_df.csv")
 
         # Get advocate side descriptive statistics
-        advocate_stats = self.get_count_desc(advocates, ["side"])
+        advocate_stats = self.get_count_statistics(advocates, ["side"])
         sides = [
             "for petitioner",
             "for respondent",
@@ -169,7 +169,7 @@ class DescriptiveStatistics:
         speakers = pd.read_csv(self.local_path + "speakers_df.csv")
 
         # Get descriptive statistics
-        speakers_stats = self.get_count_desc(speakers, ["speaker_type"])
+        speakers_stats = self.get_count_statistics(speakers, ["speaker_type"])
 
         speaker_types = ["advocate (A)", "justice (J)"]
         speakers_stats.index = self.fix_indices("speaker type", speaker_types)
@@ -222,7 +222,7 @@ class DescriptiveStatistics:
         voters = pd.read_csv(self.local_path + "voters_df.csv")
 
         # Get descriptive statistics for votes
-        voter_statistics = self.get_count_desc(voters, ["vote"])
+        voter_statistics = self.get_count_statistics(voters, ["vote"])
         vote_types = ["for petitioner", "for respondent"]
         voter_statistics.index = self.fix_indices("votes", vote_types)
 
@@ -281,7 +281,7 @@ class DescriptiveStatistics:
             "for respondent",
         ]
 
-        case_statistics = self.get_count_desc(cases, ["win_side"])
+        case_statistics = self.get_count_statistics(cases, ["win_side"])
 
         case_statistics.index = self.fix_indices("win side", winning_sides)
 
@@ -318,7 +318,7 @@ class DescriptiveStatistics:
         debug_print(
             "Grabbing advocates descriptive statistics...", self.debug_mode
         )
-        self.advocates_stats = self.get_advocate_desc()
+        self.advocates_stats = self.get_advocate_statistics()
 
         debug_print(
             "Grabbing speakers descriptive statistics...", self.debug_mode
