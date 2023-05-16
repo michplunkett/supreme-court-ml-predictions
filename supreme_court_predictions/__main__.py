@@ -15,7 +15,7 @@ from supreme_court_predictions.processing.service import (
     process_data,
     tokenize_data,
 )
-from supreme_court_predictions.statistics.service import describe_data
+from supreme_court_predictions.summary_analysis.service import describe_data
 
 if __name__ == "__main__":
     print("oh, what up?")

@@ -2,7 +2,7 @@
 This file works as the central point of interaction for the statistics package.
 """
 
-from supreme_court_predictions.statistics.descriptives import Descriptives
+from supreme_court_predictions.summary_analysis.descriptives import Descriptives
 
 
 def describe_data(debug_mode=False):
