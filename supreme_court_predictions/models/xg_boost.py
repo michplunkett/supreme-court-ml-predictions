@@ -9,11 +9,10 @@ import os.path
 import pandas as pd
 import xgboost as xgb
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.models.model import Model
-from supreme_court_predictions.util.contants import SEED_CONSTANT
+from supreme_court_predictions.util.constants import SEED_CONSTANT
 from supreme_court_predictions.util.functions import get_full_data_pathway
 
 # from sklearn.model_selection import cross_val_score
@@ -43,10 +42,14 @@ class XGBoost(Model):
         eta=0.3,
         subsample=1,
     ):
+        # Model outputs
         self.accuracies = []
+        self.f1 = []
+        self.models = []
         self.debug_mode = debug_mode
         self.local_path = get_full_data_pathway("processed/")
         self.name = "Gradient Boosted Tree Model"
+        self.confusion_matrix = []
 
         # Dataframes and df names to run models against
         self.dataframes = []
@@ -126,11 +129,14 @@ class XGBoost(Model):
 
         for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
-                acc = self.create_and_measure(df, accuracy_score)
+                model, acc, f1, cm = self.create_and_measure(df)
+                self.models.append(model)
                 self.accuracies.append(acc)
+                self.f1.append(f1)
+                self.confusion_matrix.append(cm)
 
                 # Print the results, if applicable
-                self.print_results(self.name.lower(), acc, df_name)
+                self.print_results(self.name.lower(), acc, f1, df_name)
             except ValueError:
                 self.print("------------------------------------------")
                 self.print(
@@ -138,7 +144,7 @@ class XGBoost(Model):
                 )
                 self.print("------------------------------------------")
 
-        return self.accuracies
+        return self.accuracies, self.f1, self.confusion_matrix
 
     def __repr__(self):
         """
@@ -147,16 +153,35 @@ class XGBoost(Model):
         :return string representation of Model
         """
 
-        parameters = []  # TODO - add me
-        parameter_names = []  # TODO - add me
+        parameters = [
+            self.max_features,
+            self.test_size,
+            self.max_depth,
+            self.n_estimators,
+            self.eta,
+            self.subsample,
+        ]
 
-        s = f"MODEL TYPE: {self.name}\n"
-        s += "PARAMETERS: \n"
+        parameter_names = [
+            "Maximum Features",
+            "Test Size",
+            "Maximum Depth",
+            "Number of Trees",
+            "Learning Rate",
+            "Subsample",
+        ]
+
+        return_str = f"MODEL TYPE: {self.name}\n"
+        return_str += "PARAMETERS: \n"
         for parameter, name in zip(parameters, parameter_names):
-            s += f"\t{name}: {str(parameter)}\n"
+            return_str += f"\t{name}: {str(parameter)}\n"
 
-        s += "ACCURACIES: "
+        return_str += "ACCURACIES: \n"
         for name, acc in zip(self.dataframe_names, self.accuracies):
-            s += f"\n\t{name}: {str(acc)}"
+            return_str += f"\t{name}: {str(acc)}\n"
 
-        return s
+        return_str += "F1 SCORES: "
+        for name, f1 in zip(self.dataframe_names, self.f1):
+            return_str += f"\n\t{name}: {str(f1)}"
+
+        return return_str
