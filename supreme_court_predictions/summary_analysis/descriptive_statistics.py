@@ -5,23 +5,24 @@ statistics for the convokit datasets.
 import numpy as np
 import pandas as pd
 
-from supreme_court_predictions.util.contants import ENCODING_UTF_8
+from supreme_court_predictions.util.constants import ENCODING_UTF_8
 from supreme_court_predictions.util.functions import (
     debug_print,
     get_full_data_pathway,
 )
 
 
-class Descriptives:
+class DescriptiveStatistics:
     """
     This class houses the functions needed to provide and export descriptive
     statistics of the convokit data.
     """
 
-    def __init__(self, debug_mode=False):
+    def __init__(self, debug_mode=False, print_to_csv=True):
         self.advocates_stats = None
         self.cases_stats = None
         self.debug_mode = debug_mode
+        self.print_to_csv = print_to_csv
         self.speakers_stats = None
         self.utterances_stats = None
         self.voters_stats = None
@@ -53,7 +54,7 @@ class Descriptives:
         return pd.MultiIndex.from_tuples(new_indices)
 
     @staticmethod
-    def get_count_desc(df, cols):
+    def get_count_statistics(df, cols):
         """
         Calculates descriptive statistics of counts for a given DataFrame.
 
@@ -78,7 +79,7 @@ class Descriptives:
 
         return df_stats
 
-    def get_advocate_desc(self):
+    def get_advocate_statistics(self):
         """
         Calculates descriptive statistics for the advocates DataFrame.
 
@@ -87,8 +88,8 @@ class Descriptives:
         # Load data
         advocates = pd.read_csv(self.local_path + "advocates_df.csv")
 
-        # Get advocate side descriptives
-        advocate_stats = self.get_count_desc(advocates, ["side"])
+        # Get advocate side descriptive statistics
+        advocate_stats = self.get_count_statistics(advocates, ["side"])
         sides = [
             "for petitioner",
             "for respondent",
@@ -96,7 +97,8 @@ class Descriptives:
 
         advocate_stats.index = self.fix_indices("side", sides)
 
-        # Add total roles, total advocates, and aggregate roles to descriptives
+        # Add total roles, total advocates, and aggregate roles to descriptive
+        # statistics
         advocate_stats.loc[("total advocates", ""), "counts"] = len(
             advocates.loc[:, "advocate"].unique()
         )
@@ -158,7 +160,7 @@ class Descriptives:
 
         return clean_roles_df
 
-    def get_speaker_desc(self):
+    def get_speaker_statistics(self):
         """
         Calculates descriptive statistics for the speakers DataFrame.
 
@@ -167,8 +169,8 @@ class Descriptives:
         # Load data
         speakers = pd.read_csv(self.local_path + "speakers_df.csv")
 
-        # Get descriptive stats
-        speakers_stats = self.get_count_desc(speakers, ["speaker_type"])
+        # Get descriptive statistics
+        speakers_stats = self.get_count_statistics(speakers, ["speaker_type"])
 
         speaker_types = ["advocate (A)", "justice (J)"]
         speakers_stats.index = self.fix_indices("speaker type", speaker_types)
@@ -183,7 +185,7 @@ class Descriptives:
 
         return speakers_stats
 
-    def get_utterances_desc(self):
+    def get_utterance_statistics(self):
         """
         Calculates descriptive statistics for the utterances DataFrame.
 
@@ -200,18 +202,18 @@ class Descriptives:
             utterances.loc[:, ["case_id", "speaker"]].value_counts()
         ) / len(utterances.loc[:, "case_id"].unique())
 
-        descriptives = {
+        descriptive_statistics = {
             "num of utterances": avg_utterance,
             "num of speakers": avg_speakers,
         }
 
-        utterances_descriptives = pd.DataFrame.from_dict(
-            descriptives, orient="index", columns=["average"]
+        utterance_descriptive_statistics = pd.DataFrame.from_dict(
+            descriptive_statistics, orient="index", columns=["average"]
         )
 
-        return utterances_descriptives
+        return utterance_descriptive_statistics
 
-    def get_voters_desc(self):
+    def get_voters_statistics(self):
         """
         Calculates descriptive statistics for the voters DataFrame.
 
@@ -220,18 +222,20 @@ class Descriptives:
         # Load data
         voters = pd.read_csv(self.local_path + "voters_df.csv")
 
-        # Get descriptive stats of votes
-        voter_stats = self.get_count_desc(voters, ["vote"])
+        # Get descriptive statistics for votes
+        voter_statistics = self.get_count_statistics(voters, ["vote"])
         vote_types = ["for petitioner", "for respondent"]
-        voter_stats.index = self.fix_indices("votes", vote_types)
+        voter_statistics.index = self.fix_indices("votes", vote_types)
 
-        voter_stats.loc[("justices", ""), "counts"] = len(
+        voter_statistics.loc[("justices", ""), "counts"] = len(
             voters.loc[:, "voter"].unique()
         )
 
-        voter_stats = pd.concat([voter_stats, self.votes_by_justice(voters)])
+        voter_statistics = pd.concat(
+            [voter_statistics, self.votes_by_justice(voters)]
+        )
 
-        return voter_stats
+        return voter_statistics
 
     def votes_by_justice(self, voters):
         """
@@ -251,19 +255,19 @@ class Descriptives:
         )
 
         for justice in justices:
-            # get counts
+            # Get counts
             voters_df.loc[("justice", justice), "counts"] = len(
                 voters.loc[voters.loc[:, "voter"] == justice, :]
             )
 
-            # get percent for petitioner
+            # Get percent for petitioner
             voters_df.loc[("justice", justice), "percentages"] = voters.loc[
                 voters.loc[:, "voter"] == justice, "vote"
             ].sum() / len(voters.loc[voters.loc[:, "voter"] == justice, :])
 
         return voters_df
 
-    def get_cases_desc(self):
+    def get_cases_statistics(self):
         """
         Calculates descriptive statistics for the cases DataFrame.
 
@@ -278,9 +282,9 @@ class Descriptives:
             "for respondent",
         ]
 
-        cases_stats = self.get_count_desc(cases, ["win_side"])
+        case_statistics = self.get_count_statistics(cases, ["win_side"])
 
-        cases_stats.index = self.fix_indices("win side", winning_sides)
+        case_statistics.index = self.fix_indices("win side", winning_sides)
 
         # Get counts
         ct_values = []
@@ -300,9 +304,9 @@ class Descriptives:
                 attr = f"years ({min_year} to {max_year})"
             elif attr == "ids":
                 attr = "cases"
-            cases_stats.loc[(attr, ""), "counts"] = count
+            case_statistics.loc[(attr, ""), "counts"] = count
 
-        return cases_stats
+        return case_statistics
 
     def parse_all_data(self):
         """
@@ -310,27 +314,27 @@ class Descriptives:
         and exports them to csv/excel (if applicable).
         """
         debug_print("Grabbing case descriptive statistics...", self.debug_mode)
-        self.cases_stats = self.get_cases_desc()
+        self.cases_stats = self.get_cases_statistics()
 
         debug_print(
             "Grabbing advocates descriptive statistics...", self.debug_mode
         )
-        self.advocates_stats = self.get_advocate_desc()
+        self.advocates_stats = self.get_advocate_statistics()
 
         debug_print(
             "Grabbing speakers descriptive statistics...", self.debug_mode
         )
-        self.speakers_stats = self.get_speaker_desc()
+        self.speakers_stats = self.get_speaker_statistics()
 
         debug_print(
             "Grabbing voters descriptive statistics...", self.debug_mode
         )
-        self.voters_stats = self.get_voters_desc()
+        self.voters_stats = self.get_voters_statistics()
 
         debug_print(
             "Grabbing utterances descriptive statistics...", self.debug_mode
         )
-        self.utterances_stats = self.get_utterances_desc()
+        self.utterances_stats = self.get_utterance_statistics()
 
         # Outputting to CSVs
         descriptive_statistics = [
@@ -348,10 +352,29 @@ class Descriptives:
             self.output_path + "/utterances_stats.csv",
         ]
 
-        for idx, desc in enumerate(descriptive_statistics):
-            desc.to_csv(output_paths[idx], index=True, encoding=ENCODING_UTF_8)
+        for idx, desc_stats in enumerate(descriptive_statistics):
+            # Print statistics to CSV files
+            if self.print_to_csv:
+                desc_stats.to_csv(
+                    output_paths[idx], index=True, encoding=ENCODING_UTF_8
+                )
+            # Print statistics to std.out
+            # Create the title of statistical output from the output title
+            if self.debug_mode:
+                statistics_title = (
+                    output_paths[idx]
+                    .split("/")[-1]
+                    .replace("_", " ")
+                    .replace(".csv", "")
+                    .replace("stats", "statistics")
+                    .title()
+                )
+                print(statistics_title)
+                print(desc_stats)
+                if idx != len(descriptive_statistics) - 1:
+                    print("\n")
 
-        # Outputting to a single excel
+        # Outputting to a single Excel file
         desc_out = self.output_path + "/descriptive_statistics.xlsx"
         # Known ExcelWriter issue:
         # https://github.com/pylint-dev/pylint/issues/3060
