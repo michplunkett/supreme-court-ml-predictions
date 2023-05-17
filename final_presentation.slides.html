@@ -15219,7 +15219,7 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Case-Information">Case Information<a class="anchor-link" href="#Case-Information">&#182;</a></h3><p>Includes infromation on each court case, such as:</p>
+<h3 id="Case-Information">Case Information<a class="anchor-link" href="#Case-Information">&#182;</a></h3><p>Includes infromation on each <i>court case</i>, such as:</p>
 <ul>
 <li>Unique case ID</li>
 <li>Year and title of case</li>
@@ -15342,7 +15342,11 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Speakers">Speakers<a class="anchor-link" href="#Speakers">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
+<h3 id="Speakers">Speakers<a class="anchor-link" href="#Speakers">&#182;</a></h3><p>Includes infromation on each <i>speaker</i>, such as:</p>
+<ul>
+<li>Speaker name and unique speaker key</li>
+<li>Speaker role and type (justice, advocate, nan)</li>
+</ul>
 
 </div>
 </div>
@@ -15441,7 +15445,11 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Voters">Voters<a class="anchor-link" href="#Voters">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
+<h3 id="Voters">Voters<a class="anchor-link" href="#Voters">&#182;</a></h3><p>Includes infromation on each <i>vote and voter</i>, such as:</p>
+<ul>
+<li>Unique case ID</li>
+<li>Voter key and vote side (judges only, 1=for petitioner)</li>
+</ul>
 
 </div>
 </div>
@@ -15555,7 +15563,12 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Advocates">Advocates<a class="anchor-link" href="#Advocates">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
+<h3 id="Advocates">Advocates<a class="anchor-link" href="#Advocates">&#182;</a></h3><p>Includes infromation on each <i>advocate (non-judges)</i>, such as:</p>
+<ul>
+<li>Unique case ID</li>
+<li>Advocate ID and advocacy side(1 = for petitioner)</li>
+<li>Advocate role</li>
+</ul>
 
 </div>
 </div>
@@ -15670,7 +15683,13 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Conversations">Conversations<a class="anchor-link" href="#Conversations">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
+<h3 id="Conversations">Conversations<a class="anchor-link" href="#Conversations">&#182;</a></h3><p>Includes infromation on each <i>conversation</i>. There is one conversation per case, <br>
+and conversations are made up of individual utterances. Conversation information includes:</p>
+<ul>
+<li>Unique case ID</li>
+<li>Unique conversation ID</li>
+<li>Winning side (1 = for petitioner)</li>
+</ul>
 
 </div>
 </div>
@@ -15758,7 +15777,13 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Utterances">Utterances<a class="anchor-link" href="#Utterances">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
+<h3 id="Utterances">Utterances<a class="anchor-link" href="#Utterances">&#182;</a></h3><p>Includes infromation on each <i>utterance</i>, such as:</p>
+<ul>
+<li>Unique case ID</li>
+<li>Corresponding conversation ID</li>
+<li>Speaker key</li>
+<li>Utterance text</li>
+</ul>
 
 </div>
 </div>
@@ -15922,7 +15947,33 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Data-Cleaning-and-Pre-Processing">Data Cleaning and Pre-Processing<a class="anchor-link" href="#Data-Cleaning-and-Pre-Processing">&#182;</a></h2><p><span style="color:red"><b>[insert steps]</b></span></p>
+<h2 id="Data-Cleaning-and-Pre-Processing">Data Cleaning and Pre-Processing<a class="anchor-link" href="#Data-Cleaning-and-Pre-Processing">&#182;</a></h2><h3 id="Data-Cleaning-Steps:">Data Cleaning Steps:<a class="anchor-link" href="#Data-Cleaning-Steps:">&#182;</a></h3><ol>
+<li>Limited cases to those that ruled either for the petitioner or respondent (removed undetermined)</li>
+<li>Removed cases with no utterances</li>
+<li>Cleaned utterance text</li>
+<li>Filtered cases to include last 5 years of dataset (2014-2019)</li>
+</ol>
+
+</div>
+</div>
+</div>
+</div></section><section >
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Data-Processing-Steps">Data Processing Steps<a class="anchor-link" href="#Data-Processing-Steps">&#182;</a></h3><ol>
+<li>Tokenized utterance text</li>
+<li>Created utterances dataframes that includes tokenized text, case id, year, and winning side. These dataframes corresponded to:<ul>
+<li>All utterances within a case</li>
+<li>Judge utterances within a case</li>
+<li>Advocate (for petitioner) utterances within a case</li>
+<li>Adversary (for respondent) utterances within a case</li>
+</ul>
+</li>
+</ol>
 
 </div>
 </div>
@@ -15934,8 +15985,7 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Pre-processed-Datasets">Pre-processed Datasets<a class="anchor-link" href="#Pre-processed-Datasets">&#182;</a></h2><h3 id="All-Utterances">All Utterances<a class="anchor-link" href="#All-Utterances">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
-
+<h2 id="Pre-processed-Datasets">Pre-processed Datasets<a class="anchor-link" href="#Pre-processed-Datasets">&#182;</a></h2><h3 id="All-Utterances">All Utterances<a class="anchor-link" href="#All-Utterances">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -16025,7 +16075,7 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Judge-Utterances">Judge Utterances<a class="anchor-link" href="#Judge-Utterances">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
+<h3 id="Judge-Utterances">Judge Utterances<a class="anchor-link" href="#Judge-Utterances">&#182;</a></h3><p>In addition to standard columns, includes columns on count of advocates for petitioner or respondent.</p>
 
 </div>
 </div>
@@ -16122,8 +16172,7 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Advocate-Utterances">Advocate Utterances<a class="anchor-link" href="#Advocate-Utterances">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
-
+<h3 id="Advocate-Utterances">Advocate Utterances<a class="anchor-link" href="#Advocate-Utterances">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -16213,8 +16262,7 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Adversary-Utterances">Adversary Utterances<a class="anchor-link" href="#Adversary-Utterances">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
-
+<h3 id="Adversary-Utterances">Adversary Utterances<a class="anchor-link" href="#Adversary-Utterances">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -16304,7 +16352,12 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Model-and-Evaulation-Overviews">Model and Evaulation Overviews<a class="anchor-link" href="#Model-and-Evaulation-Overviews">&#182;</a></h2>
+<h2 id="Model-and-Evaulation-Overviews">Model and Evaulation Overviews<a class="anchor-link" href="#Model-and-Evaulation-Overviews">&#182;</a></h2><ul>
+<li>Linear Regression</li>
+<li>Gradient Boosted Tree Model</li>
+<li>Random Forest</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -16315,7 +16368,7 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Logistic-Regression">Logistic Regression<a class="anchor-link" href="#Logistic-Regression">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
+<h3 id="Linear-Regression">Linear Regression<a class="anchor-link" href="#Linear-Regression">&#182;</a></h3><p><span style="color:red"><b>[insert description]</b></span></p>
 
 </div>
 </div>
@@ -16473,7 +16526,11 @@ div.jp-OutputPrompt {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><span style="color:red"><b>[insert defaults]</b></span></p>
+<ul>
+<li><strong>Maximum number of featuers</strong>: 5000</li>
+<li><strong>Maximum number of iterations</strong>: 1000</li>
+<li><strong>Test size</strong>: 0.20</li>
+</ul>
 
 </div>
 </div>
@@ -16873,7 +16930,12 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><span style="color:red"><b>[insert defaults]</b></span></p>
+<ul>
+<li><strong>Maximum Depth</strong>: None</li>
+<li><strong>Maximum Features</strong>: 5000</li>
+<li><strong>Number of trees</strong>: 100</li>
+<li><strong>Test Size</strong>: 0.20</li>
+</ul>
 
 </div>
 </div>
@@ -17273,7 +17335,14 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><span style="color:red"><b>[insert defaults]</b></span></p>
+<ul>
+<li><strong>Maximum number of features</strong>: 5000</li>
+<li><strong>Test size</strong>: 0.20</li>
+<li><strong>Maximum depth</strong>: 7</li>
+<li><strong>Number of estimators</strong>: 100</li>
+<li><strong>Learning rate</strong>: 0.3</li>
+<li><strong>Subsample</strong>: 1</li>
+</ul>
 
 </div>
 </div>
