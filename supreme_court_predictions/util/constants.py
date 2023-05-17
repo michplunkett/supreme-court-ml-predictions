@@ -17,4 +17,4 @@ FILE_MODE_WRITE = "w"
 LATEST_YEAR = 2019
 
 # Labels for ML models
-LABELS = np.array(["for petitioner", "for respondent"])
+LABELS = np.array(["for respondent", "for petitioner"])
