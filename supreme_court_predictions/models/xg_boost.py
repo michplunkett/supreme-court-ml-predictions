@@ -95,8 +95,21 @@ class XGBoost(Model):
         bag_of_words_x = vectorizer.fit_transform(vectorize_document)
         bag_of_words_y = df.loc[:, "win_side"]
 
+        # Append bag of words to other attributes in df
+        new_df = df.drop(columns=["case_id", "tokens", "win_side"])
+        new_df = pd.concat(
+            [
+                new_df,
+                pd.DataFrame(
+                    bag_of_words_x.toarray(),
+                    columns=vectorizer.get_feature_names_out(),
+                ),
+            ],
+            axis=1,
+        )
+
         X_train, X_test, y_train, y_test = train_test_split(
-            bag_of_words_x,
+            new_df,
             bag_of_words_y,
             test_size=self.test_size,
             random_state=SEED_CONSTANT,

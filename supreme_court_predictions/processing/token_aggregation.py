@@ -62,7 +62,7 @@ class TokenAggregations:
         win_side_df = pd.read_csv(self.local_path + "cases_df.csv").rename(
             columns={"id": "case_id"}
         )
-        return win_side_df.loc[:, ["case_id", "win_side"]]
+        return win_side_df.loc[:, ["year", "case_id", "win_side"]]
 
     def get_vote_side(self):
         """
@@ -193,7 +193,21 @@ class TokenAggregations:
         ut = self.utterance_sides.loc[
             self.utterance_sides.loc[:, "speaker_type"] == "J", :
         ]
-        return self.get_case_tokens(ut.loc[:, ["case_id", "tokens"]])
+        judge_tokens = self.get_case_tokens(ut.loc[:, ["case_id", "tokens"]])
+
+        # Add advocate counts to tokens
+        advocate_cts = self.advocate_side.copy()
+        advocate_cts.loc[:, "for_pet"] = 0
+        advocate_cts.loc[:, "for_resp"] = 0
+        advocate_cts.loc[advocate_cts.loc[:, "side"] == 0, "for_resp"] = 1
+        advocate_cts.loc[advocate_cts.loc[:, "side"] == 1, "for_pet"] = 1
+        advocate_cts = (
+            advocate_cts.loc[:, ["case_id", "for_resp", "for_pet"]]
+            .groupby("case_id")
+            .agg("sum")
+        )
+
+        return pd.merge(advocate_cts, judge_tokens, on="case_id")
 
     def parse_all_data(self):
         """
