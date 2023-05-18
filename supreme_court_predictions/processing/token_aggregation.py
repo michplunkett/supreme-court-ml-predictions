@@ -49,7 +49,7 @@ class TokenAggregations:
         """
         Calculates the number of sentences and the number of words per sentence
         in a text.
-       
+
         :param text (str): The text to generate sentence counts from.
         :returns (int) Number of sentences in the given text.
         """
