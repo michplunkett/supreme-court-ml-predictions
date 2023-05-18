@@ -44,7 +44,9 @@ There are two ways that you can run this application, one of them is to run all 
 - `make process-data`: This function parses the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces dataframes collapsing tokenization by case IDs.
 - `make logistic-regression`: This function runs a logistic regression on the output of the `process-data` functionality.
 
-## Package Description
+[THIS WILL BE UPDATED ONCE ALL OF OUR STEPS ARE IN PLACE]
+
+## Package Descriptions
 
 Within the `api` directory, the `client.py` file for convokit downloads initial data through the get_data function, and the google_cloud_platform `client.py` file will send computing jobs to the cloud. 
 
