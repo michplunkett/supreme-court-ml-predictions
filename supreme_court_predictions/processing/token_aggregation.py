@@ -5,8 +5,6 @@ import pickle
 
 import pandas as pd
 
-import re
-
 from supreme_court_predictions.util.functions import (
     debug_print,
     get_full_data_pathway,
