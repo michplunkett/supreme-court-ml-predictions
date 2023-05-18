@@ -49,8 +49,9 @@ class TokenAggregations:
         """
         Calculates the number of sentences and the number of words per sentence
         in a text.
-        """
 
+        :returns (int) Number of sentences in the given text.
+        """
         # Remove false punctuation
         for punc in FALSE_PUNCT:
             if punc in text:
@@ -66,7 +67,12 @@ class TokenAggregations:
 
     def engineer_features(self, ut):
         """
-        Engineers utterance count features for the utterances dataset.
+        Engineers features for the utterances dataset, including number of
+        sentences and number of words per utterance.
+
+        :param (ut): Utterances dataframe to engineer features for.
+        :returns (DataFrame): Utterances dataframe with added columns for number
+                              of words and sentences.
         """
         new_ut = ut.copy()
 
@@ -270,20 +276,6 @@ class TokenAggregations:
         judge_tokens = self.get_case_tokens(
             ut.loc[:, ["case_id", "tokens", "num_sentences", "num_words"]]
         )
-
-        # Add advocate counts to tokens
-        # advocate_cts = self.advocate_side.copy()
-        # advocate_cts.loc[:, "for_pet"] = 0
-        # advocate_cts.loc[:, "for_resp"] = 0
-        # advocate_cts.loc[advocate_cts.loc[:, "side"] == 0, "for_resp"] = 1
-        # advocate_cts.loc[advocate_cts.loc[:, "side"] == 1, "for_pet"] = 1
-        # advocate_cts = (
-        #     advocate_cts.loc[:, ["case_id", "for_resp", "for_pet"]]
-        #     .groupby("case_id")
-        #     .agg("sum")
-        # )
-
-        # return pd.merge(advocate_cts, judge_tokens, on="case_id")
         return judge_tokens
 
     def parse_all_data(self):
