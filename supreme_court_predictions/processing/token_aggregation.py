@@ -10,6 +10,10 @@ from supreme_court_predictions.util.functions import (
     get_full_data_pathway,
 )
 
+MIN_SENTENCE_LEN = 5
+SPLIT_PUNC = "."
+FALSE_PUNCT = ["no.", "v."]
+
 
 class TokenAggregations:
     """
@@ -40,6 +44,51 @@ class TokenAggregations:
         self.utterances = self.get_utterances()
         self.utterance_sides = self.append_side(self.utterances)
 
+    @staticmethod
+    def get_sentence_count(text):
+        """
+        Calculates the number of sentences and the number of words per sentence
+        in a text.
+
+        :param text (str): The text to generate sentence counts from.
+        :returns (int) Number of sentences in the given text.
+        """
+        # Remove false punctuation
+        for punc in FALSE_PUNCT:
+            if punc in text:
+                text = text.replace(punc, "")
+
+        # Get individual sentences
+        text_lst = text.split(SPLIT_PUNC)
+        text_lst = [
+            sen.strip() for sen in text_lst if len(sen) >= MIN_SENTENCE_LEN
+        ]
+
+        return len(text_lst)
+
+    def engineer_features(self, ut):
+        """
+        Engineers features for the utterances dataset, including number of
+        sentences and number of words per utterance.
+
+        :param (ut): Utterances dataframe to engineer features for.
+        :returns (DataFrame): Utterances dataframe with added columns for number
+                              of words and sentences.
+        """
+        new_ut = ut.copy()
+
+        # Add sentence count to utterances
+        new_ut.loc[:, "num_sentences"] = new_ut.loc[:, "text"].map(
+            self.get_sentence_count
+        )
+
+        # Add word count to utterances
+        new_ut.loc[:, "num_words"] = new_ut.loc[:, "tokens"].map(
+            lambda x: len(x)
+        )
+
+        return new_ut
+
     def get_utterances(self):
         """
         Load the utterances dataframe. Keep only the relevant columns, i.e.,
@@ -48,8 +97,18 @@ class TokenAggregations:
         :return A dataframe of case utterances.
         """
         utterances = pd.read_csv(self.local_path + "utterances_df.csv")
-        return utterances.loc[
-            :, ["case_id", "speaker", "tokens", "speaker_type"]
+        ut_eng = self.engineer_features(utterances)
+
+        return ut_eng.loc[
+            :,
+            [
+                "case_id",
+                "speaker",
+                "speaker_type",
+                "tokens",
+                "num_sentences",
+                "num_words",
+            ],
         ]
 
     def get_win_side(self):
@@ -98,24 +157,43 @@ class TokenAggregations:
         """
         # Aggregate tokens by case_id
         case_ids = utterance_tokens.loc[:, "case_id"].unique()
-        agg_tokens = {"case_id": [], "tokens": []}
+        agg_tokens = {
+            "case_id": [],
+            "tokens": [],
+            "avg_num_sentences": [],
+            "avg_num_words": [],
+        }
+
+        replacement = "[]' "
 
         for case in case_ids:
             tokens = []
             agg_tokens["case_id"].append(case)
+
+            # Add aggregate tokens
             for token in utterance_tokens.loc[
                 utterance_tokens.loc[:, "case_id"] == case, "tokens"
             ]:
                 # Preprocess instances - from string to list
-                token = token.strip("[")
-                token = token.strip("]")
-                token = token.replace("'", "")
-                token = token.replace(" ", "")
+                token = token.translate(str.maketrans("", "", replacement))
                 token = token.split(",")
 
                 tokens.extend(token)
-
             agg_tokens["tokens"].append(tokens)
+
+            # Add average sentence count
+            agg_tokens["avg_num_sentences"].append(
+                utterance_tokens.loc[
+                    utterance_tokens.loc[:, "case_id"] == case, "num_sentences"
+                ].mean()
+            )
+
+            # Add average word count
+            agg_tokens["avg_num_words"].append(
+                utterance_tokens.loc[
+                    utterance_tokens.loc[:, "case_id"] == case, "num_words"
+                ].mean()
+            )
 
         agg_tokens = pd.DataFrame.from_dict(agg_tokens)
 
@@ -133,7 +211,9 @@ class TokenAggregations:
         :return A dataframe of case utterances to aggregate tokens of.
         """
         return self.get_case_tokens(
-            self.utterance_sides.loc[:, ["case_id", "tokens"]]
+            self.utterance_sides.loc[
+                :, ["case_id", "tokens", "num_sentences", "num_words"]
+            ]
         )
 
     def append_side(self, utterances):
@@ -155,8 +235,7 @@ class TokenAggregations:
             ut,
             pd.concat([self.vote_side, self.advocate_side]),
             how="left",
-            left_on=["case_id", "advocate"],
-            right_on=["case_id", "advocate"],
+            on=["case_id", "advocate"],
         )
 
         # Remove NA values
@@ -182,7 +261,9 @@ class TokenAggregations:
             ut = self.utterance_sides.loc[
                 self.utterance_sides.loc[:, "side"] == 0, :
             ]
-        return self.get_case_tokens(ut.loc[:, ["case_id", "tokens"]])
+        return self.get_case_tokens(
+            ut.loc[:, ["case_id", "tokens", "num_sentences", "num_words"]]
+        )
 
     def get_judge_case_tokens(self):
         """
@@ -193,21 +274,10 @@ class TokenAggregations:
         ut = self.utterance_sides.loc[
             self.utterance_sides.loc[:, "speaker_type"] == "J", :
         ]
-        judge_tokens = self.get_case_tokens(ut.loc[:, ["case_id", "tokens"]])
-
-        # Add advocate counts to tokens
-        advocate_cts = self.advocate_side.copy()
-        advocate_cts.loc[:, "for_pet"] = 0
-        advocate_cts.loc[:, "for_resp"] = 0
-        advocate_cts.loc[advocate_cts.loc[:, "side"] == 0, "for_resp"] = 1
-        advocate_cts.loc[advocate_cts.loc[:, "side"] == 1, "for_pet"] = 1
-        advocate_cts = (
-            advocate_cts.loc[:, ["case_id", "for_resp", "for_pet"]]
-            .groupby("case_id")
-            .agg("sum")
+        judge_tokens = self.get_case_tokens(
+            ut.loc[:, ["case_id", "tokens", "num_sentences", "num_words"]]
         )
-
-        return pd.merge(advocate_cts, judge_tokens, on="case_id")
+        return judge_tokens
 
     def parse_all_data(self):
         """
