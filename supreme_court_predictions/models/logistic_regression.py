@@ -86,6 +86,7 @@ class LogisticRegression(Model):
 
         # Append bag of words to other attributes in df
         new_df = df.drop(columns=["case_id", "tokens", "win_side"])
+        print(new_df.head(2))
         new_df = pd.concat(
             [
                 new_df,
