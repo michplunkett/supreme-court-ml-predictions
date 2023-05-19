@@ -34,6 +34,7 @@ class LogisticRegression(Model):
         max_features=5000,
         max_iter=1000,
         test_size=0.20,
+        simulation=False
     ):
         # Model outputs
         self.accuracies = {}
@@ -64,6 +65,7 @@ class LogisticRegression(Model):
 
                 # Add name of file
                 self.dataframe_names.append(df.split(".")[0])
+        
 
     def create(self, df):
         """

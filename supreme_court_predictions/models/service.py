@@ -9,7 +9,7 @@ from supreme_court_predictions.models.random_forest import RandomForest
 from supreme_court_predictions.models.xg_boost import XGBoost
 
 
-def run_linear_regression(debug_mode=False):
+def run_linear_regression(debug_mode=False, simulation=False):
     """
     Runner function for the Linear Regression model.
 
@@ -17,6 +17,8 @@ def run_linear_regression(debug_mode=False):
         statements.
     """
     LogisticRegression(debug_mode=debug_mode).run()
+    if simulation:
+        pass
 
 
 def run_random_forest(debug_mode=False):
