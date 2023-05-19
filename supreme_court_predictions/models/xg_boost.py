@@ -44,7 +44,7 @@ class XGBoost(Model):
         self.confusion_matrix = {}
         self.dataframe_names = []
         self.dataframes = []
-        self.execution_time = {}
+        self.execution_times = {}
         self.f1 = {}
         self.models = {}
 
@@ -147,7 +147,7 @@ class XGBoost(Model):
                 self.accuracies[df_name] = acc
                 self.f1[df_name] = f1
                 self.confusion_matrix[df_name] = cm
-                self.execution_time[df_name] = stop - start
+                self.execution_times[df_name] = stop - start
 
                 # Print the results, if applicable
                 self.print_results(self.name.lower(), acc, f1, df_name)
@@ -197,5 +197,9 @@ class XGBoost(Model):
         return_str += "F1 SCORES: "
         for name, f1 in self.f1.items():
             return_str += f"\n\t{name}: {str(f1)}"
+
+        return_str += "EXECUTION TIME: "
+        for name, execution_time in self.execution_times.items():
+            return_str += f"\n\t{name}: {execution_time:0.4f}"
 
         return return_str
