@@ -1,7 +1,7 @@
 """
 This file contains the class that is the basis for all models in this package.
 """
-
+import time
 from abc import ABC, abstractmethod
 
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
@@ -34,13 +34,17 @@ class Model(ABC):
         :return: Float of F1 score.
         :return: Confusion matrix for model
         """
+
+        start = time.perf_counter()
         model, y_test, y_pred = self.create(df)
+        stop = time.perf_counter()
 
         return (
             model,
             accuracy_score(y_true=y_test, y_pred=y_pred),
             f1_score(y_true=y_test, y_pred=y_pred),
             confusion_matrix(y_true=y_test, y_pred=y_pred),
+            stop - start,
         )
 
     @abstractmethod

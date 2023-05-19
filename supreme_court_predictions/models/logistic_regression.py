@@ -5,7 +5,6 @@ the results of a case based on the text learned from utterances.
 """
 
 import os.path
-import time
 
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
@@ -123,14 +122,12 @@ class LogisticRegression(Model):
 
         for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
-                start = time.perf_counter()
-                model, acc, f1, cm = self.create_and_measure(df)
-                stop = time.perf_counter()
+                model, acc, f1, cm, execution_time = self.create_and_measure(df)
                 self.models[df_name] = model
                 self.accuracies[df_name] = acc
                 self.f1[df_name] = f1
                 self.confusion_matrix[df_name] = cm
-                self.execution_times[df_name] = stop - start
+                self.execution_times[df_name] = execution_time
 
                 # Print the results, if applicable
                 self.print_results(self.name.lower(), acc, f1, df_name)
