@@ -15,10 +15,6 @@ from supreme_court_predictions.models.model import Model
 from supreme_court_predictions.util.constants import SEED_CONSTANT
 from supreme_court_predictions.util.functions import get_full_data_pathway
 
-# from sklearn.model_selection import cross_val_score
-# from sklearn.metrics import confusion_matrix
-# from sklearn.model_selection import GridSearchCV
-
 
 class XGBoost(Model):
     """
