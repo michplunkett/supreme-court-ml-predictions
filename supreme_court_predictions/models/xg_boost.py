@@ -5,6 +5,7 @@ results of a case based on the text learned from utterances.
 """
 
 import os.path
+import time
 
 import pandas as pd
 import xgboost as xgb
@@ -40,11 +41,12 @@ class XGBoost(Model):
     ):
         # Model outputs
         self.accuracies = {}
+        self.confusion_matrix = {}
+        self.dataframe_names = []
+        self.dataframes = []
+        self.execution_time = {}
         self.f1 = {}
         self.models = {}
-        self.confusion_matrix = {}
-        self.dataframes = []
-        self.dataframe_names = []
 
         # Data and display
         self.debug_mode = debug_mode
@@ -138,11 +140,14 @@ class XGBoost(Model):
 
         for df, df_name in zip(self.dataframes, self.dataframe_names):
             try:
+                start = time.perf_counter()
                 model, acc, f1, cm = self.create_and_measure(df)
+                stop = time.perf_counter()
                 self.models[df_name] = model
                 self.accuracies[df_name] = acc
                 self.f1[df_name] = f1
                 self.confusion_matrix[df_name] = cm
+                self.execution_time[df_name] = stop - start
 
                 # Print the results, if applicable
                 self.print_results(self.name.lower(), acc, f1, df_name)
