@@ -205,6 +205,6 @@ class XGBoost(Model):
 
         return_str += "EXECUTION TIME: "
         for name, execution_time in self.execution_times.items():
-            return_str += f"\n\t{name}: {execution_time:0.4f}"
+            return_str += f"\n\t{name}: {execution_time:0.4f} seconds"
 
         return return_str
