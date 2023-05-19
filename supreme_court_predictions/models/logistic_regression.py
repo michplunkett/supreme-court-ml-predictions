@@ -130,7 +130,9 @@ class LogisticRegression(Model):
                 self.execution_times[df_name] = execution_time
 
                 # Print the results, if applicable
-                self.print_results(self.name.lower(), acc, f1, df_name)
+                self.print_results(
+                    self.name.lower(), acc, f1, execution_time, df_name
+                )
             except ValueError:
                 self.print("------------------------------------------")
                 self.print(
