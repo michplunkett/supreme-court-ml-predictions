@@ -15,6 +15,12 @@ from supreme_court_predictions.models.service import (
     run_xg_boost,
 )
 
+"""
+TODO: 1. Aggregate the prediction for each judge for each case. 
+    2. Count them up for majority rule and decide if you win or lose case
+    3. Compare this prediction with actual win_side for accuracy matrix.
+"""
+
 # run_linear_regression()
 local_path = get_full_data_pathway("clean_convokit/")
 if os.path.isfile(local_path + "utterances_df.p"):
