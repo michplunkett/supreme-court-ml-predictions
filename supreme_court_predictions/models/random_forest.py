@@ -145,7 +145,12 @@ class RandomForest(Model):
                 )
                 self.print("------------------------------------------")
 
-        return self.accuracies, self.f1, self.confusion_matrix
+        return (
+            self.accuracies,
+            self.f1,
+            self.confusion_matrix,
+            self.execution_times,
+        )
 
     def __repr__(self):
         """
