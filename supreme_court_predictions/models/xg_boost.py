@@ -126,6 +126,10 @@ class XGBoost(Model):
             predictor="gpu_predictor",
         )
 
+        # Remove duplicate columns
+        X_train = X_train.loc[:, ~X_train.columns.duplicated()]
+        X_test = X_test.loc[:, ~X_test.columns.duplicated()]
+
         # Fit the classifier on the training data
         xgb_model.fit(X_train, y_train)
         y_pred = xgb_model.predict(X_test)
@@ -150,12 +154,13 @@ class XGBoost(Model):
                 self.print_results(
                     self.name.lower(), acc, f1, execution_time, df_name
                 )
-            except ValueError:
+            except ValueError as e:
                 self.print("------------------------------------------")
                 self.print(
                     "Error: training data is not big enough for this subset"
                 )
                 self.print("------------------------------------------")
+                self.print(e)
 
         return (
             self.accuracies,
