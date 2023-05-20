@@ -31,7 +31,7 @@ There are two ways that you can run this application, one of them is to run all 
 4. Run the `make prepare-data` command to process the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html), produce an Excel sheet containing descriptive statistics of the cleaned data, and prepare the cleaned data to be processed by the machine learning models.
 5. Run the `make run-all-models` command to run the Logistic Regression, Random Forest, and XGBoost models on the output of the `prepare-data` command.
 
-## Individual commands
+#### Individual commands
 - `make format`: Runs `Black` on the codebase.
 - `make lint`: Runs `ruff` on the codebase.
 - `make test`: Runs test cases in the `test` directory.
