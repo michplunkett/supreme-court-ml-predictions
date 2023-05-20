@@ -122,8 +122,6 @@ class XGBoost(Model):
             subsample=self.subsample,
             objective="binary:logistic",
             random_state=SEED_CONSTANT,
-            tree_method="gpu_hist",
-            predictor="gpu_predictor",
         )
 
         # Remove duplicate columns
