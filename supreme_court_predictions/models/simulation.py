@@ -129,6 +129,6 @@ actual_values = [actual_values_dict[case_id] for case_id in majority_predictions
 predicted_values = list(majority_predictions.values())
 
 # Calculate the accuracy
-total_accuracy = accuracy_score(actual_values, predicted_values)
-
-print('Total Accuracy for All Cases:', total_accuracy)
+if len(actual_values) > 0 and len(predicted_values) > 0:
+    total_accuracy = accuracy_score(actual_values, predicted_values)
+    print('Total Accuracy for All Cases:', total_accuracy)
