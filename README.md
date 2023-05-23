@@ -28,39 +28,6 @@ There are two ways that you can run this application, one of them is to run all 
 1. After you have installed [Poetry](https://python-poetry.org/docs/basic-usage/), run the command from the base repository directory: `poetry shell`
 2. Run the command `poetry install` to install the package dependencies within the project.
 3. Run the `make get-data` command to get the data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html).
-<<<<<<< HEAD
-4. Run the `make clean-data` command to clean the data so that we can have our data in the format needed for the downstream functions.
-5. Run the `make describe-data` command to process the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) and produce an Excel sheet that contains basic descriptive statistics of the data.
-
-[THIS WILL BE UPDATED ONCE ALL OF OUR STEPS ARE IN PLACE]
-
-## Standard Commands
-- `make format`: Runs `Black` on the codebase
-- `make lint`: Runs `ruff` on the codebase
-- `make test`: Runs test cases in the `test` directory
-- `make run`: Runs the `main` function in the `supreme-court-predictions` folder
-- `make get-data`: This function gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html)
-- `make clean-data`: This function cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html) and provides tokenizations of utterances data.
-- `make describe-data`: This function parses the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces an Excel file that contains basic descriptive statistics of the data.
-- `make process-data`: This function parses the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces dataframes collapsing tokenization by case IDs.
-- `make logistic-regression`: This function runs a logistic regression on the output of the `process-data` functionality.
-
-[THIS WILL BE UPDATED ONCE ALL OF OUR STEPS ARE IN PLACE]
-
-## Package Descriptions
-
-Within the `api` directory, the `client.py` file for convokit downloads initial data through the get_data function, and the google_cloud_platform `client.py` file will send computing jobs to the cloud. 
-
-In the `util` directory, the `constants.py` file declares often used constants.  
-
-The `data` directory will contain the data for the initial download in convokit, a cleaned version in clean_convokit, results from statistical summaries in statistics, and model analysis results in models. 
-
-In the `statistics` directory, `service.py` cleans data and provides statical summaries using `datacleaner.py` and `descriptives.py`. 
-
-Specifically, `datacleaner.py` provides a DataCleaner class that provides functionality to download, load, and clean convokit data. `parse_all_data` method can clean and parse the Supreme Court Corpus data, convert data into pandas DataFrames, and save the cleaned data to CSV files in `/supreme_court_predictions/data/clean_convokit`.
-
-`descriptives.py` provides a Descriptives class that generates summary statistics on cases, advocates, speakers, voters, and utterances. The `parse_all_data` method generates these summary statistics and exports data as separate CSV files and one complete Excel file. 
-=======
 4. Run the `make prepare-data` command to process the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html), produce an Excel sheet containing descriptive statistics of the cleaned data, and prepare the cleaned data to be processed by the machine learning models.
 5. Run the `make run-all-models` command to run the Logistic Regression, Random Forest, and XGBoost models on the output of the `prepare-data` command.
 
@@ -87,4 +54,3 @@ Specifically, `datacleaner.py` provides a DataCleaner class that provides functi
 - `summary_analysis`: Houses all functions used to create our cursory statistical analysis.
 - `models`: Houses all functions used to create and run our machine learning models.
 - `util`: Houses all functions and constants utilized in multiple packages to prevent code duplication throughout the `supreme-court-predictions` application.
->>>>>>> main
