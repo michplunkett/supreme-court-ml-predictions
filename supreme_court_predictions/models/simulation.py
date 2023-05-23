@@ -20,7 +20,7 @@ from supreme_court_predictions.models.service import (
     run_xg_boost,
 )
 
-def merge_data():
+def merge_vectorize_data():
 
     # run_linear_regression()
     local_path = get_full_data_pathway("clean_convokit/")
@@ -34,16 +34,13 @@ def merge_data():
         voters = pd.read_csv(local_path + "voters_df.csv")
 
     merged_df = pd.merge(simulation_utterance, voters, left_on=['case_id', 'speaker'], right_on=['case_id', 'voter'])
-
-    return merged_df
-
-def simulate_one_model(input_model):
-    # for each speaker column, train on tokens as x and vote as y. 
-    # logistic regression 
     vectorizer = CountVectorizer(analyzer='word', max_features=5000)
     merged_df['tokens'] = merged_df['tokens'].apply(' '.join)
     bag_of_words = vectorizer.fit_transform(merged_df['tokens'])
+    return merged_df, bag_of_words, vectorizer
 
+def simulate_one_model(input_model, data_tuple):
+    merged_df, bag_of_words, vectorizer = data_tuple 
     # Initialize dictionaries to store models and scores
     models = {}
     accuracies = {}
@@ -87,6 +84,8 @@ def simulate_one_model(input_model):
                     X_train = X_train.drop(columns='case_id')
                     X_test = X_test.drop(columns='case_id')
 
+                    # for each speaker column, train on tokens as x and vote as y. 
+                    # logistic regression 
                     input_model.fit(X_train, y_train)
                     y_pred = input_model.predict(X_test)
 
@@ -133,6 +132,5 @@ def simulate_one_model(input_model):
         total_accuracy = accuracy_score(actual_values, predicted_values)
         print('Total Accuracy for All Cases:', total_accuracy)
 
-merged_df = merge_data()
-simulate_one_model(input_model = LogisticRegression(max_iter=1000, random_state=42))
-
+data_tuple = merge_vectorize_data()
+simulate_one_model(input_model = LogisticRegression(max_iter=1000, random_state=42), data_tuple=data_tuple)
