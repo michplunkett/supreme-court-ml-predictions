@@ -9,7 +9,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MultiLabelBinarizer
 
 from supreme_court_predictions.util.constants import SEED_CONSTANT
 from supreme_court_predictions.util.functions import get_full_data_pathway
@@ -87,16 +86,18 @@ class Simulate:
             speaker_df = merged_df[merged_df["speaker"] == speaker]
             predictions[speaker] = {}
 
-            # If there's only one instance for a class, predict it as the single class
+            # If there's only one instance for a class,
+            # predict it as the single class
             if len(speaker_df["vote"].unique()) == 1:
-                default_class = speaker_df["vote"].iloc[0]
+                speaker_df["vote"].iloc[0]
                 accuracies[speaker] = 1.0
                 f1_scores[speaker] = 1.0
 
                 # for case_id, pred_speaker_tuple in zip(
                 #             case_ids, [(pred, speaker) for pred in y_pred]
                 #         ):
-                #             predictions[case_id] = predictions.get(case_id, []) + [
+                #             predictions[case_id] = predictions.get(
+                #                   case_id, []) + [
                 #                 pred_speaker_tuple
                 #             ]
             else:
@@ -121,15 +122,17 @@ class Simulate:
 
                 if len(y_test) != 0:
                     try:
-                        # Fit the logistic regression model if there are more than one instance of each class
+                        # Fit the logistic regression model if there are
+                        # more than one instance of each class
                         # Make predictions for the test set
                         case_ids = X_test["case_id"].values
 
                         X_train = X_train.drop(columns="case_id")
                         X_test = X_test.drop(columns="case_id")
 
-                        # for each speaker column, train on tokens as x and vote as y.
-                        # logistic regression
+                        # for each speaker column, train on tokens as x
+                        # and vote as y.
+                        # Model prediction
                         input_model.fit(X_train, y_train)
                         y_pred = input_model.predict(X_test)
 
@@ -186,4 +189,3 @@ class Simulate:
         if len(actual_values) > 0 and len(predicted_values) > 0:
             total_accuracy = accuracy_score(actual_values, predicted_values)
             print("Total Accuracy for All Cases:", total_accuracy)
-
