@@ -2,12 +2,12 @@ import os
 from collections import Counter
 
 import pandas as pd
+import xgboost as xgb
 
-# add to poetry.
 from scipy.stats import mode
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MultiLabelBinarizer
@@ -158,14 +158,27 @@ def simulate_one_model(input_model, data_tuple):
         total_accuracy = accuracy_score(actual_values, predicted_values)
         print("Total Accuracy for All Cases:", total_accuracy)
 
-max_depth=None,
-max_features=5000,
-num_trees=100
 
-list_of_models = [LogisticRegression(max_iter=1000, random_state=42),
-                  RandomForestClassifier(
-            n_estimators=num_trees, max_depth=max_depth
-        )]
+max_depth = 5000
+max_features = 5000
+num_trees = 100
+eta = 0.3
+subsample = 1
+
+list_of_models = [
+    LogisticRegression(max_iter=1000, random_state=42),
+    RandomForestClassifier(n_estimators=num_trees, max_depth=max_depth),
+    xgb.XGBClassifier(
+            max_depth=max_depth,
+            n_estimators=num_trees,
+            eta=eta,
+            subsample=subsample,
+            objective="binary:logistic",
+            random_state=SEED_CONSTANT,
+            tree_method="gpu_hist",
+            predictor="gpu_predictor",
+        ),
+]
 data_tuple = merge_vectorize_data()
 for model in list_of_models:
     simulate_one_model(input_model=model, data_tuple=data_tuple)
