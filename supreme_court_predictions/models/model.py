@@ -1,7 +1,7 @@
 """
 This file contains the class that is the basis for all models in this package.
 """
-
+import time
 from abc import ABC, abstractmethod
 
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
@@ -34,13 +34,17 @@ class Model(ABC):
         :return: Float of F1 score.
         :return: Confusion matrix for model
         """
+
+        start = time.perf_counter()
         model, y_test, y_pred = self.create(df)
+        stop = time.perf_counter()
 
         return (
             model,
             accuracy_score(y_true=y_test, y_pred=y_pred),
             f1_score(y_true=y_test, y_pred=y_pred),
             confusion_matrix(y_true=y_test, y_pred=y_pred),
+            stop - start,
         )
 
     @abstractmethod
@@ -66,23 +70,27 @@ class Model(ABC):
 
     def print_results(
         self,
-        model_name="",
-        accuracy_score=None,
-        f1_score=None,
-        dataframe_name=None,
+        model_name: str = "",
+        acc_score: list = None,
+        f1: float = None,
+        execution_time: float = None,
+        dataframe_name: str = None,
     ):
         """
         Prints the results of running the model.
 
         :param str model_name: The name of the model.
-        :param list accuracy_score: The accuracy scores generated across for
+        :param list acc_score: The accuracy scores generated across for
             the dataframes ran in the model.
-        :param list dataframe_name: Name of the dataframe used to create the
+        :param float f1: The F1 score for the model.
+        :param float execution_time: The time it takes to execute the model.
+        :param str dataframe_name: Name of the dataframe used to create the
             model.
         """
         if self.debug_mode:
             print("------------------------------------------")
             print(f"Running a {model_name} on {dataframe_name}...")
-            print(f"Accuracy score: {accuracy_score}")
-            print(f"F1 score: {f1_score}")
+            print(f"Accuracy score: {acc_score}")
+            print(f"F1 score: {f1:04f}")
+            print(f"Execution time: {execution_time:04f} seconds")
             print("------------------------------------------")
