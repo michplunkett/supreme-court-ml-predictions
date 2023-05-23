@@ -122,10 +122,7 @@ for case_id, pred_speaker_tuples in predictions.items():
 for case_id, actual_value in zip(case_ids, y_test):
     actual_values_dict[case_id] = actual_values_dict.get(case_id, []) + [actual_value]
 
-try :
-    actual_values = [mode(actual_values_dict[case_id]).mode[0] for case_id in majority_predictions.keys()]
-except FutureWarning:
-    print('Wrong SciPy Version. ')
+actual_values = [mode(actual_values_dict[case_id], keepdims=True).mode[0] for case_id in majority_predictions.keys()]
 predicted_values = list(majority_predictions.values())
 
 # Calculate the accuracy
