@@ -70,6 +70,13 @@ def simulate_one_model(input_model, data_tuple):
             default_class = speaker_df["vote"].iloc[0]
             accuracies[speaker] = 1.0
             f1_scores[speaker] = 1.0
+
+            # for case_id, pred_speaker_tuple in zip(
+            #             case_ids, [(pred, speaker) for pred in y_pred]
+            #         ):
+            #             predictions[case_id] = predictions.get(case_id, []) + [
+            #                 pred_speaker_tuple
+            #             ]
         else:
             try:
                 token_df = pd.DataFrame(
@@ -158,7 +165,6 @@ def simulate_one_model(input_model, data_tuple):
         total_accuracy = accuracy_score(actual_values, predicted_values)
         print("Total Accuracy for All Cases:", total_accuracy)
 
-
 max_depth = 5000
 max_features = 5000
 num_trees = 100
@@ -175,10 +181,10 @@ list_of_models = [
             subsample=subsample,
             objective="binary:logistic",
             random_state=SEED_CONSTANT,
-            tree_method="gpu_hist",
-            predictor="gpu_predictor",
+            tree_method="hist",
+            predictor="cpu_predictor",
         ),
 ]
 data_tuple = merge_vectorize_data()
-for model in list_of_models:
+for i, model in enumerate(list_of_models):
     simulate_one_model(input_model=model, data_tuple=data_tuple)
