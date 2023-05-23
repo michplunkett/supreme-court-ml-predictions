@@ -9,18 +9,16 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MultiLabelBinarizer
+
+# add to poetry.
+from scipy.stats import mode
 
 from supreme_court_predictions.models.service import (
     run_linear_regression,
     run_random_forest,
     run_xg_boost,
 )
-
-"""
-TODO: 1. Aggregate the prediction for each judge for each case. 
-    2. Count them up for majority rule and decide if you win or lose case
-    3. Compare this prediction with actual win_side for accuracy matrix.
-"""
 
 # run_linear_regression()
 local_path = get_full_data_pathway("clean_convokit/")
@@ -80,14 +78,13 @@ for speaker in merged_df['speaker'].unique():
             try:    
                 # Fit the logistic regression model if there are more than one instance of each class
                 lr = LogisticRegression(max_iter=1000, random_state=42)
-                lr.fit(X_train, y_train)
-
                 # Make predictions for the test set
                 case_ids = X_test['case_id'].values
 
                 X_train = X_train.drop(columns='case_id')
                 X_test = X_test.drop(columns='case_id')
 
+                lr.fit(X_train, y_train)
                 y_pred = lr.predict(X_test)
 
                 for case_id, pred_speaker_tuple in zip(case_ids, [(pred, speaker) for pred in y_pred]):
@@ -103,7 +100,7 @@ for speaker in merged_df['speaker'].unique():
                 f1_scores[speaker] = f1
 
                 # Print the prediction
-                print("Prediction for single instance:", y_pred_single)
+                print(f"Predicted for judge: {speaker}")
             except ValueError:
                 print("Prediction Error")
 
@@ -125,7 +122,10 @@ for case_id, pred_speaker_tuples in predictions.items():
 for case_id, actual_value in zip(case_ids, y_test):
     actual_values_dict[case_id] = actual_values_dict.get(case_id, []) + [actual_value]
 
-actual_values = [actual_values_dict[case_id] for case_id in majority_predictions.keys()]
+try :
+    actual_values = [mode(actual_values_dict[case_id]).mode[0] for case_id in majority_predictions.keys()]
+except FutureWarning:
+    print('Wrong SciPy Version. ')
 predicted_values = list(majority_predictions.values())
 
 # Calculate the accuracy
