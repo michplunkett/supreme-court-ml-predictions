@@ -31,7 +31,7 @@ prepare-data:
 
 .PHONY: run-all-models
 run-all-models:
-	python -m ${BASEDIR} --logistic-regression --random-forest --xg-boost
+	python -m ${BASEDIR} --logistic-regression --random-forest --xg-boost --simulate
 
 .PHONY: run
 run:
@@ -65,3 +65,7 @@ random-forest:
 .PHONY: xg-boost
 xg-boost:
 	python -m ${BASEDIR} --xg-boost
+
+.PHONY: simulate
+simulate:
+	python -m ${BASEDIR} --simulate

@@ -3,7 +3,6 @@ from collections import Counter
 
 import pandas as pd
 import xgboost as xgb
-
 from scipy.stats import mode
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
@@ -12,48 +11,45 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MultiLabelBinarizer
 
-from supreme_court_predictions.models.service import (
-    run_linear_regression,
-    run_random_forest,
-    run_xg_boost,
-)
 from supreme_court_predictions.util.constants import SEED_CONSTANT
 from supreme_court_predictions.util.functions import get_full_data_pathway
 
+
 class Simulate:
-
-    def __init__(self):
-        self.max_depth = 5000
-        self.max_features = 5000
-        self.num_trees = 100
-        self.eta = 0.3
-        self.subsample = 1
-        self.max_iter=1000
-
+    def __init__(
+        self,
+        max_depth=5000,
+        max_features=5000,
+        num_trees=100,
+        eta=0.3,
+        subsample=1,
+        max_iter=1000,
+    ):
         list_of_models = [
-            LogisticRegression(max_iter=self.max_iter, random_state=SEED_CONSTANT),
-            RandomForestClassifier(n_estimators=self.num_trees, max_depth=self.max_depth),
+            LogisticRegression(max_iter=max_iter, random_state=SEED_CONSTANT),
+            RandomForestClassifier(n_estimators=num_trees, max_depth=max_depth),
             xgb.XGBClassifier(
-                    max_depth=self.max_depth,
-                    n_estimators=self.num_trees,
-                    eta=self.eta,
-                    subsample=self.subsample,
-                    objective="binary:logistic",
-                    random_state=SEED_CONSTANT,
-                    tree_method="hist",
-                    predictor="cpu_predictor",
-                ),
+                max_depth=max_depth,
+                n_estimators=num_trees,
+                eta=eta,
+                subsample=subsample,
+                objective="binary:logistic",
+                random_state=SEED_CONSTANT,
+                tree_method="hist",
+                predictor="cpu_predictor",
+            ),
         ]
         data_tuple = self.merge_vectorize_data()
         for model in list_of_models:
             self.simulate_one_model(input_model=model, data_tuple=data_tuple)
 
     def merge_vectorize_data(self):
-        # run_linear_regression()
         local_path = get_full_data_pathway("clean_convokit/")
         if os.path.isfile(local_path + "utterances_df.p"):
             # Use the correct file reading function
-            simulation_utterance = pd.read_pickle(local_path + "utterances_df.p")
+            simulation_utterance = pd.read_pickle(
+                local_path + "utterances_df.p"
+            )
             simulation_utterance = simulation_utterance.loc[
                 simulation_utterance.loc[:, "speaker_type"] == "J", :
             ]
@@ -76,7 +72,6 @@ class Simulate:
         merged_df["tokens"] = merged_df["tokens"].apply(" ".join)
         bag_of_words = vectorizer.fit_transform(merged_df["tokens"])
         return merged_df, bag_of_words, vectorizer
-
 
     def simulate_one_model(self, input_model, data_tuple):
         merged_df, bag_of_words, vectorizer = data_tuple
@@ -141,9 +136,9 @@ class Simulate:
                         for case_id, pred_speaker_tuple in zip(
                             case_ids, [(pred, speaker) for pred in y_pred]
                         ):
-                            predictions[case_id] = predictions.get(case_id, []) + [
-                                pred_speaker_tuple
-                            ]
+                            predictions[case_id] = predictions.get(
+                                case_id, []
+                            ) + [pred_speaker_tuple]
 
                         # Calculate the accuracy and F1-score
                         acc = accuracy_score(y_test, y_pred)
@@ -177,9 +172,9 @@ class Simulate:
 
         # create dictionary for actual
         for case_id, actual_value in zip(case_ids, y_test):
-            actual_values_dict[case_id] = actual_values_dict.get(case_id, []) + [
-                actual_value
-            ]
+            actual_values_dict[case_id] = actual_values_dict.get(
+                case_id, []
+            ) + [actual_value]
 
         actual_values = [
             mode(actual_values_dict[case_id], keepdims=True).mode[0]
@@ -192,4 +187,3 @@ class Simulate:
             total_accuracy = accuracy_score(actual_values, predicted_values)
             print("Total Accuracy for All Cases:", total_accuracy)
 
-Simulate()

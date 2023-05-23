@@ -1,15 +1,15 @@
 """
 This file works as the central point of interaction for the models package.
 """
-
 from supreme_court_predictions.models.logistic_regression import (
     LogisticRegression,
 )
 from supreme_court_predictions.models.random_forest import RandomForest
+from supreme_court_predictions.models.simulation import Simulate
 from supreme_court_predictions.models.xg_boost import XGBoost
 
 
-def run_linear_regression(debug_mode=False, simulation=False):
+def run_linear_regression(debug_mode=False):
     """
     Runner function for the Linear Regression model.
 
@@ -17,8 +17,6 @@ def run_linear_regression(debug_mode=False, simulation=False):
         statements.
     """
     LogisticRegression(debug_mode=debug_mode).run()
-    if simulation:
-        pass
 
 
 def run_random_forest(debug_mode=False):
@@ -39,3 +37,7 @@ def run_xg_boost(debug_mode=False):
         statements.
     """
     XGBoost(debug_mode=debug_mode).run()
+
+
+def run_simulation():
+    Simulate()

@@ -34,7 +34,6 @@ class LogisticRegression(Model):
         max_features=5000,
         max_iter=1000,
         test_size=0.20,
-        simulation=False,
     ):
         # Model outputs
         self.accuracies = {}

@@ -8,6 +8,7 @@ from supreme_court_predictions.api.convokit import get_data
 from supreme_court_predictions.models.service import (
     run_linear_regression,
     run_random_forest,
+    run_simulation,
     run_xg_boost,
 )
 from supreme_court_predictions.processing.service import (
@@ -86,6 +87,14 @@ if __name__ == "__main__":
         action=argparse.BooleanOptionalAction,
     )
 
+    parser.add_argument(
+        "--simulate",
+        help="Simulate all three models for each judge and reach majority decision.",
+        type=bool,
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
+
     args = parser.parse_args()
 
     # Debug mode will only trigger when we call functionality from the command
@@ -127,3 +136,6 @@ if __name__ == "__main__":
 
     if args.xg_boost:
         run_xg_boost(debug_mode)
+
+    if args.simulate:
+        run_simulation()
