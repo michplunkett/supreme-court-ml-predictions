@@ -93,13 +93,6 @@ class Simulate:
                 accuracies[speaker] = 1.0
                 f1_scores[speaker] = 1.0
 
-                # for case_id, pred_speaker_tuple in zip(
-                #             case_ids, [(pred, speaker) for pred in y_pred]
-                #         ):
-                #             predictions[case_id] = predictions.get(
-                #                   case_id, []) + [
-                #                 pred_speaker_tuple
-                #             ]
             else:
                 try:
                     token_df = pd.DataFrame(
