@@ -89,8 +89,8 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--simulate",
-        help="Simulate all three models for \
-            each judge and reach majority decision.",
+        help="Simulate all three models for each judge and reach majority "
+        "decision",
         type=bool,
         default=False,
         action=argparse.BooleanOptionalAction,
@@ -111,6 +111,7 @@ if __name__ == "__main__":
             args.logistic_regression,
             args.random_forest,
             args.xg_boost,
+            args.simulate,
         ]
     )
 
