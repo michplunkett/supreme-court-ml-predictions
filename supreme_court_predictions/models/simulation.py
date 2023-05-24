@@ -171,7 +171,7 @@ class Simulate:
             only_predictions = [tup[0] for tup in pred_speaker_tuples]
             counter = Counter(only_predictions)
 
-            if len(counter.most_common(1)) != 0:
+            if len(counter.most_common(1)):
                 majority_predictions[case_id] = counter.most_common(1)[0][0]
 
         # Create dictionary for actual values
