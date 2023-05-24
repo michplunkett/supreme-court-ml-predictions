@@ -46,7 +46,7 @@ class Simulate:
         ]
         data_tuple = self.merge_vectorize_data()
         for model in list_of_models:
-            self.simulate_one_model(input_model=model, data_tuple=data_tuple)
+            self.simulate_model(input_model=model, data_tuple=data_tuple)
 
     def merge_vectorize_data(self):
         local_path = get_full_data_pathway("clean_convokit/")
@@ -80,7 +80,7 @@ class Simulate:
         bag_of_words = vectorizer.fit_transform(merged_df["tokens"])
         return merged_df, bag_of_words, vectorizer
 
-    def simulate_one_model(self, input_model, data_tuple):
+    def simulate_model(self, input_model, data_tuple):
         merged_df, bag_of_words, vectorizer = data_tuple
         # Initialize dictionaries to store models and scores
         models = {}
