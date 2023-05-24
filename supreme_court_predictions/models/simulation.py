@@ -48,7 +48,7 @@ class Simulation:
     ):
         self.debug_mode = debug_mode
         self.max_features = max_features
-        list_of_models = [
+        self.list_of_models = [
             (
                 LogisticRegression(
                     max_iter=max_iter, random_state=SEED_CONSTANT
@@ -75,13 +75,8 @@ class Simulation:
                 "XGBoost",
             ),
         ]
-        data_tuple = self.merge_vectorize_data()
-        for model in list_of_models:
-            self.simulate_model(
-                input_model=model[0], model_name=model[1], data_tuple=data_tuple
-            )
 
-    def merge_vectorize_data(self):
+    def _merge_vectorize_data(self):
         """
         Reads data from the local path, merges the utterances with
         the voters, and vectorizes the utterance tokens.
@@ -117,7 +112,7 @@ class Simulation:
         bag_of_words = vectorizer.fit_transform(merged_df["tokens"])
         return merged_df, bag_of_words, vectorizer
 
-    def simulate_model(self, input_model, model_name, data_tuple):
+    def _simulate_model(self, input_model, model_name, data_tuple):
         """
         Trains provided models on the given data and evaluates its performance
         in terms of accuracy and F1-score.
@@ -247,6 +242,16 @@ class Simulation:
         if len(actual_values) > 0 and len(predicted_values) > 0:
             total_accuracy = accuracy_score(actual_values, predicted_values)
             print(f"Total {model_name} accuracy for all cases:", total_accuracy)
+
+    def run(self):
+        """
+        This function handles running the simulations.
+        """
+        data_tuple = self._merge_vectorize_data()
+        for model in self.list_of_models:
+            self._simulate_model(
+                input_model=model[0], model_name=model[1], data_tuple=data_tuple
+            )
 
     @staticmethod
     def judge_key_to_name(judge_key):
