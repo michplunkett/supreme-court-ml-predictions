@@ -125,7 +125,7 @@ class Simulate:
 
                 if len(y_test) != 0:
                     try:
-                        # Fit the logistic regression model if there are
+                        # Fit the logistic regression model if there is
                         # more than one instance of each class
                         # Make predictions for the test set
                         case_ids = X_test["case_id"].values
@@ -133,9 +133,8 @@ class Simulate:
                         X_train = X_train.drop(columns="case_id")
                         X_test = X_test.drop(columns="case_id")
 
-                        # for each speaker column, train on tokens as x
-                        # and vote as y.
-                        # Model prediction
+                        # For each speaker column, train on tokens as x
+                        # and vote as y
                         input_model.fit(X_train, y_train)
                         y_pred = input_model.predict(X_test)
 
@@ -166,17 +165,16 @@ class Simulate:
 
         majority_predictions, actual_values_dict = {}, {}
 
-        # create dictionary for predictions
+        # Create dictionary for predictions
         for case_id, pred_speaker_tuples in predictions.items():
-            only_predictions = [
-                tup[0] for tup in pred_speaker_tuples
-            ]  # Extract all predictions for this case_id
+            # Extract all predictions for this case_id
+            only_predictions = [tup[0] for tup in pred_speaker_tuples]
             counter = Counter(only_predictions)
 
             if len(counter.most_common(1)) != 0:
                 majority_predictions[case_id] = counter.most_common(1)[0][0]
 
-        # create dictionary for actual
+        # Create dictionary for actual values
         for case_id, actual_value in zip(case_ids, y_test):
             actual_values_dict[case_id] = actual_values_dict.get(
                 case_id, []
