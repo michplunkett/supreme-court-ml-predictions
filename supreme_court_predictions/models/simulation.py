@@ -11,19 +11,25 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.util.constants import SEED_CONSTANT
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
 class Simulate:
     def __init__(
         self,
+        debug_mode=False,
+        eta=0.3,
         max_depth=5000,
         max_features=5000,
-        num_trees=100,
-        eta=0.3,
-        subsample=1,
         max_iter=1000,
+        num_trees=100,
+        subsample=1,
     ):
+        self.debug_mode = debug_mode
+        self.max_features = max_features
         list_of_models = [
             LogisticRegression(max_iter=max_iter, random_state=SEED_CONSTANT),
             RandomForestClassifier(n_estimators=num_trees, max_depth=max_depth),
@@ -67,7 +73,9 @@ class Simulate:
             left_on=["case_id", "speaker"],
             right_on=["case_id", "voter"],
         )
-        vectorizer = CountVectorizer(analyzer="word", max_features=5000)
+        vectorizer = CountVectorizer(
+            analyzer="word", max_features=self.max_features
+        )
         merged_df["tokens"] = merged_df["tokens"].apply(" ".join)
         bag_of_words = vectorizer.fit_transform(merged_df["tokens"])
         return merged_df, bag_of_words, vectorizer
@@ -110,7 +118,9 @@ class Simulate:
                     )
 
                 except ValueError:
-                    print("Dataset too small for splitting")
+                    debug_print(
+                        "Dataset too small for splitting", self.debug_mode
+                    )
                     continue
 
                 if len(y_test) != 0:
@@ -148,7 +158,7 @@ class Simulate:
                         # Print the prediction
                         print(f"Predicted for judge: {speaker}")
                     except ValueError:
-                        print("Prediction Error")
+                        debug_print("Prediction Error", self.debug_mode)
 
         print("Models by judges:", models)
         print("Accuracies by judges:", accuracies)
@@ -158,10 +168,10 @@ class Simulate:
 
         # create dictionary for predictions
         for case_id, pred_speaker_tuples in predictions.items():
-            only_preds = [
+            only_predictions = [
                 tup[0] for tup in pred_speaker_tuples
             ]  # Extract all predictions for this case_id
-            counter = Counter(only_preds)
+            counter = Counter(only_predictions)
 
             if len(counter.most_common(1)) != 0:
                 majority_predictions[case_id] = counter.most_common(1)[0][0]
