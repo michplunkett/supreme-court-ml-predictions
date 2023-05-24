@@ -139,4 +139,4 @@ if __name__ == "__main__":
         run_xg_boost(debug_mode)
 
     if args.simulate:
-        run_simulation()
+        run_simulation(debug_mode)
