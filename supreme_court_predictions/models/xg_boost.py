@@ -3,9 +3,6 @@ This file contains the XGBoost class that runs a gradient boosted tree model on
 utterance data from the Supreme Court dataset. This class aims to predict the
 results of a case based on the text learned from utterances.
 """
-
-import os.path
-
 import pandas as pd
 import xgboost as xgb
 from sklearn.feature_extraction.text import CountVectorizer
@@ -62,16 +59,14 @@ class XGBoost(Model):
         self.subsample = subsample
 
         for df in dfs:
-            # Make sure it's a file name
-            if os.path.isfile(self.local_path + df):
-                # Use the correct file reading function
-                read_func = (
-                    pd.read_pickle if df.split(".")[-1] == "p" else pd.read_csv
-                )
-                self.dataframes.append(read_func(self.local_path + df))
+            # Use the correct file reading function
+            read_func = (
+                pd.read_pickle if df.split(".")[-1] == "p" else pd.read_csv
+            )
+            self.dataframes.append(read_func(self.local_path + df))
 
-                # Add name of file
-                self.dataframe_names.append(df.split(".")[0])
+            # Add name of file
+            self.dataframe_names.append(df.split(".")[0])
 
     def create(self, df):
         """

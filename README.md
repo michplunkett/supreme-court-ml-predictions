@@ -47,6 +47,7 @@ There are two ways that you can run this application, one of them is to run all 
 - `make logistic-regression`: Runs the [Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression) model on the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data.
 - `make random-forest`: Runs the [Random Forest](https://en.wikipedia.org/wiki/Random_forest) model on the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data.
 - `make xg-boost`: Runs the [XGBoost](https://en.wikipedia.org/wiki/XGBoost) model on the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data.
+- `make simluate`: Runs a simulation utilizing all three of the above models to predict the verdict for each judge and then uses the majority decision to predict the outcome of each case.
 
 ## Package Descriptions
 - `api`: Houses all functions used to access external APIs.

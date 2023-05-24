@@ -1,4 +1,3 @@
-import os
 from collections import Counter
 
 import pandas as pd
@@ -17,13 +16,16 @@ from supreme_court_predictions.util.functions import get_full_data_pathway
 class Simulate:
     def __init__(
         self,
+        debug_mode=False,
+        eta=0.3,
         max_depth=5000,
         max_features=5000,
-        num_trees=100,
-        eta=0.3,
-        subsample=1,
         max_iter=1000,
+        num_trees=100,
+        subsample=1,
     ):
+        self.debug_mode = debug_mode
+        self.max_features = max_features
         list_of_models = [
             LogisticRegression(max_iter=max_iter, random_state=SEED_CONSTANT),
             RandomForestClassifier(n_estimators=num_trees, max_depth=max_depth),
@@ -40,26 +42,22 @@ class Simulate:
         ]
         data_tuple = self.merge_vectorize_data()
         for model in list_of_models:
-            self.simulate_one_model(input_model=model, data_tuple=data_tuple)
+            self.simulate_model(input_model=model, data_tuple=data_tuple)
 
     def merge_vectorize_data(self):
         local_path = get_full_data_pathway("clean_convokit/")
-        if os.path.isfile(local_path + "utterances_df.p"):
-            # Use the correct file reading function
-            simulation_utterance = pd.read_pickle(
-                local_path + "utterances_df.p"
-            )
-            simulation_utterance = simulation_utterance.loc[
-                simulation_utterance.loc[:, "speaker_type"] == "J", :
-            ]
-            simulation_utterance = (
-                simulation_utterance.groupby(["case_id", "speaker"])["tokens"]
-                .apply(sum)
-                .reset_index()
-            )
+        # Use the correct file reading function
+        simulation_utterance = pd.read_pickle(local_path + "utterances_df.p")
+        simulation_utterance = simulation_utterance.loc[
+            simulation_utterance.loc[:, "speaker_type"] == "J", :
+        ]
+        simulation_utterance = (
+            simulation_utterance.groupby(["case_id", "speaker"])["tokens"]
+            .apply(sum)
+            .reset_index()
+        )
 
-        if os.path.isfile(local_path + "voters_df.csv"):
-            voters = pd.read_csv(local_path + "voters_df.csv")
+        voters = pd.read_csv(local_path + "voters_df.csv")
 
         merged_df = pd.merge(
             simulation_utterance,
@@ -67,12 +65,14 @@ class Simulate:
             left_on=["case_id", "speaker"],
             right_on=["case_id", "voter"],
         )
-        vectorizer = CountVectorizer(analyzer="word", max_features=5000)
+        vectorizer = CountVectorizer(
+            analyzer="word", max_features=self.max_features
+        )
         merged_df["tokens"] = merged_df["tokens"].apply(" ".join)
         bag_of_words = vectorizer.fit_transform(merged_df["tokens"])
         return merged_df, bag_of_words, vectorizer
 
-    def simulate_one_model(self, input_model, data_tuple):
+    def simulate_model(self, input_model, data_tuple):
         merged_df, bag_of_words, vectorizer = data_tuple
         # Initialize dictionaries to store models and scores
         models = {}
@@ -109,13 +109,16 @@ class Simulate:
                         stratify=merged_df["vote"],
                     )
 
-                except ValueError:
-                    print("Dataset too small for splitting")
+                except ValueError as e:
+                    self.print("------------------------------------------")
+                    self.print("Error: Dataset too small for splitting")
+                    self.print("------------------------------------------")
+                    self.print(e)
                     continue
 
-                if len(y_test) != 0:
+                if len(y_test):
                     try:
-                        # Fit the logistic regression model if there are
+                        # Fit the logistic regression model if there is
                         # more than one instance of each class
                         # Make predictions for the test set
                         case_ids = X_test["case_id"].values
@@ -123,9 +126,8 @@ class Simulate:
                         X_train = X_train.drop(columns="case_id")
                         X_test = X_test.drop(columns="case_id")
 
-                        # for each speaker column, train on tokens as x
-                        # and vote as y.
-                        # Model prediction
+                        # For each speaker column, train on tokens as x
+                        # and vote as y
                         input_model.fit(X_train, y_train)
                         y_pred = input_model.predict(X_test)
 
@@ -147,8 +149,11 @@ class Simulate:
 
                         # Print the prediction
                         print(f"Predicted for judge: {speaker}")
-                    except ValueError:
-                        print("Prediction Error")
+                    except ValueError as e:
+                        self.print("------------------------------------------")
+                        self.print("Error: Prediction error")
+                        self.print("------------------------------------------")
+                        self.print(e)
 
         print("Models by judges:", models)
         print("Accuracies by judges:", accuracies)
@@ -156,17 +161,16 @@ class Simulate:
 
         majority_predictions, actual_values_dict = {}, {}
 
-        # create dictionary for predictions
+        # Create dictionary for predictions
         for case_id, pred_speaker_tuples in predictions.items():
-            only_preds = [
-                tup[0] for tup in pred_speaker_tuples
-            ]  # Extract all predictions for this case_id
-            counter = Counter(only_preds)
+            # Extract all predictions for this case_id
+            only_predictions = [tup[0] for tup in pred_speaker_tuples]
+            counter = Counter(only_predictions)
 
-            if len(counter.most_common(1)) != 0:
+            if len(counter.most_common(1)):
                 majority_predictions[case_id] = counter.most_common(1)[0][0]
 
-        # create dictionary for actual
+        # Create dictionary for actual values
         for case_id, actual_value in zip(case_ids, y_test):
             actual_values_dict[case_id] = actual_values_dict.get(
                 case_id, []
