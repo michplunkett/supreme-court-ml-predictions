@@ -39,5 +39,5 @@ def run_xg_boost(debug_mode=False):
     XGBoost(debug_mode=debug_mode).run()
 
 
-def run_simulation():
-    Simulate()
+def run_simulation(debug_mode=False):
+    Simulate(debug_mode=debug_mode)
