@@ -3,9 +3,6 @@ This LogisticRegression class runs logistic regression
 on utterance data from the Supreme Court dataset. This class aims to predict
 the results of a case based on the text learned from utterances. 
 """
-
-import os.path
-
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression as skLR
@@ -55,16 +52,14 @@ class LogisticRegression(Model):
         self.test_size = test_size
 
         for df in dfs:
-            # Ensure the file exists
-            if os.path.isfile(self.local_path + df):
-                # Use the correct file reading function
-                read_func = (
-                    pd.read_pickle if df.split(".")[-1] == "p" else pd.read_csv
-                )
-                self.dataframes.append(read_func(self.local_path + df))
+            # Use the correct file reading function
+            read_func = (
+                pd.read_pickle if df.split(".")[-1] == "p" else pd.read_csv
+            )
+            self.dataframes.append(read_func(self.local_path + df))
 
-                # Add name of file
-                self.dataframe_names.append(df.split(".")[0])
+            # Add name of file
+            self.dataframe_names.append(df.split(".")[0])
 
     def create(self, df):
         """
