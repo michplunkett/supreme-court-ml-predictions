@@ -46,4 +46,4 @@ def run_simulation(debug_mode=False):
     :param bool debug_mode: Indicates if the application requires debug print
         statements.
     """
-    Simulation(debug_mode=debug_mode)
+    Simulation(debug_mode=debug_mode).run()
