@@ -10,10 +10,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.util.constants import SEED_CONSTANT
-from supreme_court_predictions.util.functions import (
-    debug_print,
-    get_full_data_pathway,
-)
+from supreme_court_predictions.util.functions import get_full_data_pathway
 
 
 class Simulate:
@@ -112,10 +109,11 @@ class Simulate:
                         stratify=merged_df["vote"],
                     )
 
-                except ValueError:
-                    debug_print(
-                        "Dataset too small for splitting", self.debug_mode
-                    )
+                except ValueError as e:
+                    self.print("------------------------------------------")
+                    self.print("Error: Dataset too small for splitting")
+                    self.print("------------------------------------------")
+                    self.print(e)
                     continue
 
                 if len(y_test):
@@ -151,8 +149,11 @@ class Simulate:
 
                         # Print the prediction
                         print(f"Predicted for judge: {speaker}")
-                    except ValueError:
-                        debug_print("Prediction Error", self.debug_mode)
+                    except ValueError as e:
+                        self.print("------------------------------------------")
+                        self.print("Error: Prediction error")
+                        self.print("------------------------------------------")
+                        self.print(e)
 
         print("Models by judges:", models)
         print("Accuracies by judges:", accuracies)
