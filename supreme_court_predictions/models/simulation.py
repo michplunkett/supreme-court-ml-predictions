@@ -15,9 +15,10 @@ from supreme_court_predictions.util.functions import get_full_data_pathway
 
 class Simulate:
     """
-    A class taht simulates through three machine learning models:
-    LR, Random Forest, and XG Boost. This class predicts the decision of each 
-    judge. And then, based on majority vote, it predicts majority decision. 
+    A class that simulates through three machine learning models:
+    LR, Random Forest, and XGBoost. This class predicts each judge's decision,
+    and then, based on a majority vote, it predicts the court's decision.
+
 
     :param debug_mode: A flag to operate in debug mode.
     :param eta: The learning rate for XGBoost.
@@ -27,6 +28,7 @@ class Simulate:
     :param num_trees: The number of trees in the Random Forest and XGBoost.
     :param subsample: Subsample ratio of the training instances for XGBoost.
     """
+
     def __init__(
         self,
         debug_mode=False,
@@ -60,10 +62,11 @@ class Simulate:
     def merge_vectorize_data(self):
         """
         Reads data from the local path, merges the utterances with
-        the voters, vectorizes the utterance tokens.
+        the voters, and vectorizes the utterance tokens.
 
-        :return (merged_df, bag_of_words, vectorizer): Tuple containing the 
-        merged DataFrame, the bag of words matrix, and the CountVectorizer.
+
+        :return (merged_df, bag_of_words, vectorizer): Tuple containing the
+            merged DataFrame, the bag of words matrix, and the CountVectorizer.
         """
         local_path = get_full_data_pathway("clean_convokit/")
         # Use the correct file reading function
@@ -98,8 +101,8 @@ class Simulate:
         in terms of accuracy and F1-score.
 
         :param input_model: List o three models.
-        :param data_tuple: Tuple containing the merged DataFrame, the bag of 
-        words matrix, and the CountVectorizer object.
+        :param data_tuple: Tuple containing the merged DataFrame, the bag of
+            words matrix, and the CountVectorizer object.
         """
         merged_df, bag_of_words, vectorizer = data_tuple
         # Initialize dictionaries to store models and scores
