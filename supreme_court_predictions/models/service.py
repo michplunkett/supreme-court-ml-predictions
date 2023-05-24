@@ -41,9 +41,9 @@ def run_xg_boost(debug_mode=False):
 
 def run_simulation(debug_mode=False):
     """
-   Runner function for the model simulation.
+    Runner function for the model simulation.
 
-   :param bool debug_mode: Indicates if the application requires debug print
-       statements.
-   """
+    :param bool debug_mode: Indicates if the application requires debug print
+        statements.
+    """
     Simulate(debug_mode=debug_mode)
