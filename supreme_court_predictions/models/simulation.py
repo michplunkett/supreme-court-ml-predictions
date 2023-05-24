@@ -42,22 +42,37 @@ class Simulate:
         self.debug_mode = debug_mode
         self.max_features = max_features
         list_of_models = [
-            LogisticRegression(max_iter=max_iter, random_state=SEED_CONSTANT),
-            RandomForestClassifier(n_estimators=num_trees, max_depth=max_depth),
-            xgb.XGBClassifier(
-                max_depth=max_depth,
-                n_estimators=num_trees,
-                eta=eta,
-                subsample=subsample,
-                objective="binary:logistic",
-                random_state=SEED_CONSTANT,
-                tree_method="hist",
-                predictor="cpu_predictor",
+            (
+                LogisticRegression(
+                    max_iter=max_iter, random_state=SEED_CONSTANT
+                ),
+                "Logistic Regression",
+            ),
+            (
+                RandomForestClassifier(
+                    n_estimators=num_trees, max_depth=max_depth
+                ),
+                "Random Forest",
+            ),
+            (
+                xgb.XGBClassifier(
+                    max_depth=max_depth,
+                    n_estimators=num_trees,
+                    eta=eta,
+                    subsample=subsample,
+                    objective="binary:logistic",
+                    random_state=SEED_CONSTANT,
+                    tree_method="hist",
+                    predictor="cpu_predictor",
+                ),
+                "XGBoost",
             ),
         ]
         data_tuple = self.merge_vectorize_data()
         for model in list_of_models:
-            self.simulate_model(input_model=model, data_tuple=data_tuple)
+            self.simulate_model(
+                input_model=model[0], model_name=model[1], data_tuple=data_tuple
+            )
 
     def merge_vectorize_data(self):
         """
@@ -95,12 +110,13 @@ class Simulate:
         bag_of_words = vectorizer.fit_transform(merged_df["tokens"])
         return merged_df, bag_of_words, vectorizer
 
-    def simulate_model(self, input_model, data_tuple):
+    def simulate_model(self, input_model, model_name, data_tuple):
         """
         Trains provided models on the given data and evaluates its performance
         in terms of accuracy and F1-score.
 
-        :param input_model: List o three models.
+        :param input_model: A particular ML model.
+        :param str model_name: The name of the model.
         :param data_tuple: Tuple containing the merged DataFrame, the bag of
             words matrix, and the CountVectorizer object.
         """
@@ -179,14 +195,17 @@ class Simulate:
                         f1_scores[speaker] = f1
 
                         # Print the prediction
-                        print(f"Predicted for judge: {speaker}")
+                        print(
+                            f"Predicted for judge: "
+                            f"{self.judge_key_to_name(speaker)}"
+                        )
                     except ValueError as e:
                         self.print("------------------------------------------")
                         self.print("Error: Prediction error")
                         self.print("------------------------------------------")
                         self.print(e)
 
-        print("Models by judges:", models)
+        print(f"{model_name} by judges\n")
         print("Accuracies by judges:", accuracies)
         print("F1 scores by judges:", f1_scores)
 
@@ -217,3 +236,14 @@ class Simulate:
         if len(actual_values) > 0 and len(predicted_values) > 0:
             total_accuracy = accuracy_score(actual_values, predicted_values)
             print("Total Accuracy for All Cases:", total_accuracy)
+
+    @staticmethod
+    def judge_key_to_name(judge_key):
+        """
+        This function takes in a judge name key 'j__earl_warren' and turns it
+        something similar to 'Judge Earl Warren'.
+
+        :param str judge_key: They key for a particular judge.
+        :return: str A formatted string
+        """
+        return judge_key.replace("j__", "Judge ").replace("_", " ").title()
