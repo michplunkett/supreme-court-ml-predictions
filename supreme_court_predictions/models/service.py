@@ -5,7 +5,7 @@ from supreme_court_predictions.models.logistic_regression import (
     LogisticRegression,
 )
 from supreme_court_predictions.models.random_forest import RandomForest
-from supreme_court_predictions.models.simulation import Simulate
+from supreme_court_predictions.models.simulation import Simulation
 from supreme_court_predictions.models.xg_boost import XGBoost
 
 
@@ -46,4 +46,4 @@ def run_simulation(debug_mode=False):
     :param bool debug_mode: Indicates if the application requires debug print
         statements.
     """
-    Simulate(debug_mode=debug_mode)
+    Simulation(debug_mode=debug_mode).run()
