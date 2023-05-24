@@ -16,7 +16,7 @@ from supreme_court_predictions.util.functions import (
 )
 
 
-class Simulate:
+class Simulation:
     """
     A class that simulates through three machine learning models:
     LR, Random Forest, and XGBoost. This class predicts each judge's decision,
