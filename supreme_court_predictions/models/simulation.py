@@ -1,4 +1,3 @@
-import os
 from collections import Counter
 
 import pandas as pd
@@ -50,22 +49,18 @@ class Simulate:
 
     def merge_vectorize_data(self):
         local_path = get_full_data_pathway("clean_convokit/")
-        if os.path.isfile(local_path + "utterances_df.p"):
-            # Use the correct file reading function
-            simulation_utterance = pd.read_pickle(
-                local_path + "utterances_df.p"
-            )
-            simulation_utterance = simulation_utterance.loc[
-                simulation_utterance.loc[:, "speaker_type"] == "J", :
-            ]
-            simulation_utterance = (
-                simulation_utterance.groupby(["case_id", "speaker"])["tokens"]
-                .apply(sum)
-                .reset_index()
-            )
+        # Use the correct file reading function
+        simulation_utterance = pd.read_pickle(local_path + "utterances_df.p")
+        simulation_utterance = simulation_utterance.loc[
+            simulation_utterance.loc[:, "speaker_type"] == "J", :
+        ]
+        simulation_utterance = (
+            simulation_utterance.groupby(["case_id", "speaker"])["tokens"]
+            .apply(sum)
+            .reset_index()
+        )
 
-        if os.path.isfile(local_path + "voters_df.csv"):
-            voters = pd.read_csv(local_path + "voters_df.csv")
+        voters = pd.read_csv(local_path + "voters_df.csv")
 
         merged_df = pd.merge(
             simulation_utterance,
