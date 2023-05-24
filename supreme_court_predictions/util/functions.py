@@ -5,9 +5,8 @@ This file holds general utility functions.
 import os
 
 
-def debug_print(message, debug_mode=True):
+def debug_print(message, debug_mode=False):
     """
-    TODO: Add to `processing` and `statistics` packages.
     TODO: Eventually turn into a Singleton.
 
     This function uses `print` if the application is in debug mode.
