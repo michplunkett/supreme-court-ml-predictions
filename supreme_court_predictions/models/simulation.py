@@ -10,7 +10,10 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.util.constants import SEED_CONSTANT
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
 class Simulate:
@@ -195,9 +198,10 @@ class Simulate:
                         f1_scores[speaker] = f1
 
                         # Print the prediction
-                        print(
+                        debug_print(
                             f"Predicted for judge: "
-                            f"{self.judge_key_to_name(speaker)}"
+                            f"{self.judge_key_to_name(speaker)}",
+                            self.debug_mode,
                         )
                     except ValueError as e:
                         self.print("------------------------------------------")
@@ -205,9 +209,12 @@ class Simulate:
                         self.print("------------------------------------------")
                         self.print(e)
 
-        print(f"{model_name} by judges\n")
-        print("Accuracies by judges:", accuracies)
-        print("F1 scores by judges:", f1_scores)
+        for judge, _ in models.items():
+            print(
+                f"{model_name} information for {self.judge_key_to_name(judge)}"
+            )
+            print("Accuracy:", accuracies[judge])
+            print("F1 score:", f1_scores[judge])
 
         majority_predictions, actual_values_dict = {}, {}
 
@@ -235,7 +242,7 @@ class Simulate:
         # Calculate the accuracy
         if len(actual_values) > 0 and len(predicted_values) > 0:
             total_accuracy = accuracy_score(actual_values, predicted_values)
-            print("Total Accuracy for All Cases:", total_accuracy)
+            print(f"Total {model_name} accuracy for all cases:", total_accuracy)
 
     @staticmethod
     def judge_key_to_name(judge_key):
