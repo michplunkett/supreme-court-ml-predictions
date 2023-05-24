@@ -1,3 +1,7 @@
+"""
+This file handles the functions that run the judge and court majority decision
+simulation.
+"""
 from collections import Counter
 
 import pandas as pd
