@@ -118,7 +118,7 @@ class Simulate:
                     )
                     continue
 
-                if len(y_test) != 0:
+                if len(y_test):
                     try:
                         # Fit the logistic regression model if there is
                         # more than one instance of each class
