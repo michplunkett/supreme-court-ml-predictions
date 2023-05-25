@@ -1,4 +1,7 @@
-import os
+"""
+This file handles the functions that run the judge and court majority decision
+simulation.
+"""
 from collections import Counter
 
 import pandas as pd
@@ -11,55 +14,90 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
 
 from supreme_court_predictions.util.constants import SEED_CONSTANT
-from supreme_court_predictions.util.functions import get_full_data_pathway
+from supreme_court_predictions.util.functions import (
+    debug_print,
+    get_full_data_pathway,
+)
 
 
-class Simulate:
+class Simulation:
+    """
+    A class that simulates through three machine learning models:
+    LR, Random Forest, and XGBoost. This class predicts each judge's decision,
+    and then, based on a majority vote, it predicts the court's decision.
+
+
+    :param debug_mode: A flag to operate in debug mode.
+    :param eta: The learning rate for XGBoost.
+    :param max_depth: Maximum depth of a tree for Random Forest and XGBoost.
+    :param max_features: Maximum features to consider in the CountVectorizer.
+    :param max_iter: Maximum number of iterations for the Logistic Regression.
+    :param num_trees: The number of trees in the Random Forest and XGBoost.
+    :param subsample: Subsample ratio of the training instances for XGBoost.
+    """
+
     def __init__(
         self,
+        debug_mode=False,
+        eta=0.3,
         max_depth=5000,
         max_features=5000,
-        num_trees=100,
-        eta=0.3,
-        subsample=1,
         max_iter=1000,
+        num_trees=100,
+        subsample=1,
     ):
-        list_of_models = [
-            LogisticRegression(max_iter=max_iter, random_state=SEED_CONSTANT),
-            RandomForestClassifier(n_estimators=num_trees, max_depth=max_depth),
-            xgb.XGBClassifier(
-                max_depth=max_depth,
-                n_estimators=num_trees,
-                eta=eta,
-                subsample=subsample,
-                objective="binary:logistic",
-                random_state=SEED_CONSTANT,
-                tree_method="hist",
-                predictor="cpu_predictor",
+        self.debug_mode = debug_mode
+        self.max_features = max_features
+        self.list_of_models = [
+            (
+                LogisticRegression(
+                    max_iter=max_iter, random_state=SEED_CONSTANT
+                ),
+                "Logistic Regression",
+            ),
+            (
+                RandomForestClassifier(
+                    n_estimators=num_trees, max_depth=max_depth
+                ),
+                "Random Forest",
+            ),
+            (
+                xgb.XGBClassifier(
+                    max_depth=max_depth,
+                    n_estimators=num_trees,
+                    eta=eta,
+                    subsample=subsample,
+                    objective="binary:logistic",
+                    random_state=SEED_CONSTANT,
+                    tree_method="hist",
+                    predictor="cpu_predictor",
+                ),
+                "XGBoost",
             ),
         ]
-        data_tuple = self.merge_vectorize_data()
-        for model in list_of_models:
-            self.simulate_one_model(input_model=model, data_tuple=data_tuple)
 
-    def merge_vectorize_data(self):
+    def _merge_vectorize_data(self):
+        """
+        Reads data from the local path, merges the utterances with
+        the voters, and vectorizes the utterance tokens.
+
+
+        :return (merged_df, bag_of_words, vectorizer): Tuple containing the
+            merged DataFrame, the bag of words matrix, and the CountVectorizer.
+        """
         local_path = get_full_data_pathway("clean_convokit/")
-        if os.path.isfile(local_path + "utterances_df.p"):
-            # Use the correct file reading function
-            simulation_utterance = pd.read_pickle(
-                local_path + "utterances_df.p"
-            )
-            simulation_utterance = simulation_utterance.loc[
-                simulation_utterance.loc[:, "speaker_type"] == "J", :
-            ]
-            simulation_utterance = (
-                simulation_utterance.groupby(["case_id", "speaker"])["tokens"]
-                .apply(sum)
-                .reset_index()
-            )
+        # Use the correct file reading function
+        simulation_utterance = pd.read_pickle(local_path + "utterances_df.p")
+        simulation_utterance = simulation_utterance.loc[
+            simulation_utterance.loc[:, "speaker_type"] == "J", :
+        ]
+        simulation_utterance = (
+            simulation_utterance.groupby(["case_id", "speaker"])["tokens"]
+            .apply(sum)
+            .reset_index()
+        )
 
-        if os.path.isfile(local_path + "voters_df.csv"):
-            voters = pd.read_csv(local_path + "voters_df.csv")
+        voters = pd.read_csv(local_path + "voters_df.csv")
 
         merged_df = pd.merge(
             simulation_utterance,
@@ -67,12 +105,23 @@ class Simulate:
             left_on=["case_id", "speaker"],
             right_on=["case_id", "voter"],
         )
-        vectorizer = CountVectorizer(analyzer="word", max_features=5000)
+        vectorizer = CountVectorizer(
+            analyzer="word", max_features=self.max_features
+        )
         merged_df["tokens"] = merged_df["tokens"].apply(" ".join)
         bag_of_words = vectorizer.fit_transform(merged_df["tokens"])
         return merged_df, bag_of_words, vectorizer
 
-    def simulate_one_model(self, input_model, data_tuple):
+    def _simulate_model(self, input_model, model_name, data_tuple):
+        """
+        Trains provided models on the given data and evaluates its performance
+        in terms of accuracy and F1-score.
+
+        :param input_model: A particular ML model.
+        :param str model_name: The name of the model.
+        :param data_tuple: Tuple containing the merged DataFrame, the bag of
+            words matrix, and the CountVectorizer object.
+        """
         merged_df, bag_of_words, vectorizer = data_tuple
         # Initialize dictionaries to store models and scores
         models = {}
@@ -109,13 +158,16 @@ class Simulate:
                         stratify=merged_df["vote"],
                     )
 
-                except ValueError:
-                    print("Dataset too small for splitting")
+                except ValueError as e:
+                    self.print("------------------------------------------")
+                    self.print("Error: Dataset too small for splitting")
+                    self.print("------------------------------------------")
+                    self.print(e)
                     continue
 
-                if len(y_test) != 0:
+                if len(y_test):
                     try:
-                        # Fit the logistic regression model if there are
+                        # Fit the logistic regression model if there is
                         # more than one instance of each class
                         # Make predictions for the test set
                         case_ids = X_test["case_id"].values
@@ -123,9 +175,8 @@ class Simulate:
                         X_train = X_train.drop(columns="case_id")
                         X_test = X_test.drop(columns="case_id")
 
-                        # for each speaker column, train on tokens as x
-                        # and vote as y.
-                        # Model prediction
+                        # For each speaker column, train on tokens as x
+                        # and vote as y
                         input_model.fit(X_train, y_train)
                         y_pred = input_model.predict(X_test)
 
@@ -146,27 +197,36 @@ class Simulate:
                         f1_scores[speaker] = f1
 
                         # Print the prediction
-                        print(f"Predicted for judge: {speaker}")
-                    except ValueError:
-                        print("Prediction Error")
+                        debug_print(
+                            f"Predicted for judge: "
+                            f"{self.judge_key_to_name(speaker)}",
+                            self.debug_mode,
+                        )
+                    except ValueError as e:
+                        self.print("------------------------------------------")
+                        self.print("Error: Prediction error")
+                        self.print("------------------------------------------")
+                        self.print(e)
 
-        print("Models by judges:", models)
-        print("Accuracies by judges:", accuracies)
-        print("F1 scores by judges:", f1_scores)
+        for judge, _ in models.items():
+            print(
+                f"{model_name} information for {self.judge_key_to_name(judge)}"
+            )
+            print("Accuracy:", accuracies[judge])
+            print("F1 score:", f1_scores[judge])
 
         majority_predictions, actual_values_dict = {}, {}
 
-        # create dictionary for predictions
+        # Create dictionary for predictions
         for case_id, pred_speaker_tuples in predictions.items():
-            only_preds = [
-                tup[0] for tup in pred_speaker_tuples
-            ]  # Extract all predictions for this case_id
-            counter = Counter(only_preds)
+            # Extract all predictions for this case_id
+            only_predictions = [tup[0] for tup in pred_speaker_tuples]
+            counter = Counter(only_predictions)
 
-            if len(counter.most_common(1)) != 0:
+            if len(counter.most_common(1)):
                 majority_predictions[case_id] = counter.most_common(1)[0][0]
 
-        # create dictionary for actual
+        # Create dictionary for actual values
         for case_id, actual_value in zip(case_ids, y_test):
             actual_values_dict[case_id] = actual_values_dict.get(
                 case_id, []
@@ -181,4 +241,25 @@ class Simulate:
         # Calculate the accuracy
         if len(actual_values) > 0 and len(predicted_values) > 0:
             total_accuracy = accuracy_score(actual_values, predicted_values)
-            print("Total Accuracy for All Cases:", total_accuracy)
+            print(f"Total {model_name} accuracy for all cases:", total_accuracy)
+
+    def run(self):
+        """
+        This function handles running the simulations.
+        """
+        data_tuple = self._merge_vectorize_data()
+        for model in self.list_of_models:
+            self._simulate_model(
+                input_model=model[0], model_name=model[1], data_tuple=data_tuple
+            )
+
+    @staticmethod
+    def judge_key_to_name(judge_key):
+        """
+        This function takes in a judge name key 'j__earl_warren' and turns it
+        something similar to 'Judge Earl Warren'.
+
+        :param str judge_key: They key for a particular judge.
+        :return: str A formatted string
+        """
+        return judge_key.replace("j__", "Judge ").replace("_", " ").title()
