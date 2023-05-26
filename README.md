@@ -7,6 +7,8 @@ The project uses historic United States Supreme Court cases to train natural lan
    - The code for that grouping can be found in the `clean_roles` function in the [`descriptives.py` file.](https://github.com/michplunkett/supreme-court-ml-predictions/blob/main/supreme_court_predictions/statistics/descriptives.py)
 2. The years included within this data set are 2014 to 2019.
 3. The datasets included within the previously mentioned year range are ones where the winnings side was either 0 or 1 (no missing, etc.).
+4. All reports and presentations are contained within the `reports` folder in the base directory.
+   - The Jupyter notebooks cannot be run from the `reports` directory as they use paths that require being in the base directory. If you want to run them yourself, move them to the base directory.
 
 ### Project Requirements
 - Python version: `^3.11`
