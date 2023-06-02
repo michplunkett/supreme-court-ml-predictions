@@ -33,23 +33,11 @@ There are two ways that you can run this application, one of them is to run all 
 4. Run the `make prepare-data` command to process the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html), produce an Excel sheet containing descriptive statistics of the cleaned data, and prepare the cleaned data to be processed by the machine learning models.
 5. Run the `make run-all-models` command to run the Logistic Regression, Random Forest, and XGBoost models on the output of the `prepare-data` command.
 
-#### Individual commands
+#### Repository Health Commands
 - `make format`: Runs `Black` on the codebase.
 - `make lint`: Runs `ruff` on the codebase.
 - `make test`: Runs test cases in the `test` directory.
 - `make test-and-fail` Runs test cases in the `test` directory with the `-x` flag that causes a build to fail if a test fails.
-- `make run`: Runs the entirety of the `supreme-court-predictions` application from end-to-end.
-- `make get-data`: Gets the initial data from [Convokit](https://convokit.cornell.edu/documentation/supreme.html).
-- `make prepare-data`: Runs the `clean-data`, `describe-data`, `tokenize-data`, and `process-data` `make` commands.
-- `make run-all-models`: Runs the `logistic-regression`, `random-forest`, and `xg-boost` `make` commands.
-- `make clean-data`: Cleans the downloaded [Convokit](https://convokit.cornell.edu/documentation/supreme.html) and provides tokenizations of utterances data.
-- `make describe-data`: Parses the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces an Excel file that contains basic descriptive statistics of the data.
-- `make tokenize-data`: Tokenizes the cleaned [Convokit](https://convokit.cornell.edu/documentation/supreme.html) corpus DataFrames.
-- `make process-data`: Parses the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data and produces dataframes collapsing tokenization by case IDs.
-- `make logistic-regression`: Runs the [Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression) model on the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data.
-- `make random-forest`: Runs the [Random Forest](https://en.wikipedia.org/wiki/Random_forest) model on the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data.
-- `make xg-boost`: Runs the [XGBoost](https://en.wikipedia.org/wiki/XGBoost) model on the tokenized [Convokit](https://convokit.cornell.edu/documentation/supreme.html) data.
-- `make simluate`: Runs a simulation utilizing all three of the above models to predict the verdict for each judge and then uses the majority decision to predict the outcome of each case.
 
 ## Package Descriptions
 - `api`: Houses all functions used to access external APIs.
